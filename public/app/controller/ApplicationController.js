@@ -2,8 +2,9 @@ Ext.define('App.controller.ApplicationController', {
     extend: 'Ext.app.Controller',
 
     requires: [
+        'App.view.Toolbar',
         'App.view.home.Main',
-        'App.view.Toolbar'
+        'App.view.dsh-pvd.Main'
     ],
 
     control: {
@@ -11,7 +12,8 @@ Ext.define('App.controller.ApplicationController', {
     },
 
     routes: {
-        'home': { action: 'homeAction' }
+        'home': { action: 'homeAction' },
+        'dashboard-performance-venda-dia': { action: 'dashboardPerformanceVendaDiaAction' }
     },
 
     init: function() {
@@ -22,6 +24,10 @@ Ext.define('App.controller.ApplicationController', {
 
     homeAction: function(){
         this.addMasterTab('homemain', true);
+    },
+
+    dashboardPerformanceVendaDiaAction: function(){
+        this.addMasterTab('dshpvdmain', true);
     },
 
     configViewport: function(){
