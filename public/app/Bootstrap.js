@@ -10,15 +10,11 @@ Ext.application({
 
     requires: [
         'Ext.ux.util.Format',
-        'App.view.Viewport',
-        'App.controller.CpCfController',
-        'App.controller.CpCeController'
+        'App.view.Viewport'
     ],
     
     controllers: [
-        'ApplicationController',
-        'CpCfController',
-        'CpCeController'
+        'ApplicationController'
     ],
     
     mainView: 'App.view.Viewport',

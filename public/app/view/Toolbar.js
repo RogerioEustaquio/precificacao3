@@ -1,6 +1,6 @@
-Ext.define('App.view.Viewport', {
-    extend: 'Ext.Viewport',
-    layout: 'border',
+Ext.define('App.view.Toolbar', {
+    extend: 'Ext.toolbar.Toolbar',
+    xtype: 'apptoolbar',
 
     initComponent: function() {
         var me = this;
@@ -8,12 +8,12 @@ Ext.define('App.view.Viewport', {
         Ext.applyIf(me, {
             items: [
                 {
-                    region: 'north',
-                    xtype: 'apptoolbar'
+                    text: 'teste'
                 }
             ]
         });
 
         me.callParent(arguments);
     }
+
 });

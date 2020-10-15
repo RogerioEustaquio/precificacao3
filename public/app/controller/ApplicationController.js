@@ -2,49 +2,29 @@ Ext.define('App.controller.ApplicationController', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        
+        'App.view.home.Main',
+        'App.view.Toolbar'
     ],
 
     control: {
-        // '#mastermenu > menuitem': {
-        //     click: function(item){
-        //         console.log(item)
-        //     }
-        // }
+
     },
 
     routes: {
-        'home': { action: 'cpAction' }
+        'home': { action: 'homeAction' }
     },
-    
-    getViewport: function(){
-        return App.getApplication().getMainView();
-    },
-    
-    addOrActiveCard: function(xtype){
-        var viewport = this.getViewport(),
-            viewportCard = viewport.down('#applicationcard');
-        
-        var page = viewportCard.down(xtype);
-        if(!page){
-            page = viewportCard.add({ xtype: xtype });
-        }
-        
-        viewportCard.setActiveItem(page);
-    },
-    
+
     init: function() {
         var me = this;
 
-        App.app.on('menumasterclick', function(item){
-            me.redirectTo(item);
-        });
-
-        // Se não tiver logado
-        me.mainAction();
+        me.configViewport();
     },
-    
-    mainAction: function(){
+
+    homeAction: function(){
+        this.addMasterTab('homemain', true);
+    },
+
+    configViewport: function(){
         var me = this,
             viewport = me.getViewport();
         
@@ -57,39 +37,25 @@ Ext.define('App.controller.ApplicationController', {
             });
         }
     },
-
-    homeAction: function(){
-        var me = this,
-        viewport = me.getViewport();
-    },
     
-    cpAction: function(){
-        var me = this;
-        me.addMasterTab('cpcemain');
-        me.addMasterTab('cpcfmain');
-        
-    },
-
-    addMasterTab: function(xtype){
+    addMasterTab: function(xtype, closable){
         var me = this,
             viewport = me.getViewport(),
             viewportTabs = viewport.down('#applicationtabs'),
             tab = viewportTabs.down(xtype);
 
         if(!tab){
-
             tab = viewportTabs.add({
-                closable: false,
-                xtype: xtype,
-                listeners: {
-                    // destroy: function(){
-                    //     me.redirectTo('home');
-                    // }
-                }
+                closable: closable,
+                xtype: xtype
             });
         };
         
         viewportTabs.setActiveItem(tab);
+    },
+
+    getViewport: function(){
+        return App.getApplication().getMainView();
     }
     
 });
