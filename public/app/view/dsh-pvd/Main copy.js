@@ -7,13 +7,12 @@ Ext.define('App.view.dsh-pvd.Main', {
         'App.view.dsh-pvd.TreeGrid'
     ],
     
-    title: 'Dashboard Performance Venda Dia',
-    layout: 'border',
-
     initComponent: function() {
         var me = this;
         
         Ext.applyIf(me, {
+            title: 'Dashboard Performance Venda Dia',
+            layout: 'border',
             items: [
                 {
                     xtype : 'toolbarpvd'
@@ -33,12 +32,12 @@ Ext.define('App.view.dsh-pvd.Main', {
                 {
                     xtype: 'panel',
                     region: 'center',
-                    layout: 'fit',
-                    items: [
-                        {
-                            xtype: 'treegrid'
-                        }
-                    ]
+                    title: 'teste',
+                    // items: [
+                    //     {
+                    //         xtype: 'treegrid'
+                    //     }
+                    // ]
                 }
             ]
 
