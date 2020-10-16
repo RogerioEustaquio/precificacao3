@@ -76,12 +76,11 @@ class DshpvdController extends AbstractRestfulController
             $sql ="select *
                 from (
                     select $groupId as id,
-                            $groupDescription as grupo,
-                            $leaf as leaf,
+                           $groupDescription as grupo,
+                           $leaf as leaf,
                            sum(vd_rol) as rol,
                            sum(vd_lb) as lb,
                            (case when sum(vd_lb) > 0 then round((sum(vd_lb)/suM(vd_rol))*100,2) end) as mb
-                           
                       from (
                           select 'REDE' as id_rede,
                                  'REDE' as rede,
