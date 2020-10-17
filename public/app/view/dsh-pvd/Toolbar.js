@@ -25,7 +25,8 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             tooltip: 'Consultar',
             margin: '1 1 1 4',
             handler: function() {
-
+                var objfiltro = me.up('container').down('#panelfilter');
+                (objfiltro.hidden ? objfiltro.setHidden(false) : objfiltro.setHidden(true));
             }
         });
 

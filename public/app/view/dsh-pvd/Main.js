@@ -4,7 +4,8 @@ Ext.define('App.view.dsh-pvd.Main', {
     itemId: 'dshpvdmain',
     requires: [
         'App.view.dsh-pvd.Toolbar',
-        'App.view.dsh-pvd.TreeGrid'
+        'App.view.dsh-pvd.TreeGrid',
+        'App.view.dsh-pvd.PanelFilter'
     ],
     
     title: 'Dashboard Performance Venda Dia',
@@ -19,16 +20,7 @@ Ext.define('App.view.dsh-pvd.Main', {
                     xtype : 'toolbarpvd'
                 },
                 {
-                    xtype: 'tabpanel',
-                    width: 220,
-                    region: 'west',
-                    items:[
-                        {
-                            xtype: 'container',
-                            title: 'filtro2',
-                            html: 'texto'
-                        }
-                    ]
+                    xtype: 'panelfilter'
                 },
                 {
                     xtype: 'panel',

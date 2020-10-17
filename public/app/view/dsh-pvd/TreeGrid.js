@@ -5,6 +5,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
     rootVisible: false,
     constructor: function() {
         var me = this;
+        var utilFormat = Ext.create('Ext.ux.util.Format');
 
         var myModel = Ext.create('Ext.data.TreeModel', {
                             fields: [ { name: 'grupo', type: 'string'},
@@ -19,7 +20,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
             autoLoad: true,
             proxy: {
                 type: 'ajax',
-                url: BASEURL + '/api/dshpvd/listarNfEstoque',
+                url: BASEURL + '/api/dshpvd/listartreepvd',
                 encode: true,
                 reader: {
                     type: 'json',
@@ -51,17 +52,26 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                 {
                     text: 'ROL',
                     dataIndex: 'rol',
-                    align: 'rigth'
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
                 },
                 {
                     text: 'LB',
                     dataIndex: 'lb',
-                    align: 'rigth'
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
                 },
                 {
                     text: 'MB',
                     dataIndex: 'mb',
-                    align: 'rigth'
+                    align: 'center',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
                 }
             ],
             listeners: {

@@ -1,7 +1,7 @@
-Ext.define('App.view.dsh-pvd.MarcaGrid', {
+Ext.define('App.view.dsh-pvd.GrupoGrid', {
     extend: 'Ext.grid.Panel',
-    xtype: 'marcagrid',
-    itemId: 'marcagrid',
+    xtype: 'grupogrid',
+    itemId: 'grupogrid',
     columnLines: true,
     selType: 'checkboxmodel',
     margin: '1 1 1 1',
@@ -28,7 +28,7 @@ Ext.define('App.view.dsh-pvd.MarcaGrid', {
     }),
     columns: [
         {
-            text: 'Marca',
+            text: 'Grupo',
             dataIndex: 'marca',
             flex: 1
             
