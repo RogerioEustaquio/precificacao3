@@ -4,30 +4,27 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
     itemId: 'toolbarpvd',
     region: 'north',
     requires:[
-        'App.view.dsh-pvd.WindowNode'
+        'App.view.dsh-pvd.FiltrosWindow'
     ],
     vEmps: null,
+    vMarcas: null,
 
     constructor: function() {
         var me = this;
-
-        var btnWinEmp = Ext.create('Ext.button.Button',{
-            
-            iconCls: 'fa fa-list',
-            margin: '1 1 1 4',
-            handler: me.onBtnEmpClick
-
-        });
 
         var btnFiltro = Ext.create('Ext.button.Button',{
             
             iconCls: 'fa fa-filter',
             tooltip: 'Consultar',
             margin: '1 1 1 4',
-            handler: function() {
-                var objfiltro = me.up('container').down('#panelfilter');
-                (objfiltro.hidden ? objfiltro.setHidden(false) : objfiltro.setHidden(true));
-            }
+            handler: me.onBtnEmpClick
+        });
+
+        var btnClean = Ext.create('Ext.button.Button',{
+            
+            iconCls: 'fa fa-file',
+            tooltip: 'Limpar',
+            margin: '1 1 1 4'
         });
 
         var btnSearch = Ext.create('Ext.button.Button',{
@@ -40,11 +37,12 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
                 console.log(me.vEmps)
             }
         });
+
         Ext.applyIf(me, {
 
             items : [
-                btnWinEmp,
                 btnFiltro,
+                btnClean,
                 btnSearch
             ]
         });
@@ -56,19 +54,29 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
     onBtnEmpClick: function(btn){
         var me = this;
 
-        var objWindow = Ext.create('App.view.dsh-pvd.WindowNode');
-            objWindow.show();
+        var objWindow = Ext.create( 'App.view.dsh-pvd.FiltrosWindow');
+        objWindow.show();
 
         if(me.vEmps)
             objWindow.down('#elEmp').setValue(me.vEmps);
+
+        if(me.vMarcas)
+            objWindow.down('#elMarca').setValue(me.vMarcas);
 
         objWindow.down('button[name=confirmar]').on('click',function(){
 
             var empSelect = objWindow.down('#elEmp').getValue();
             me.vEmps = empSelect;
 
+            var marcaSelect = objWindow.down('#elMarca').getValue();
+            me.vMarcas = marcaSelect;
+
+            console.log(empSelect);
+            console.log(marcaSelect);
+
             objWindow.close();
         });
+
     }
     
 });
