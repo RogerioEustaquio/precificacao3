@@ -3,6 +3,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
     xtype: 'treegrid',
     itemId: 'treegrid',
     rootVisible: false,
+
     constructor: function() {
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
@@ -75,14 +76,14 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                 }
             ],
             listeners: {
-                click: {
-                    element: 'el', //bind to the underlying el property on the panel
-                    fn: function(e){ console.log( this.getLoader()); }
-                },
-                dblclick: {
-                    element: 'body', //bind to the underlying body property on the panel
-                    fn: function(){ console.log('dblclick body'); }
-                }
+                // click: {
+                //     element: 'el', //bind to the underlying el property on the panel
+                //     fn: function(e){ console.log( this.getLoader()); }
+                // },
+                // dblclick: {
+                //     element: 'body', //bind to the underlying body property on the panel
+                //     fn: function(){ console.log('dblclick body'); }
+                // }
             }
 
         });

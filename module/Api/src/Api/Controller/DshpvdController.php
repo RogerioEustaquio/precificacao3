@@ -28,6 +28,21 @@ class DshpvdController extends AbstractRestfulController
         
         try {
 
+            $emps   = $this->params()->fromQuery('emps',null);
+            $marcas = $this->params()->fromQuery('marcas',null);
+
+            $emps   =  implode(",",json_decode($emps));
+            $marcas =  implode(",",json_decode($marcas));
+
+            $andSql = '';
+            if($emps){
+                $andSql = " and vi.id_empresa in ($emps)";
+            }
+
+            if($marcas){
+                $andSql .= " and ic.id_marca in ($marcas)";
+            }
+
             $pNiveis = $this->params()->fromQuery('niveis',null);
             $lvs = json_decode($pNiveis);
 
@@ -115,7 +130,7 @@ class DshpvdController extends AbstractRestfulController
                              and vi.id_empresa = es.id_empresa
                              and vi.id_item = es.id_item
                              and vi.id_categoria = es.id_categoria
-          
+                             $andSql
                              and trunc(vi.data_emissao,'MM') = '01/01/2020'
                              --and trunc(vi.data_emissao) >= trunc(add_months(sysdate,-12),'RRRR')
                              --and trunc(vi.data_emissao) <= trunc(sysdate-1)

@@ -9,7 +9,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
     vEmps: null,
     vMarcas: null,
 
-    constructor: function() {
+    initComponent: function() {
         var me = this;
 
         var btnFiltro = Ext.create('Ext.button.Button',{
@@ -17,33 +17,22 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             iconCls: 'fa fa-filter',
             tooltip: 'Consultar',
             margin: '1 1 1 4',
-            handler: me.onBtnEmpClick
+            handler: me.onBtnFiltros
         });
 
-        var btnClean = Ext.create('Ext.button.Button',{
-            
-            iconCls: 'fa fa-file',
-            tooltip: 'Limpar',
-            margin: '1 1 1 4'
-        });
-
-        var btnSearch = Ext.create('Ext.button.Button',{
+        var btnConsultar = Ext.create('Ext.button.Button',{
             
             iconCls: 'fa fa-search',
             tooltip: 'Consultar',
             margin: '1 1 1 4',
-            handler: function() {
-                
-                console.log(me.vEmps)
-            }
+            handler: me.onBtnConsultar
         });
 
         Ext.applyIf(me, {
 
             items : [
                 btnFiltro,
-                btnClean,
-                btnSearch
+                btnConsultar
             ]
         });
 
@@ -51,8 +40,8 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
 
     },
 
-    onBtnEmpClick: function(btn){
-        var me = this;
+    onBtnFiltros: function(btn){
+        var me = this.up('toolbar');
 
         var objWindow = Ext.create( 'App.view.dsh-pvd.FiltrosWindow');
         objWindow.show();
@@ -71,11 +60,23 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             var marcaSelect = objWindow.down('#elMarca').getValue();
             me.vMarcas = marcaSelect;
 
-            console.log(empSelect);
-            console.log(marcaSelect);
-
             objWindow.close();
         });
+
+    },
+
+    onBtnConsultar: function(btn){
+        var me = this.up('toolbar');
+
+        var grid = me.up('container').down('panel').down('treepanel');
+
+        var params = {
+            emps :  Ext.encode(me.vEmps),
+            marcas:  Ext.encode(me.vMarcas)
+        };
+
+        grid.getStore().getProxy().setExtraParams(params);
+        grid.getStore().load();
 
     }
     

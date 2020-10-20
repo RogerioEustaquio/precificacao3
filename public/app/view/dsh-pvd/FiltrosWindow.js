@@ -18,9 +18,11 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
         var elTagEmpresa = Ext.create('Ext.form.field.Tag',{
             name: 'elEmp',
             itemId: 'elEmp',
+            multiSelect: true,
             store: Ext.data.Store({
                 fields: [
-                    { name: 'emp', type: 'string' }
+                    { name: 'emp', type: 'string' },
+                    { name: 'idEmpresa', type: 'string' }
                 ],
                 proxy: {
                     type: 'ajax',
@@ -37,23 +39,30 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
             queryParam: 'emp',
             queryMode: 'local',
             displayField: 'emp',
-            valueField: 'emp',
+            valueField: 'idEmpresa',
             emptyText: 'Empresa',
             fieldLabel: 'Empresas',
             labelWidth: 60,
             margin: '1 1 1 1',
             plugins:'dragdroptag',
             filterPickList: true,
-            publishes: 'value'
+            publishes: 'value',
+            disabled:true
         });
-        elTagEmpresa.store.load();
+        elTagEmpresa.store.load(
+            function(){
+                elTagEmpresa.setDisabled(false);
+            }
+        );
 
         var elTagMarca = Ext.create('Ext.form.field.Tag',{
             name: 'elMarca',
             itemId: 'elMarca',
+            multiSelect: true,
             store: Ext.data.Store({
                 fields: [
-                    { name: 'marca', type: 'string' }
+                    { name: 'marca', type: 'string' },
+                    { name: 'idMarca', type: 'string' }
                 ],
                 proxy: {
                     type: 'ajax',
@@ -70,25 +79,27 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
             queryParam: 'marca',
             queryMode: 'local',
             displayField: 'marca',
-            valueField: 'marca',
+            valueField: 'idMarca',
             emptyText: 'Marca',
             fieldLabel: 'Marcas',
             labelWidth: 60,
             margin: '1 1 1 1',
             plugins:'dragdroptag',
             filterPickList: true,
-            publishes: 'value'
+            publishes: 'value',
+            disabled: true
         });
-        elTagMarca.store.load();
+        elTagMarca.store.load(
+            function(){
+                elTagMarca.setDisabled(false);
+            }
+        );
 
         var btnConfirm = Ext.create('Ext.button.Button',{
 
             text: 'Confirmar',
             name: 'confirmar',
             margin: '2 10 2 2'
-            // handler: function(form) {
-            //     console.log(elementbx.getValue());
-            // }
         });
 
         Ext.applyIf(me, {
@@ -97,17 +108,18 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                 {
                     xtype:'panel',
                     layout: 'border',
+                    scrollable: false,
                     items:[
                         {
                             xtype: 'panel',
                             region: 'center',
                             defaults:{
-                                padding: 10,
+                                margin: '10 0 10 0',
                                 border: false
                             },
                             items: [
                                 {
-                                    xtype: 'form',
+                                    xtype: 'panel',
                                     layout: 'hbox',
                                     items:[
                                         elTagEmpresa,
@@ -117,14 +129,13 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                                             tooltip: 'Limpar',
                                             margin: '1 1 1 4',
                                             handler: function(form) {
-                                                form.up('form').down('tagfield').setValue(null);
+                                                form.up('panel').down('tagfield').setValue(null);
                                             }
                                         }
                                     ]
-                
                                 },
                                 {
-                                    xtype: 'form',
+                                    xtype: 'panel',
                                     layout: 'hbox',
                                     items:[
                                         elTagMarca,
@@ -134,7 +145,7 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                                             tooltip: 'Limpar',
                                             margin: '1 1 1 4',
                                             handler: function(form) {
-                                                form.up('form').down('tagfield').setValue(null);
+                                                form.up('panel').down('tagfield').setValue(null);
                                             }
                                         }
                                     ]
