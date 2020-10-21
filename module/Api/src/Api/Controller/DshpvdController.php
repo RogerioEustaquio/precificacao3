@@ -28,19 +28,32 @@ class DshpvdController extends AbstractRestfulController
         
         try {
 
+            $data   = $this->params()->fromQuery('data',null);
             $emps   = $this->params()->fromQuery('emps',null);
             $marcas = $this->params()->fromQuery('marcas',null);
+            $curvas = $this->params()->fromQuery('curvas',null);
 
             $emps   =  implode(",",json_decode($emps));
             $marcas =  implode(",",json_decode($marcas));
+            $curvas =  implode("','",json_decode($curvas));
 
             $andSql = '';
+            if($data){
+                $andSql = " and trunc(vi.data_emissao,'MM') = '01/$data'";
+            }else{
+                $andSql = " and trunc(vi.data_emissao,'MM') = '01/'||to_char(sysdate,'mm/yyyy')";
+            }
+
             if($emps){
-                $andSql = " and vi.id_empresa in ($emps)";
+                $andSql .= " and vi.id_empresa in ($emps)";
             }
 
             if($marcas){
                 $andSql .= " and ic.id_marca in ($marcas)";
+            }
+
+            if($curvas){
+                $andSql .= " and es.id_curva_abc in ('$curvas')";
             }
 
             $pNiveis = $this->params()->fromQuery('niveis',null);
@@ -131,7 +144,7 @@ class DshpvdController extends AbstractRestfulController
                              and vi.id_item = es.id_item
                              and vi.id_categoria = es.id_categoria
                              $andSql
-                             and trunc(vi.data_emissao,'MM') = '01/01/2020'
+                             --and trunc(vi.data_emissao,'MM') = '01/01/2020'
                              --and trunc(vi.data_emissao) >= trunc(add_months(sysdate,-12),'RRRR')
                              --and trunc(vi.data_emissao) <= trunc(sysdate-1)
                         )
@@ -140,7 +153,7 @@ class DshpvdController extends AbstractRestfulController
                     group by $groupBy, $groupId
                  )
             where 1=1";
-
+            
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
             
@@ -276,6 +289,47 @@ class DshpvdController extends AbstractRestfulController
             }
 
             $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function listarcurvaAction()
+    {
+        $data = array();
+        
+        try {
+            $session = $this->getSession();
+            $usuario = $session['info']['usuarioSistema'];
+
+            // $idEmpresa      = $this->params()->fromQuery('idEmpresa',null);
+
+            $em = $this->getEntityManager();
+            $conn = $em->getConnection();
+
+            $sql = "select id_curva_abc from MS.TB_CURVA_ABC";
+
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindParam(':idEmpresa', $idEmpresa);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('id_curva_abc', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            $this->setMessage("Solicitação enviada com sucesso.");
             
         } catch (\Exception $e) {
             $this->setCallbackError($e->getMessage());
