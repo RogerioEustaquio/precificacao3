@@ -48,7 +48,6 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                 }
             }),
             width: '96%',
-            name: 'emp',
             queryParam: 'emp',
             queryMode: 'local',
             displayField: 'emp',
@@ -89,7 +88,6 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                 }
             }),
             width: '96%',
-            name: 'marca',
             queryParam: 'marca',
             queryMode: 'local',
             displayField: 'marca',
@@ -129,7 +127,6 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                 }
             }),
             width: '96%',
-            name: 'idCurvaAbc',
             queryParam: 'idCurvaAbc',
             queryMode: 'local',
             displayField: 'idCurvaAbc',
@@ -158,6 +155,15 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
             padding: 1
         });
 
+        var btnLimpar = Ext.create('Ext.button.Button',{
+
+            text: 'Limpar',
+            name: 'limpar',
+            // margin: '2 10 2 2'
+            padding: 1,
+            handler: me.onBtnLimpar
+        });
+
         Ext.applyIf(me, {
             
             items:[
@@ -173,7 +179,7 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                             region: 'center',
                             scrollable: true,
                             defaults:{
-                                margin: '0 0 10 0',
+                                margin: '2 2 10 2',
                                 border: false
                             },
                             items: [
@@ -248,13 +254,8 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                             region: 'south',
                             items: [
                                 '->',
-                                {
-                                    xtype: 'form',
-                                    border: false,
-                                    items: [
-                                        btnConfirm
-                                    ]
-                                }
+                                btnConfirm,
+                                btnLimpar
                             ]
                         }
                     ]
@@ -264,6 +265,17 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
         });
 
         me.callParent(arguments);
+
+    },
+
+    onBtnLimpar: function(){
+
+        var me = this.up('toolbar').up('panel');
+
+        me.down('panel').down('datefield[name=data]').setRawValue(null);
+        me.down('panel').down('tagfield[name=elEmp]').setValue(null);
+        me.down('panel').down('tagfield[name=elMarca]').setValue(null);
+        me.down('panel').down('tagfield[name=elCurva]').setValue(null);
 
     }
 
