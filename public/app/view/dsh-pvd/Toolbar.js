@@ -4,8 +4,10 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
     itemId: 'toolbarpvd',
     region: 'north',
     requires:[
+        'App.view.dsh-pvd.NodeWindow',
         'App.view.dsh-pvd.FiltrosWindow'
     ],
+    vNiveis: null,
     vData: null,
     vEmps: null,
     vMarcas: null,
@@ -13,6 +15,12 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
 
     initComponent: function() {
         var me = this;
+
+        var btnGrupo = Ext.create('Ext.button.Button',{
+            iconCls: 'fa fa-list',
+            margin: '1 1 1 4',
+            handler: me.onBtnGrupo
+        });
 
         var btnFiltro = Ext.create('Ext.button.Button',{
             
@@ -33,6 +41,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         Ext.applyIf(me, {
 
             items : [
+                btnGrupo,
                 btnFiltro,
                 btnConsultar
             ]
@@ -40,6 +49,26 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
 
         me.callParent(arguments);
 
+    },
+
+    onBtnGrupo: function(){
+        var me = this.up('toolbar');
+
+        objWindow = Ext.create('App.view.dsh-pvd.NodeWindow');
+        objWindow.show();
+
+        var btnConfirmar = objWindow.down('panel').down('toolbar').down('form').down('button');
+
+        btnConfirmar.on('click',
+            function(){
+
+                var niveis = objWindow.down('panel').down('form').down('#bxElement').getValue();
+                me.vNiveis = niveis;
+
+                objWindow.close();
+
+            }
+        );
     },
 
     onBtnFiltros: function(btn){
@@ -89,6 +118,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             emps : Ext.encode(me.vEmps),
             marcas: Ext.encode(me.vMarcas),
             curvas: Ext.encode(me.vCurvas),
+            niveis: Ext.encode(me.vNiveis),
         };
 
         grid.getStore().getProxy().setExtraParams(params);

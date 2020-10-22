@@ -33,9 +33,16 @@ class DshpvdController extends AbstractRestfulController
             $marcas = $this->params()->fromQuery('marcas',null);
             $curvas = $this->params()->fromQuery('curvas',null);
 
-            $emps   =  implode(",",json_decode($emps));
-            $marcas =  implode(",",json_decode($marcas));
-            $curvas =  implode("','",json_decode($curvas));
+            if($emps){
+                $emps   =  implode(",",json_decode($emps));
+            }
+            if($marcas){
+                $marcas =  implode(",",json_decode($marcas));
+            }
+            if($curvas){
+                $curvas =  implode("','",json_decode($curvas));
+            }
+            
 
             $andSql = '';
             if($data){
@@ -69,7 +76,9 @@ class DshpvdController extends AbstractRestfulController
 
             $em = $this->getEntityManager();
 
-            $lvs = ['REDE', 'EMPRESA', 'CURVA_NBS', 'MARCA'];
+            if(!$lvs){
+                $lvs = ['REDE', 'EMPRESA', 'CURVA_NBS', 'MARCA'];
+            }
             $nodes = array();
             foreach($lvs as $k => $n){
                 if($k === 0){
@@ -336,6 +345,32 @@ class DshpvdController extends AbstractRestfulController
         }
         
         return $this->getCallbackModel();
+    }
+
+    public function listarElementosAction()
+    {
+        $data = array();
+        
+        try {
+
+            $pNode = $this->params()->fromQuery('node',null);
+            // $lvs = ['REDE', 'EMPRESA', 'CURVA_NBS', 'MARCA'];
+            $data = array();
+            $pkey = 'idKey';
+            $data[] = [$pkey => 'REDE'];
+            $data[] = [$pkey => 'EMPRESA'];
+            $data[] = [$pkey => 'CURVA_NBS'];
+            $data[] = [$pkey => 'MARCA'];
+
+            $this->setCallbackData($data);
+
+            $objReturn = $this->getCallbackModel();
+            
+        } catch (\Exception $e) {
+            $objReturn = $this->setCallbackError($e->getMessage());
+        }
+        
+        return $objReturn;
     }
     
 }
