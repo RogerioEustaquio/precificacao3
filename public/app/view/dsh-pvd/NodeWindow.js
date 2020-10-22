@@ -13,7 +13,7 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
         var me = this;
 
         var elementbx = Ext.create('Ext.form.field.Tag',{
-            id: 'bxElement',
+            name: 'bxElement',
             itemId: 'bxElement',
             store: Ext.data.Store({
                 fields: [{ name: 'idKey', type: 'string' }],
@@ -28,7 +28,6 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
                 }
             }),
             width: '100%',
-            name: 'idKey',
             queryParam: 'idKey',
             queryMode: 'local',
             displayField: 'idKey',
@@ -38,8 +37,7 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
             margin: '1 1 1 1',
             plugins:'dragdroptag',
             filterPickList: true,
-            publishes: 'value',
-            reference: 'idKeys'
+            publishes: 'value'
         });
 
         var btnConfirm = Ext.create('Ext.button.Button',{
@@ -80,12 +78,8 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
                             ]
                         }
                     ]
-                }
-                
+                }   
             ]
-            
-            
-
         });
 
         me.callParent(arguments);
