@@ -7,11 +7,12 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         'App.view.dsh-pvd.NodeWindow',
         'App.view.dsh-pvd.FiltrosWindow'
     ],
-    vNiveis: null,
+    vNiveis: [],
     vData: null,
-    vEmps: null,
-    vMarcas: null,
-    vCurvas: null,
+    vEmps: [],
+    vMarcas: [],
+    vCurvas: [],
+    vProdutos: [],
 
     initComponent: function() {
         var me = this;
@@ -88,6 +89,8 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         
         if(me.vCurvas)
             objWindow.down('#elCurva').setValue(me.vCurvas);
+        
+        me.vProdutos = [];
 
         objWindow.down('button[name=confirmar]').on('click',function(){
 
@@ -102,6 +105,9 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
 
             var curvaSelect = objWindow.down('#elCurva').getValue();
             me.vCurvas = curvaSelect;
+
+            var produtoSelect = objWindow.down('#elProduto').getValue();
+            me.vProdutos = produtoSelect;
 
             objWindow.close();
         });
@@ -119,6 +125,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             marcas: Ext.encode(me.vMarcas),
             curvas: Ext.encode(me.vCurvas),
             niveis: Ext.encode(me.vNiveis),
+            produtos: Ext.encode(me.vProdutos),
         };
 
         grid.getStore().getProxy().setExtraParams(params);

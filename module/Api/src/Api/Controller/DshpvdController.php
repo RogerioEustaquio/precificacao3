@@ -28,10 +28,11 @@ class DshpvdController extends AbstractRestfulController
         
         try {
 
-            $data   = $this->params()->fromQuery('data',null);
-            $emps   = $this->params()->fromQuery('emps',null);
-            $marcas = $this->params()->fromQuery('marcas',null);
-            $curvas = $this->params()->fromQuery('curvas',null);
+            $data       = $this->params()->fromQuery('data',null);
+            $emps       = $this->params()->fromQuery('emps',null);
+            $marcas     = $this->params()->fromQuery('marcas',null);
+            $curvas     = $this->params()->fromQuery('curvas',null);
+            $produtos   = $this->params()->fromQuery('produtos',null);
 
             if($emps){
                 $emps   =  implode(",",json_decode($emps));
@@ -42,7 +43,9 @@ class DshpvdController extends AbstractRestfulController
             if($curvas){
                 $curvas =  implode("','",json_decode($curvas));
             }
-            
+            if($produtos){
+                $produtos =  implode("','",json_decode($produtos));
+            }
 
             $andSql = '';
             if($data){
@@ -61,6 +64,10 @@ class DshpvdController extends AbstractRestfulController
 
             if($curvas){
                 $andSql .= " and es.id_curva_abc in ('$curvas')";
+            }
+
+            if($produtos){
+                $andSql .= " and i.cod_item in ('$produtos')";
             }
 
             $pNiveis = $this->params()->fromQuery('niveis',null);
@@ -371,6 +378,68 @@ class DshpvdController extends AbstractRestfulController
         }
         
         return $objReturn;
+    }
+
+    public function listarprodutosAction()
+    {   
+        $data = array();
+        
+        try {
+
+            $pEmp = $this->params()->fromQuery('emp',null);
+            $pCod = $this->params()->fromQuery('codItem',null);
+
+            if(!$pCod){
+                throw new \Exception('Parâmetros não informados.');
+            }
+
+            $em = $this->getEntityManager();
+            
+            $sql = "select * 
+            from (
+                    select distinct --em.apelido as emp,
+                            i.cod_item as cod_item, i.descricao,
+                            null as preco_venda, null custo_contabil
+                        from ms.tb_estoque e,
+                        ms.tb_item i,
+                        ms.tb_categoria c,
+                        ms.tb_item_categoria ic,
+                        ms.empresa em
+                    where e.id_item = i.id_item
+                    and e.id_categoria = c.id_categoria
+                    and e.id_empresa = em.id_empresa
+                    and e.id_item = ic.id_item
+                    and e.id_categoria = ic.id_categoria
+                    and i.cod_item||c.descricao like upper('%$pCod%')
+                    --and em.apelido = ?
+                 )
+            where rownum <= 5";
+
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindValue(1, $pEmp);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('custo_contabil', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
     }
     
 }

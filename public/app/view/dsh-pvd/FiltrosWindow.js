@@ -147,6 +147,52 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
             }
         );
 
+        var elTagProduto = Ext.create('Ext.form.field.Tag',{
+            name: 'elProduto',
+            itemId: 'elProduto',
+            multiSelect: true,
+            width: '96%',
+            labelWidth: 60,
+            store: Ext.data.Store({
+                fields: [{ name: 'coditem' }, { name: 'descricao' }],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/dshpvd/listarprodutos',
+                    reader: { type: 'json', root: 'data' },
+                    // extraParams: { emp: this.empresa }
+                }
+            }),
+            queryParam: 'codItem',
+            queryMode: 'remote',
+            displayField: 'codItem',
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',		                            
+                '{codItem} {descricao} {marca}',
+                '</tpl>'), 
+            valueField: 'codItem',
+            emptyText: 'Produto',
+            fieldLabel: 'Produtos',
+            emptyText: 'Informe o código do produto',
+            // matchFieldWidth: false,
+            padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+
+            listeners: {
+                
+            },
+            
+            // allowBlank: false,
+            listConfig: {
+                loadingText: 'Carregando...',
+                emptyText: '<div class="notificacao-red">Nenhuma produto encontrado!</div>',
+                getInnerTpl: function() {
+                    return '{[ values.codItem]} {[ values.descricao]} {[ values.marca]}';
+                }
+            }
+        });
+
         var btnConfirm = Ext.create('Ext.button.Button',{
 
             text: 'Confirmar',
@@ -236,6 +282,22 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                                     layout: 'hbox',
                                     items:[
                                         elTagCurva,
+                                        {
+                                            xtype: 'button',
+                                            iconCls: 'fa fa-file',
+                                            tooltip: 'Limpar',
+                                            margin: '1 1 1 4',
+                                            handler: function(form) {
+                                                form.up('panel').down('tagfield').setValue(null);
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: 'panel',
+                                    layout: 'hbox',
+                                    items:[
+                                        elTagProduto,
                                         {
                                             xtype: 'button',
                                             iconCls: 'fa fa-file',
