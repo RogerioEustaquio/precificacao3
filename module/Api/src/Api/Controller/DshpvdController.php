@@ -124,7 +124,12 @@ class DshpvdController extends AbstractRestfulController
                            $leaf as leaf,
                            sum(vd_rol) as rol,
                            sum(vd_lb) as lb,
-                           (case when sum(vd_lb) > 0 then round((sum(vd_lb)/suM(vd_rol))*100,2) end) as mb
+                           sum(vd_qtde) as qtde,
+                           (case when sum(vd_desconto) > 0 then round((sum(vd_desconto)/suM(vd_robx))*100,2) end) as p_desconto,
+                           (case when sum(vd_lb) > 0 then round((sum(vd_lb)/suM(vd_rol))*100,2) end) as mb,
+                           (case when sum(vd_rob) > 0 then round((sum(vd_rob)/sum(vd_qtde))*100,2) end) as preco_rob_venda_medio, -- pvm_rob
+                           (case when sum(vd_rol) > 0 then round((sum(vd_rol)/sum(vd_qtde))*100,2) end) as preco_rol_venda_medio, -- pvm_rol
+                           (case when sum(vd_cmv) > 0 then round((sum(vd_cmv)/sum(vd_qtde))*100,2) end) as custo_venda_medio -- cvm
                       from (
                           select 'REDE' as id_rede,
                                  'REDE' as rede,
@@ -142,7 +147,6 @@ class DshpvdController extends AbstractRestfulController
                                  vi.rol as vd_rol,
                                  vi.custo as vd_cmv,
                                  nvl(vi.rol,0)-nvl(vi.custo,0) as vd_lb
-          
                             from pricing.ie_ve_venda_item vi,
                                  ms.empresa e,
                                  ms.tb_item_categoria ic,
@@ -180,6 +184,10 @@ class DshpvdController extends AbstractRestfulController
             $hydrator->addStrategy('rol', new ValueStrategy);
             $hydrator->addStrategy('lb', new ValueStrategy);
             $hydrator->addStrategy('mb', new ValueStrategy);
+            $hydrator->addStrategy('p_desconto', new ValueStrategy);
+            $hydrator->addStrategy('preco_rob_venda_medio', new ValueStrategy);
+            $hydrator->addStrategy('preco_rol_venda_medio', new ValueStrategy);
+            $hydrator->addStrategy('custo_venda_medio', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);

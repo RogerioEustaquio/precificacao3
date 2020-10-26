@@ -12,7 +12,11 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             fields: [ { name: 'grupo', type: 'string'},
                                       { name: 'rol', type: 'number'},
                                       { name: 'lb', type: 'number'},
-                                      { name: 'mb', type: 'number'}
+                                      { name: 'pDesconto', type: 'number'},
+                                      { name: 'mb', type: 'number'},
+                                      { name: 'precoRobVendaMedio', type: 'number'},
+                                      { name: 'precoRolVendaMedio', type: 'number'},
+                                      { name: 'custoVendaMedio', type: 'number'}
                                     ]
                         });
 
@@ -53,6 +57,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                 {
                     text: 'ROL',
                     dataIndex: 'rol',
+                    width: 100,
                     align: 'right',
                     renderer: function (v) {
                         return utilFormat.Value(v);
@@ -61,7 +66,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                 {
                     text: 'LB',
                     dataIndex: 'lb',
+                    width: 100,
                     align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'Desconto',
+                    dataIndex: 'pDesconto',
+                    width: 100,
+                    align: 'center',
                     renderer: function (v) {
                         return utilFormat.Value(v);
                     }
@@ -69,7 +84,35 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                 {
                     text: 'MB',
                     dataIndex: 'mb',
+                    width: 100,
                     align: 'center',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'ROB Médio',
+                    dataIndex: 'precoRobVendaMedio',
+                    width: 120,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'ROL Médio',
+                    dataIndex: 'precoRolVendaMedio',
+                    width: 120,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'Custo Médio',
+                    dataIndex: 'custoVendaMedio',
+                    width: 120,
+                    align: 'right',
                     renderer: function (v) {
                         return utilFormat.Value(v);
                     }
