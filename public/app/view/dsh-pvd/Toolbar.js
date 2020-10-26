@@ -75,7 +75,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
     onBtnFiltros: function(btn){
         var me = this.up('toolbar');
 
-        var objWindow = Ext.create( 'App.view.dsh-pvd.FiltrosWindow');
+        var objWindow = Ext.create('App.view.dsh-pvd.FiltrosWindow');
         objWindow.show();
 
         if(me.vData)

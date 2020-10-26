@@ -395,25 +395,18 @@ class DshpvdController extends AbstractRestfulController
 
             $em = $this->getEntityManager();
             
-            $sql = "select * 
-            from (
-                    select distinct --em.apelido as emp,
-                            i.cod_item as cod_item, i.descricao,
-                            null as preco_venda, null custo_contabil
-                        from ms.tb_estoque e,
+            $sql = "select i.cod_item||c.descricao as cod_item,
+                           i.descricao,
+                           m.descricao as marca
+                        from ms.tb_item_categoria ic,
+                        ms.tb_marca m,
                         ms.tb_item i,
-                        ms.tb_categoria c,
-                        ms.tb_item_categoria ic,
-                        ms.empresa em
-                    where e.id_item = i.id_item
-                    and e.id_categoria = c.id_categoria
-                    and e.id_empresa = em.id_empresa
-                    and e.id_item = ic.id_item
-                    and e.id_categoria = ic.id_categoria
-                    and i.cod_item||c.descricao like upper('%$pCod%')
-                    --and em.apelido = ?
-                 )
-            where rownum <= 5";
+                        ms.tb_categoria c
+                    where ic.id_item = i.id_item
+                    and ic.id_categoria = c.id_categoria
+                    and ic.id_marca = m.id_marca
+                    and i.cod_item||c.descricao like upper('$pCod%')
+                    order by cod_item asc";
 
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
