@@ -167,7 +167,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol,
                                             sum(vi.custo) as vd_cmv,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb
-                                        from pricing.ie_ve_venda_item_tmp vi,
+                                        from pricing.ie_ve_venda_item vi,
                                             ms.empresa e,
                                             ms.tb_item_categoria ic,
                                             ms.tb_item i,
@@ -184,7 +184,7 @@ class DshpvdController extends AbstractRestfulController
                                         and vi.id_item = es.id_item
                                         and vi.id_categoria = es.id_categoria
                                         --and trunc(vi.data_emissao,'MM') = '01/10/2020'
-                                        and i.cod_item = 'JS00506'
+                                        --and i.cod_item = 'JS00506'
                                         $andSql
                                         group by vi.id_empresa, vi.id_item, vi.id_categoria, e.apelido, ic.id_marca, m.descricao, es.id_curva_abc) a,
                                         (select vi.id_empresa, vi.id_item, vi.id_categoria,
@@ -195,7 +195,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol_1m,
                                             sum(vi.custo) as vd_cmv_1m,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_1m
-                                        from pricing.ie_ve_venda_item_tmp vi
+                                        from pricing.ie_ve_venda_item vi
                                         where trunc(vi.data_emissao,'MM') = add_months($andData,-1)
                                         group by vi.id_empresa, vi.id_item, vi.id_categoria) b,
                                         (select vi.id_empresa, vi.id_item, vi.id_categoria,
@@ -206,7 +206,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol_1a,
                                             sum(vi.custo) as vd_cmv_1a,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_1a
-                                        from pricing.ie_ve_venda_item_tmp vi
+                                        from pricing.ie_ve_venda_item vi
                                         where trunc(vi.data_emissao,'MM') = add_months($andData,-12)
                                         group by vi.id_empresa, vi.id_item, vi.id_categoria) c,
                                         (select vi.id_empresa, vi.id_item, vi.id_categoria,
@@ -217,7 +217,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol_ac,
                                             sum(vi.custo) as vd_cmv_ac,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_ac
-                                        from pricing.ie_ve_venda_item_tmp vi
+                                        from pricing.ie_ve_venda_item vi
                                         --where trunc(vi.data_emissao,'RRRR') = trunc(to_date($andData, 'DD/MM/RRRR'),'RRRR')
                                         --and trunc(vi.data_emissao,'MM') < trunc(to_date($andData, 'DD/MM/RRRR'),'MM')
                                         group by vi.id_empresa, vi.id_item, vi.id_categoria) d
