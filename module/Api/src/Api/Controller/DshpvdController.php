@@ -69,7 +69,7 @@ class DshpvdController extends AbstractRestfulController
             }
 
             if($produtos){
-                $andSql .= " and i.cod_item in ('$produtos')";
+                $andSql .= " and i.cod_item||c.descricao in ('$produtos')";
             }
 
             $pNiveis = $this->params()->fromQuery('niveis',null);

@@ -90,7 +90,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     // }
                     columns: [
                         {
-                            text: 'ROL',
+                            text: 'Atual',
                             dataIndex: 'rol',
                             width: 100,
                             align: 'right',
@@ -99,9 +99,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% ROL 1M',
+                            text: '1M',
+                            dataIndex: 'rol_1m',
+                            hidden: true,
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1M',
                             dataIndex: 'rol_x_1m',
-                            width: 120,
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -114,9 +124,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% ROL 1A',
+                            text: '1A',
+                            dataIndex: 'rol_1a',
+                            hidden: true,
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1A',
                             dataIndex: 'rol_x_1a',
-                            width: 120,
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -140,7 +160,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     // }
                     columns: [
                         {
-                            text: 'LB',
+                            text: 'Atual',
                             dataIndex: 'lb',
                             width: 100,
                             align: 'right',
@@ -149,9 +169,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% LB 1M',
+                            text: '1M',
+                            dataIndex: 'lb_1m',
+                            hidden: true,
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1M',
                             dataIndex: 'bl_x_1m',
-                            width: 120,
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -164,9 +194,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% LB 1A',
+                            text: '1A',
+                            dataIndex: 'lb_1a',
+                            hidden: true,
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1A',
                             dataIndex: 'lb_x_1a',
-                            width: 120,
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -190,7 +230,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     // }
                     columns: [
                         {
-                            text: 'Desconto',
+                            text: 'Atual',
                             dataIndex: 'pDesconto',
                             width: 100,
                             align: 'right',
@@ -199,9 +239,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% Desc. 1M',
+                            text: '1M',
+                            dataIndex: 'pDesconto_1m',
+                            hidden: true,
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1M',
                             dataIndex: 'pDesconto_x_1m',
-                            width: 120,
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -214,9 +264,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% Desc. 1A',
+                            text: '1A',
+                            dataIndex: 'pDesconto_1a',
+                            hidden: true,
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1A',
                             dataIndex: 'pDesconto_x_1a',
-                            width: 120,
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -240,7 +300,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     // }
                     columns: [
                         {
-                            text: 'MB',
+                            text: 'Atual',
                             dataIndex: 'mb',
                             width: 100,
                             align: 'right',
@@ -249,9 +309,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% MB 1M',
-                            dataIndex: 'mb_x_1m',
+                            text: '1M',
+                            dataIndex: 'mb_1m',
+                            hidden: true,
                             width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1M',
+                            dataIndex: 'mb_x_1m',
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -264,9 +334,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% MB 1A',
-                            dataIndex: 'mb_x_1a',
+                            text: '1A',
+                            dataIndex: 'mb_1a',
+                            hidden: true,
                             width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1A',
+                            dataIndex: 'mb_x_1a',
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -290,7 +370,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     // }
                     columns: [
                         {
-                            text: 'PVM',
+                            text: 'Atual',
                             dataIndex: 'pvm',
                             width: 100,
                             align: 'right',
@@ -299,9 +379,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% PVM 1M',
-                            dataIndex: 'pvm_x_1m',
+                            text: '1M',
+                            dataIndex: 'pvm_1m',
+                            hidden: true,
                             width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1M',
+                            dataIndex: 'pvm_x_1m',
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -314,9 +404,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% PVM 1A',
-                            dataIndex: 'pvm_x_1a',
+                            text: '1A',
+                            dataIndex: 'pvm_1a',
+                            hidden: true,
                             width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1A',
+                            dataIndex: 'pvm_x_1a',
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -340,7 +440,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     // }
                     columns: [
                         {
-                            text: 'PCM',
+                            text: 'Atual',
                             dataIndex: 'pcm',
                             width: 100,
                             align: 'right',
@@ -349,9 +449,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% PCM 1M',
-                            dataIndex: 'pcm_x_1m',
+                            text: '1M',
+                            dataIndex: 'pcm_1m',
+                            hidden: true,
                             width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1M',
+                            dataIndex: 'pcm_x_1m',
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
@@ -364,9 +474,19 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             }
                         },
                         {
-                            text: '% PCM 1A',
-                            dataIndex: 'pcm_x_1a',
+                            text: '1A',
+                            dataIndex: 'pcm_1a',
+                            hidden: true,
                             width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% 1A',
+                            dataIndex: 'pcm_x_1a',
+                            width: 80,
                             align: 'right',
                             renderer: function (value, metaData, record) {
 
