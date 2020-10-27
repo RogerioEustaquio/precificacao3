@@ -11,12 +11,36 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
         var myModel = Ext.create('Ext.data.TreeModel', {
                             fields: [ { name: 'grupo', type: 'string'},
                                       { name: 'rol', type: 'number'},
+                                      { name: 'rol_1m', type: 'number'},
+                                      { name: 'rol_1a', type: 'number'},
+                                      { name: 'rol_x_1m', type: 'number'},
+                                      { name: 'rol_x_1a', type: 'number'},
                                       { name: 'lb', type: 'number'},
+                                      { name: 'lb_1m', type: 'number'},
+                                      { name: 'lb_1a', type: 'number'},
+                                      { name: 'lb_x_1m', type: 'number'},
+                                      { name: 'lb_x_1a', type: 'number'},
+                                      { name: 'qtde', type: 'number'},
                                       { name: 'pDesconto', type: 'number'},
+                                      { name: 'pDesconto_1m', type: 'number'},
+                                      { name: 'pDesconto_1a', type: 'number'},
+                                      { name: 'pDesconto_x_1m', type: 'number'},
+                                      { name: 'pDesconto_x_1a', type: 'number'},
                                       { name: 'mb', type: 'number'},
-                                      { name: 'precoRobVendaMedio', type: 'number'},
-                                      { name: 'precoRolVendaMedio', type: 'number'},
-                                      { name: 'custoVendaMedio', type: 'number'}
+                                      { name: 'mb_1m', type: 'number'},
+                                      { name: 'mb_1a', type: 'number'},
+                                      { name: 'mb_x_1m', type: 'number'},
+                                      { name: 'mb_x_1a', type: 'number'},
+                                      { name: 'pvm', type: 'number'},
+                                      { name: 'pvm_1m', type: 'number'},
+                                      { name: 'pvm_1a', type: 'number'},
+                                      { name: 'pvm_x_1m', type: 'number'},
+                                      { name: 'pvm_x_1a', type: 'number'},
+                                      { name: 'pcm', type: 'number'},
+                                      { name: 'pcm_1m', type: 'number'},
+                                      { name: 'pcm_1a', type: 'number'},
+                                      { name: 'pcm_x_1m', type: 'number'},
+                                      { name: 'pcm_x_1a', type: 'number'}
                                     ]
                         });
 
@@ -27,6 +51,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                 type: 'ajax',
                 url: BASEURL + '/api/dshpvd/listartreepvd',
                 encode: true,
+                timeout: 240000,
                 reader: {
                     type: 'json',
                     successProperty: 'success',
@@ -51,71 +76,309 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     text: '',
                     dataIndex: 'grupo',
                     flex: 1,
+                    minWidth: 120,
                     sortable: true,
                     
                 },
                 {
                     text: 'ROL',
-                    dataIndex: 'rol',
-                    width: 100,
-                    align: 'right',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
+                    // dataIndex: 'rol',
+                    // width: 100,
+                    // align: 'right',
+                    // renderer: function (v) {
+                    //     return utilFormat.Value(v);
+                    // }
+                    columns: [
+                        {
+                            text: 'ROL',
+                            dataIndex: 'rol',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% ROL 1M',
+                            dataIndex: 'rol_x_1m',
+                            width: 120,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% ROL 1A',
+                            dataIndex: 'rol_x_1a',
+                            width: 120,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        }
+                    ]
                 },
                 {
                     text: 'LB',
-                    dataIndex: 'lb',
-                    width: 100,
-                    align: 'right',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
+                    // dataIndex: 'lb',
+                    // width: 100,
+                    // align: 'right',
+                    // renderer: function (v) {
+                    //     return utilFormat.Value(v);
+                    // }
+                    columns: [
+                        {
+                            text: 'LB',
+                            dataIndex: 'lb',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% LB 1M',
+                            dataIndex: 'bl_x_1m',
+                            width: 120,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% LB 1A',
+                            dataIndex: 'lb_x_1a',
+                            width: 120,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        }
+                    ]
                 },
                 {
                     text: 'Desconto',
-                    dataIndex: 'pDesconto',
-                    width: 100,
-                    align: 'center',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
+                    // dataIndex: 'pDesconto',
+                    // width: 100,
+                    // align: 'center',
+                    // renderer: function (v) {
+                    //     return utilFormat.Value(v);
+                    // }
+                    columns: [
+                        {
+                            text: 'Desconto',
+                            dataIndex: 'pDesconto',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% Desc. 1M',
+                            dataIndex: 'pDesconto_x_1m',
+                            width: 120,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% Desc. 1A',
+                            dataIndex: 'pDesconto_x_1a',
+                            width: 120,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        }
+                    ]
                 },
                 {
                     text: 'MB',
-                    dataIndex: 'mb',
-                    width: 100,
-                    align: 'center',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
+                    // dataIndex: 'mb',
+                    // width: 100,
+                    // align: 'center',
+                    // renderer: function (v) {
+                    //     return utilFormat.Value(v);
+                    // }
+                    columns: [
+                        {
+                            text: 'MB',
+                            dataIndex: 'mb',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% MB 1M',
+                            dataIndex: 'mb_x_1m',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% MB 1A',
+                            dataIndex: 'mb_x_1a',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        }
+                    ]
                 },
                 {
-                    text: 'ROB Médio',
-                    dataIndex: 'precoRobVendaMedio',
-                    width: 120,
-                    align: 'right',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
+                    text: 'PVM',
+                    // dataIndex: 'precoRobVendaMedio',
+                    // width: 100,
+                    // align: 'right',
+                    // renderer: function (v) {
+                    //     return utilFormat.Value(v);
+                    // }
+                    columns: [
+                        {
+                            text: 'PVM',
+                            dataIndex: 'pvm',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% PVM 1M',
+                            dataIndex: 'pvm_x_1m',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% PVM 1A',
+                            dataIndex: 'pvm_x_1a',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        }
+                    ]
                 },
                 {
-                    text: 'ROL Médio',
-                    dataIndex: 'precoRolVendaMedio',
-                    width: 120,
-                    align: 'right',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
-                },
-                {
-                    text: 'Custo Médio',
-                    dataIndex: 'custoVendaMedio',
-                    width: 120,
-                    align: 'right',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
+                    text: 'PCM',
+                    // dataIndex: 'custoVendaMedio',
+                    // width: 100,
+                    // align: 'right',
+                    // renderer: function (v) {
+                    //     return utilFormat.Value(v);
+                    // }
+                    columns: [
+                        {
+                            text: 'PCM',
+                            dataIndex: 'pcm',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: '% PCM 1M',
+                            dataIndex: 'pcm_x_1m',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% PCM 1A',
+                            dataIndex: 'pcm_x_1a',
+                            width: 100,
+                            align: 'right',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        }
+                    ]
                 }
             ],
             listeners: {
