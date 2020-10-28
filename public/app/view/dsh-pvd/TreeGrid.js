@@ -100,8 +100,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                     text: '',
                     dataIndex: 'grupo',
                     flex: 1,
-                    minWidth: 120,
-                    sortable: true                    
+                    minWidth: 228,
+                    sortable: true
                 },
                 {
                     text: 'ROL',
@@ -109,7 +109,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: 'Atual',
                             dataIndex: 'rol',
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -119,7 +119,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1M',
                             dataIndex: 'rol_1m',
                             hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -129,17 +129,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1A',
                             dataIndex: 'rol_1a',
                             hidden: false,
-                            width: 100,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'rolM6',
-                            hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -149,7 +139,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: 'M12',
                             dataIndex: 'rolM12',
                             hidden: false,
-                            width: 100,
+                            width: 98,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: 'M6',
+                            dataIndex: 'rolM6',
+                            hidden: false,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -158,8 +158,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1M',
                             dataIndex: 'rol_x_1m',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -173,23 +173,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1A',
                             dataIndex: 'rol_x_1a',
-                            width: 80,
-                            align: 'right',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'rol_x_m6',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -203,8 +188,23 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% M12',
                             dataIndex: 'rol_x_m12',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% M6',
+                            dataIndex: 'rol_x_m6',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -223,7 +223,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: 'Atual',
                             dataIndex: 'lb',
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -233,7 +233,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1M',
                             dataIndex: 'lb_1m',
                             hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -243,17 +243,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1A',
                             dataIndex: 'lb_1a',
                             hidden: false,
-                            width: 100,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'lbM6',
-                            hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -263,7 +253,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: 'M12',
                             dataIndex: 'lbM12',
                             hidden: false,
-                            width: 100,
+                            width: 98,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: 'M6',
+                            dataIndex: 'lbM6',
+                            hidden: false,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -272,8 +272,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1M',
                             dataIndex: 'lb_x_1m',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -287,23 +287,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1A',
                             dataIndex: 'lb_x_1a',
-                            width: 80,
-                            align: 'right',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'lb_x_m6',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -317,8 +302,23 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% M12',
                             dataIndex: 'lb_x_m12',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% M6',
+                            dataIndex: 'lb_x_m6',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -337,7 +337,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: 'Atual',
                             dataIndex: 'pDesconto',
-                            width: 100,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -346,7 +346,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '1M',
                             dataIndex: 'pDesconto_1m',
-                            width: 100,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -356,17 +356,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1A',
                             dataIndex: 'pDesconto_1a',
                             hidden: false,
-                            width: 100,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'pDescontoM6',
-                            hidden: false,
-                            width: 100,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -376,7 +366,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: 'M12',
                             dataIndex: 'pDescontoM12',
                             hidden: false,
-                            width: 100,
+                            width: 72,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: 'M6',
+                            dataIndex: 'pDescontoM6',
+                            hidden: false,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -385,8 +385,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1M',
                             dataIndex: 'pDesconto_x_1m',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -400,23 +400,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1A',
                             dataIndex: 'pDesconto_x_1a',
-                            width: 80,
-                            align: 'right',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'pDesconto_x_m6',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -430,8 +415,23 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% M12',
                             dataIndex: 'pDesconto_x_m12',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% M6',
+                            dataIndex: 'pDesconto_x_m6',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -450,7 +450,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: 'Atual',
                             dataIndex: 'mb',
-                            width: 100,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -460,7 +460,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1M',
                             dataIndex: 'mb_1m',
                             hidden: false,
-                            width: 100,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -470,17 +470,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1A',
                             dataIndex: 'mb_1a',
                             hidden: false,
-                            width: 100,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'mbM6',
-                            hidden: false,
-                            width: 100,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -490,7 +480,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: 'M12',
                             dataIndex: 'mbM12',
                             hidden: false,
-                            width: 100,
+                            width: 72,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: 'M6',
+                            dataIndex: 'mbM6',
+                            hidden: false,
+                            width: 72,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -499,8 +499,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1M',
                             dataIndex: 'mb_x_1m',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -514,23 +514,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1A',
                             dataIndex: 'mb_x_1a',
-                            width: 80,
-                            align: 'right',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'mb_x_m6',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -544,8 +529,23 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% M12',
                             dataIndex: 'mb_x_m12',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% M6',
+                            dataIndex: 'mb_x_m6',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -564,7 +564,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: 'Atual',
                             dataIndex: 'pvm',
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -574,7 +574,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1M',
                             dataIndex: 'pvm_1m',
                             hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -584,17 +584,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1A',
                             dataIndex: 'pvm_1a',
                             hidden: false,
-                            width: 100,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'pvmM6',
-                            hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -604,7 +594,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: 'M12',
                             dataIndex: 'pvmM12',
                             hidden: false,
-                            width: 100,
+                            width: 98,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: 'M6',
+                            dataIndex: 'pvmM6',
+                            hidden: false,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -613,8 +613,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1M',
                             dataIndex: 'pvm_x_1m',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -628,23 +628,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1A',
                             dataIndex: 'pvm_x_1a',
-                            width: 80,
-                            align: 'right',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'pvm_x_m6',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -658,8 +643,23 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% M12',
                             dataIndex: 'pvm_x_m12',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% M6',
+                            dataIndex: 'pvm_x_m6',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -678,7 +678,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: 'Atual',
                             dataIndex: 'pcm',
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -688,7 +688,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1M',
                             dataIndex: 'pcm_1m',
                             hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -698,17 +698,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: '1A',
                             dataIndex: 'pcm_1a',
                             hidden: false,
-                            width: 100,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'pcmM6',
-                            hidden: false,
-                            width: 100,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -718,7 +708,17 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                             text: 'M12',
                             dataIndex: 'pcmM12',
                             hidden: false,
-                            width: 100,
+                            width: 98,
+                            align: 'right',
+                            renderer: function (v) {
+                                return utilFormat.Value(v);
+                            }
+                        },
+                        {
+                            text: 'M6',
+                            dataIndex: 'pcmM6',
+                            hidden: false,
+                            width: 98,
                             align: 'right',
                             renderer: function (v) {
                                 return utilFormat.Value(v);
@@ -727,8 +727,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1M',
                             dataIndex: 'pcm_x_1m',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -742,23 +742,8 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% 1A',
                             dataIndex: 'pcm_x_1a',
-                            width: 80,
-                            align: 'right',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'pcm_x_m6',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'ceenter',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)
@@ -772,8 +757,23 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '% M12',
                             dataIndex: 'pcm_x_m12',
-                            width: 80,
-                            align: 'right',
+                            width: 72,
+                            align: 'center',
+                            renderer: function (value, metaData, record) {
+
+                                if (value > 0)
+                                    metaData.tdCls = 'x-grid-cell-green-border';
+                                if (value < 0)
+                                    metaData.tdCls = 'x-grid-cell-red-border';
+    
+                                return utilFormat.Value(value);
+                            }
+                        },
+                        {
+                            text: '% M6',
+                            dataIndex: 'pcm_x_m6',
+                            width: 72,
+                            align: 'center',
                             renderer: function (value, metaData, record) {
 
                                 if (value > 0)

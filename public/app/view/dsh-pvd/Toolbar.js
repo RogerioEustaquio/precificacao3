@@ -26,7 +26,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         var btnFiltro = Ext.create('Ext.button.Button',{
             
             iconCls: 'fa fa-filter',
-            tooltip: 'Consultar',
+            tooltip: 'Filtro',
             margin: '1 1 1 4',
             handler: me.onBtnFiltros
         });
@@ -44,7 +44,17 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             items : [
                 btnGrupo,
                 btnFiltro,
-                btnConsultar
+                btnConsultar,
+                '->',
+                {
+                    xtype: 'displayfield',
+                    fieldLabel: 'Mês Referência',
+                    name: 'dataRef',
+                    itemId: 'dataRef',
+                    labelWidth: 100,
+                    margin: '1 40 1 1',
+                    value: null
+                }
             ]
         });
 
@@ -81,8 +91,10 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         var objWindow = Ext.create('App.view.dsh-pvd.FiltrosWindow');
         objWindow.show();
 
-        if(me.vData)
+        if(me.vData){
             objWindow.down('#data').setValue(me.vData);
+            me.down('#dataRef').setValue(me.vData);
+        }
 
         if(me.vEmps)
             objWindow.down('#elEmp').setValue(me.vEmps);
@@ -99,6 +111,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
 
             var dataValue = objWindow.down('#data').getRawValue();
             me.vData = dataValue;
+            me.down('#dataRef').setValue(dataValue);
 
             var empSelect = objWindow.down('#elEmp').getValue();
             me.vEmps = empSelect;
