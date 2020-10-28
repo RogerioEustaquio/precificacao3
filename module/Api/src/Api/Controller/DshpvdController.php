@@ -127,7 +127,7 @@ class DshpvdController extends AbstractRestfulController
                            sum(vd_rol) as rol,
                            sum(vd_lb) as lb,
                            sum(vd_qtde) as qtde,
-                           (case when sum(vd_desconto) > 0 then round((sum(vd_desconto)/suM(vd_robx))*100,2) end) as p_desconto,
+                           (case when sum(vd_desconto) > 0 and sum(vd_robx) > 0 then round((sum(vd_desconto)/suM(vd_robx))*100,2) end) as p_desconto,
                            (case when sum(vd_lb) > 0 then round((sum(vd_lb)/suM(vd_rol))*100,2) end) as mb,
                            (case when sum(vd_robx) > 0 then round((sum(vd_robx)/sum(vd_qtde))*100,2) end) as pvm,
                            (case when sum(vd_cmv) > 0 then round((sum(vd_cmv)/sum(vd_qtde))*100,2) end) as pcm,
@@ -298,7 +298,7 @@ class DshpvdController extends AbstractRestfulController
                     group by $groupBy, $groupId
                  )
             where 1=1";
-            
+
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
             
