@@ -53,7 +53,7 @@ class DshpvdController extends AbstractRestfulController
                 $andData = "'01/$data'";
             }else{
                 $andSql = " and trunc(vi.data_emissao,'MM') = '01/'||to_char(sysdate,'mm/yyyy')";
-                $andData = 'sysdate';
+                $andData = "'01/'||to_char(sysdate,'mm/yyyy')";
             }
 
             if($emps){
@@ -125,7 +125,7 @@ class DshpvdController extends AbstractRestfulController
                            $groupDescription as grupo,
                            $leaf as leaf,
                            sum(vd_rol) as rol,
-                           null as lb,
+                           sum(vd_lb) as lb,
                            sum(vd_qtde) as qtde,
                            (case when sum(vd_desconto) > 0 then round((sum(vd_desconto)/suM(vd_robx))*100,2) end) as p_desconto,
                            (case when sum(vd_lb) > 0 then round((sum(vd_lb)/suM(vd_rol))*100,2) end) as mb,
@@ -151,13 +151,29 @@ class DshpvdController extends AbstractRestfulController
                            (case when sum(vd_desconto_ac) > 0 then round((sum(vd_desconto_ac)/suM(vd_robx_ac))*100,2) end) as p_desconto_ac,
                            (case when sum(vd_lb_ac) > 0 then round((sum(vd_lb_ac)/suM(vd_rol_ac))*100,2) end) as mb_ac,
                            (case when sum(vd_robx_ac) > 0 then round((sum(vd_robx_ac)/sum(vd_qtde_ac))*100,2) end) as pvm_ac,
-                           (case when sum(vd_cmv_ac) > 0 then round((sum(vd_cmv_ac)/sum(vd_qtde_ac))*100,2) end) as pcm_ac
+                           (case when sum(vd_cmv_ac) > 0 then round((sum(vd_cmv_ac)/sum(vd_qtde_ac))*100,2) end) as pcm_ac,
+                           sum(vd_rol_m12) as rol_m12,
+                           sum(vd_lb_m12) as lb_m12,
+                           sum(vd_qtde_m12) as qtde_m12,
+                           (case when sum(vd_desconto_m12) > 0 then round((sum(vd_desconto_m12)/suM(vd_robx_m12))*100,2) end) as p_desconto_m12,
+                           (case when sum(vd_lb_m12) > 0 then round((sum(vd_lb_m12)/suM(vd_rol_m12))*100,2) end) as mb_m12,
+                           (case when sum(vd_robx_m12) > 0 then round((sum(vd_robx_m12)/sum(vd_qtde_m12))*100,2) end) as pvm_m12,
+                           (case when sum(vd_cmv_m12) > 0 then round((sum(vd_cmv_m12)/sum(vd_qtde_m12))*100,2) end) as pcm_m12,
+                           sum(vd_rol_m6) as rol_m6,
+                           sum(vd_lb_m6) as lb_m6,
+                           sum(vd_qtde_m6) as qtde_m6,
+                           (case when sum(vd_desconto_m6) > 0 then round((sum(vd_desconto_m6)/suM(vd_robx_m6))*100,2) end) as p_desconto_m6,
+                           (case when sum(vd_lb_m6) > 0 then round((sum(vd_lb_m6)/suM(vd_rol_m6))*100,2) end) as mb_m6,
+                           (case when sum(vd_robx_m6) > 0 then round((sum(vd_robx_m6)/sum(vd_qtde_m6))*100,2) end) as pvm_m6,
+                           (case when sum(vd_cmv_m6) > 0 then round((sum(vd_cmv_m6)/sum(vd_qtde_m6))*100,2) end) as pcm_m6
                         from (
                                 select 'REDE' as id_rede, 'REDE' as rede, a.id_empresa, a.empresa, a.id_marca, a.marca, a.id_curva_nbs, a.curva_nbs,
                                     a.vd_qtde, a.vd_robx, a.vd_desconto, a.vd_rob, a.vd_rol, a.vd_cmv, a.vd_lb,
                                     b.vd_qtde_1m, b.vd_robx_1m, b.vd_desconto_1m, b.vd_rob_1m, b.vd_rol_1m, b.vd_cmv_1m, b.vd_lb_1m,
                                     c.vd_qtde_1a, c.vd_robx_1a, c.vd_desconto_1a, c.vd_rob_1a, c.vd_rol_1a, c.vd_cmv_1a, c.vd_lb_1a,
-                                    d.vd_qtde_ac, d.vd_robx_ac, d.vd_desconto_ac, d.vd_rob_ac, d.vd_rol_ac, d.vd_cmv_ac, d.vd_lb_ac
+                                    d.vd_qtde_ac, d.vd_robx_ac, d.vd_desconto_ac, d.vd_rob_ac, d.vd_rol_ac, d.vd_cmv_ac, d.vd_lb_ac,
+                                    e.vd_qtde_m12, e.vd_robx_m12, e.vd_desconto_m12, e.vd_rob_m12, e.vd_rol_m12, e.vd_cmv_m12, e.vd_lb_m12,
+                                    f.vd_qtde_m6, f.vd_robx_m6, f.vd_desconto_m6, f.vd_rob_m6, f.vd_rol_m6, f.vd_cmv_m6, f.vd_lb_m6
                                 from (select vi.id_empresa, vi.id_item, vi.id_categoria, e.apelido as empresa, ic.id_marca, m.descricao as marca, 
                                             es.id_curva_abc as id_curva_nbs, es.id_curva_abc as curva_nbs,
                                             sum(vi.qtde) as vd_qtde,
@@ -167,7 +183,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol,
                                             sum(vi.custo) as vd_cmv,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb
-                                        from pricing.ie_ve_venda_item vi,
+                                        from pricing.ie_ve_venda_item_tmp vi,
                                             ms.empresa e,
                                             ms.tb_item_categoria ic,
                                             ms.tb_item i,
@@ -195,7 +211,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol_1m,
                                             sum(vi.custo) as vd_cmv_1m,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_1m
-                                        from pricing.ie_ve_venda_item vi
+                                        from pricing.ie_ve_venda_item_tmp vi
                                         where trunc(vi.data_emissao,'MM') = add_months($andData,-1)
                                         group by vi.id_empresa, vi.id_item, vi.id_categoria) b,
                                         (select vi.id_empresa, vi.id_item, vi.id_categoria,
@@ -206,7 +222,7 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol_1a,
                                             sum(vi.custo) as vd_cmv_1a,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_1a
-                                        from pricing.ie_ve_venda_item vi
+                                        from pricing.ie_ve_venda_item_tmp vi
                                         where trunc(vi.data_emissao,'MM') = add_months($andData,-12)
                                         group by vi.id_empresa, vi.id_item, vi.id_categoria) c,
                                         (select vi.id_empresa, vi.id_item, vi.id_categoria,
@@ -217,10 +233,50 @@ class DshpvdController extends AbstractRestfulController
                                             sum(vi.rol) as vd_rol_ac,
                                             sum(vi.custo) as vd_cmv_ac,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_ac
-                                        from pricing.ie_ve_venda_item vi
+                                        from pricing.ie_ve_venda_item_tmp vi
                                         --where trunc(vi.data_emissao,'RRRR') = trunc(to_date($andData, 'DD/MM/RRRR'),'RRRR')
                                         --and trunc(vi.data_emissao,'MM') < trunc(to_date($andData, 'DD/MM/RRRR'),'MM')
-                                        group by vi.id_empresa, vi.id_item, vi.id_categoria) d
+                                        group by vi.id_empresa, vi.id_item, vi.id_categoria) d,
+                                        (select id_empresa, id_item, id_categoria,
+                                            case when vd_qtde_m12 > 0 then vd_qtde_m12/12 end as vd_qtde_m12,
+                                            case when vd_robx_m12> 0 then vd_robx_m12/12 end as vd_robx_m12,
+                                            case when vd_desconto_m12 > 0 then vd_desconto_m12/12 end as vd_desconto_m12,
+                                            case when vd_rob_m12 > 0 then vd_rob_m12/12 end as vd_rob_m12,
+                                            case when vd_rol_m12 > 0 then vd_rol_m12/12 end as vd_rol_m12,
+                                            case when vd_cmv_m12 > 0 then vd_cmv_m12/12 end as vd_cmv_m12,
+                                            case when vd_lb_m12 > 0 then vd_lb_m12/12 end as vd_lb_m12 
+                                        from (select vi.id_empresa, vi.id_item, vi.id_categoria,
+                                                    sum(vi.qtde) as vd_qtde_m12,
+                                                    sum(vi.rob_sem_desconto) as vd_robx_m12,
+                                                    sum(vi.desconto) as vd_desconto_m12,
+                                                    sum(vi.rob) as vd_rob_m12,
+                                                    sum(vi.rol) as vd_rol_m12,
+                                                    sum(vi.custo) as vd_cmv_m12,
+                                                    sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_m12             
+                                                from pricing.ie_ve_venda_item_tmp vi
+                                                where trunc(vi.data_emissao,'MM') >= add_months($andData,-12)
+                                                and trunc(vi.data_emissao,'MM') <= add_months($andData,-1)
+                                                group by vi.id_empresa, vi.id_item, vi.id_categoria)) e,
+                                        (select id_empresa, id_item, id_categoria,
+                                                case when vd_qtde_m6 > 0 then vd_qtde_m6/12 end as vd_qtde_m6,
+                                                case when vd_robx_m6> 0 then vd_robx_m6/12 end as vd_robx_m6,
+                                                case when vd_desconto_m6 > 0 then vd_desconto_m6/12 end as vd_desconto_m6,
+                                                case when vd_rob_m6 > 0 then vd_rob_m6/12 end as vd_rob_m6,
+                                                case when vd_rol_m6 > 0 then vd_rol_m6/12 end as vd_rol_m6,
+                                                case when vd_cmv_m6 > 0 then vd_cmv_m6/12 end as vd_cmv_m6,
+                                                case when vd_lb_m6 > 0 then vd_lb_m6/12 end as vd_lb_m6 
+                                        from (select vi.id_empresa, vi.id_item, vi.id_categoria,
+                                                    sum(vi.qtde) as vd_qtde_m6,
+                                                    sum(vi.rob_sem_desconto) as vd_robx_m6,
+                                                    sum(vi.desconto) as vd_desconto_m6,
+                                                    sum(vi.rob) as vd_rob_m6,
+                                                    sum(vi.rol) as vd_rol_m6,
+                                                    sum(vi.custo) as vd_cmv_m6,
+                                                    sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_m6          
+                                                from pricing.ie_ve_venda_item vi
+                                                where trunc(vi.data_emissao,'MM') >= add_months($andData,-6)
+                                                and trunc(vi.data_emissao,'MM') <= add_months($andData,-1)
+                                                group by vi.id_empresa, vi.id_item, vi.id_categoria)) f                          
                                 where a.id_empresa = b.id_empresa(+)
                                 and a.id_item = b.id_item(+)
                                 and a.id_categoria = b.id_categoria(+)
@@ -229,7 +285,14 @@ class DshpvdController extends AbstractRestfulController
                                 and a.id_categoria = c.id_categoria(+)
                                 and a.id_empresa = d.id_empresa(+)
                                 and a.id_item = d.id_item(+)
-                                and a.id_categoria = d.id_categoria(+))
+                                and a.id_categoria = d.id_categoria(+)
+                                and a.id_empresa = e.id_empresa(+)
+                                and a.id_item = e.id_item(+)
+                                and a.id_categoria = e.id_categoria(+)
+                                and a.id_empresa = f.id_empresa(+)
+                                and a.id_item = f.id_item(+)
+                                and a.id_categoria = f.id_categoria(+)
+                             )
                     where 1=1
                     $groupAndWhere
                     group by $groupBy, $groupId
@@ -246,21 +309,33 @@ class DshpvdController extends AbstractRestfulController
             $hydrator->addStrategy('rol', new ValueStrategy);
             $hydrator->addStrategy('rol_1m', new ValueStrategy);
             $hydrator->addStrategy('rol_1a', new ValueStrategy);
+            $hydrator->addStrategy('rol_m12', new ValueStrategy);
+            $hydrator->addStrategy('rol_m6', new ValueStrategy);
             $hydrator->addStrategy('lb', new ValueStrategy);
             $hydrator->addStrategy('lb_1m', new ValueStrategy);
             $hydrator->addStrategy('lb_1a', new ValueStrategy);
+            $hydrator->addStrategy('lb_m12', new ValueStrategy);
+            $hydrator->addStrategy('lb_m6', new ValueStrategy);
             $hydrator->addStrategy('p_desconto', new ValueStrategy);
             $hydrator->addStrategy('p_desconto_1m', new ValueStrategy);
             $hydrator->addStrategy('p_desconto_1a', new ValueStrategy);
+            $hydrator->addStrategy('p_desconto_m12', new ValueStrategy);
+            $hydrator->addStrategy('p_desconto_m6', new ValueStrategy);
             $hydrator->addStrategy('mb', new ValueStrategy);
             $hydrator->addStrategy('mb_1m', new ValueStrategy);
             $hydrator->addStrategy('mb_1a', new ValueStrategy);
+            $hydrator->addStrategy('mb_m12', new ValueStrategy);
+            $hydrator->addStrategy('mb_m6', new ValueStrategy);
             $hydrator->addStrategy('pvm', new ValueStrategy);
             $hydrator->addStrategy('pvm_1m', new ValueStrategy);
             $hydrator->addStrategy('pvm_1a', new ValueStrategy);
+            $hydrator->addStrategy('pvm_m12', new ValueStrategy);
+            $hydrator->addStrategy('pvm_m6', new ValueStrategy);
             $hydrator->addStrategy('pcm', new ValueStrategy);
             $hydrator->addStrategy('pcm_1m', new ValueStrategy);
             $hydrator->addStrategy('pcm_1a', new ValueStrategy);
+            $hydrator->addStrategy('pcm_m12', new ValueStrategy);
+            $hydrator->addStrategy('pcm_m6', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
@@ -270,23 +345,35 @@ class DshpvdController extends AbstractRestfulController
 
                 $l = $hydrator->extract($row);
 
-                $l['rol_x_1m'] = ($l['rol'] && $l['rol_1m'] ? (($l['rol']/$l['rol_1m'])-1)*100 : null);
-                $l['rol_x_1a'] = ($l['rol'] && $l['rol_1a'] ? (($l['rol']/$l['rol_1a'])-1)*100 : null);
+                $l['rol_x_1m']  = ($l['rol'] && $l['rol_1m'] ? (($l['rol']/$l['rol_1m'])-1)*100 : null);
+                $l['rol_x_1a']  = ($l['rol'] && $l['rol_1a'] ? (($l['rol']/$l['rol_1a'])-1)*100 : null);
+                $l['rol_x_m6']  = ($l['rol'] && $l['rolM6'] ? (($l['rol']/$l['rolM6'])-1)*100 : null);
+                $l['rol_x_m12'] = ($l['rol'] && $l['rolM12'] ? (($l['rol']/$l['rolM12'])-1)*100 : null);
 
-                $l['lb_x_1m'] = ($l['lb'] && $l['lb_1m'] ? (($l['lb']/$l['lb_1m'])-1)*100 : null);
-                $l['lb_x_1a'] = ($l['lb'] && $l['lb_1a'] ? (($l['lb']/$l['lb_1a'])-1)*100 : null);
+                $l['lb_x_1m']  = ($l['lb'] && $l['lb_1m'] ? (($l['lb']/$l['lb_1m'])-1)*100 : null);
+                $l['lb_x_1a']  = ($l['lb'] && $l['lb_1a'] ? (($l['lb']/$l['lb_1a'])-1)*100 : null);
+                $l['lb_x_m6']  = ($l['lb'] && $l['lbM6'] ? (($l['lb']/$l['lbM6'])-1)*100 : null);
+                $l['lb_x_m12'] = ($l['lb'] && $l['lbM12'] ? (($l['lb']/$l['lbM12'])-1)*100 : null);
 
-                $l['pDesconto_x_1m'] = ($l['pDesconto'] && $l['pDesconto_1m'] ? (($l['pDesconto']/$l['pDesconto_1m'])-1)*100 : null);
-                $l['pDesconto_x_1a'] = ($l['pDesconto'] && $l['pDesconto_1a'] ? (($l['pDesconto']/$l['pDesconto_1a'])-1)*100 : null);
+                $l['pDesconto_x_1m']  = ($l['pDesconto'] && $l['pDesconto_1m'] ? (($l['pDesconto']/$l['pDesconto_1m'])-1)*100 : null);
+                $l['pDesconto_x_1a']  = ($l['pDesconto'] && $l['pDesconto_1a'] ? (($l['pDesconto']/$l['pDesconto_1a'])-1)*100 : null);
+                $l['pDesconto_x_m6']  = ($l['pDesconto'] && $l['pDescontoM6'] ? (($l['pDesconto']/$l['pDescontoM6'])-1)*100 : null);
+                $l['pDesconto_x_m12'] = ($l['pDesconto'] && $l['pDescontoM12'] ? (($l['pDesconto']/$l['pDescontoM12'])-1)*100 : null);
 
-                $l['mb_x_1m'] = ($l['mb'] && $l['mb_1m']? (($l['mb']/$l['mb_1m'])-1)*100 : null);
-                $l['mb_x_1a'] = ($l['mb'] && $l['mb_1a'] ? (($l['mb']/$l['mb_1a'])-1)*100 : null);
+                $l['mb_x_1m']  = ($l['mb'] && $l['mb_1m']? (($l['mb']/$l['mb_1m'])-1)*100 : null);
+                $l['mb_x_1a']  = ($l['mb'] && $l['mb_1a'] ? (($l['mb']/$l['mb_1a'])-1)*100 : null);
+                $l['mb_x_m6']  = ($l['mb'] && $l['mbM6']? (($l['mb']/$l['mbM6'])-1)*100 : null);
+                $l['mb_x_m12'] = ($l['mb'] && $l['mbM12'] ? (($l['mb']/$l['mbM12'])-1)*100 : null);
 
-                $l['pvm_x_1m'] = ($l['pvm'] && $l['pvm_1m']? (($l['pvm']/$l['pvm_1m'])-1)*100 : null);
-                $l['pvm_x_1a'] = ($l['pvm'] && $l['pvm_1a'] ? (($l['pvm']/$l['pvm_1a'])-1)*100 : null);
+                $l['pvm_x_1m']  = ($l['pvm'] && $l['pvm_1m']? (($l['pvm']/$l['pvm_1m'])-1)*100 : null);
+                $l['pvm_x_1a']  = ($l['pvm'] && $l['pvm_1a'] ? (($l['pvm']/$l['pvm_1a'])-1)*100 : null);
+                $l['pvm_x_m6']  = ($l['pvm'] && $l['pvmM6']? (($l['pvm']/$l['pvmM6'])-1)*100 : null);
+                $l['pvm_x_m12'] = ($l['pvm'] && $l['pvmM12'] ? (($l['pvm']/$l['pvmM12'])-1)*100 : null);
 
                 $l['pcm_x_1m'] = ($l['pcm'] && $l['pcm_1m']? (($l['pcm']/$l['pcm_1m'])-1)*100 : null);
                 $l['pcm_x_1a'] = ($l['pcm'] && $l['pcm_1a'] ? (($l['pcm']/$l['pcm_1a'])-1)*100 : null);
+                $l['pcm_x_m6'] = ($l['pcm'] && $l['pcmM6']? (($l['pcm']/$l['pcmM6'])-1)*100 : null);
+                $l['pcm_x_m12'] = ($l['pcm'] && $l['pcmM12'] ? (($l['pcm']/$l['pcmM12'])-1)*100 : null);
 
                 $data[] = $l;
             }
