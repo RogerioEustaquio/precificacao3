@@ -60,6 +60,9 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
 
         var btnConfirmar = objWindow.down('panel').down('toolbar').down('form').down('button');
 
+        if(me.vNiveis)
+            objWindow.down('panel').down('form').down('#bxElement').setValue(me.vNiveis);
+
         btnConfirmar.on('click',
             function(){
 
