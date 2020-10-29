@@ -346,6 +346,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
                         {
                             text: '1M',
                             dataIndex: 'pDesconto_1m',
+                            hidden: true,
                             width: 72,
                             align: 'right',
                             renderer: function (v) {
