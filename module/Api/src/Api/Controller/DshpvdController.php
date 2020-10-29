@@ -52,8 +52,8 @@ class DshpvdController extends AbstractRestfulController
                 $andSql = " and trunc(vi.data_emissao,'MM') = '01/$data'";
                 $andData = "'01/$data'";
             }else{
-                $andSql = " and trunc(vi.data_emissao,'MM') = '01/'||to_char(sysdate,'mm/yyyy')";
-                $andData = "'01/'||to_char(add_months(trunc(sysdate,'MM')),'mm/yyyy')";
+                $andSql = " and trunc(vi.data_emissao,'MM') = '01/'||to_char(add_months(trunc(sysdate,'MM'),-1),'mm/yyyy')";
+                $andData = "'01/'||to_char(add_months(trunc(sysdate,'MM'),-1),'mm/yyyy')";
             }
 
             if($emps){
@@ -273,7 +273,7 @@ class DshpvdController extends AbstractRestfulController
                                                     sum(vi.rol) as vd_rol_m6,
                                                     sum(vi.custo) as vd_cmv_m6,
                                                     sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as vd_lb_m6          
-                                                from pricing.ie_ve_venda_item vi
+                                                from pricing.VM_IE_VE_VENDA_ITEM vi
                                                 where trunc(vi.data_emissao,'MM') >= add_months($andData,-6)
                                                 and trunc(vi.data_emissao,'MM') <= add_months($andData,-1)
                                                 group by vi.id_empresa, vi.id_item, vi.id_categoria)) f                          
