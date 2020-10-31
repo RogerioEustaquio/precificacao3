@@ -33,6 +33,11 @@ class DshpvdController extends AbstractRestfulController
             $marcas     = $this->params()->fromQuery('marcas',null);
             $curvas     = $this->params()->fromQuery('curvas',null);
             $produtos   = $this->params()->fromQuery('produtos',null);
+            $ordem      = $this->params()->fromQuery('ordem',null);
+
+            if($ordem){
+                $arrayOrder = json_decode($ordem);
+            }
 
             if($emps){
                 $emps   =  implode(",",json_decode($emps));
@@ -107,11 +112,47 @@ class DshpvdController extends AbstractRestfulController
                     );
                 }
             }
+
      
             $groupBy = $nodes[$nodeId][0];
             $groupDescription = $nodes[$nodeId][1];
             $groupId = $nodes[$nodeId][2];
             $groupAndWhere = "";
+
+            //loop order by//
+            $orderBy = '';
+            foreach($arrayOrder as $linha){
+
+                if($linha->ordem){
+                    if($linha->campo == $groupDescription){
+                        if($orderBy){
+                            $orderBy .= ',GRUPO '.$linha->ordem;
+                        }else{
+                            $orderBy = 'GRUPO '.$linha->ordem;
+                        }
+                    }else{
+
+                        $SemOrder = false;
+                        foreach($lvs as $idGrupo){
+                            if($linha->campo == $idGrupo){
+                                $SemOrder = true;
+                            }
+                        }
+                        if(!$SemOrder){
+                            if($orderBy){
+                                $orderBy .= ', '.$linha->campo.' '.$linha->ordem;
+                            }else{
+                                $orderBy = ' '.$linha->campo.' '.$linha->ordem;
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            if($orderBy){
+                $orderBy = 'order by '.$orderBy;
+            }
+            // Fim order by
 
             for ($i=0; $i < count($nodeArr); $i++) {                 
                 $groupAndWhere .= ($i % 2 == 0 && $nodeArr[$i] !== 'root' ? " and ID_".$nodeArr[$i]." = '".$nodeArr[$i+1] . "'" : "" );
@@ -297,7 +338,8 @@ class DshpvdController extends AbstractRestfulController
                     $groupAndWhere
                     group by $groupBy, $groupId
                  )
-            where 1=1";
+            where 1=1
+            $orderBy";
 
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
@@ -581,11 +623,12 @@ class DshpvdController extends AbstractRestfulController
             $pNode = $this->params()->fromQuery('node',null);
             // $lvs = ['REDE', 'EMPRESA', 'CURVA_NBS', 'MARCA'];
             $data = array();
-            $pkey = 'idKey';
-            $data[] = ['campo' => 'REDE', 'ordem' => 1];
-            $data[] = ['campo' => 'EMPRESA', 'ordem' => 2];
-            $data[] = ['campo' => 'CURVA_NBS', 'ordem' => 3];
-            $data[] = ['campo' => 'MARCA', 'ordem' => 4];
+            $data[] = ['campo' => 'REDE', 'ordem' => 'ASC'];
+            $data[] = ['campo' => 'EMPRESA', 'ordem' => 'ASC'];
+            $data[] = ['campo' => 'CURVA_NBS', 'ordem' => 'ASC'];
+            $data[] = ['campo' => 'MARCA', 'ordem' => 'ASC'];
+            // $data[] = ['campo' => 'GRUPO', 'ordem' => 'ASC'];
+            $data[] = ['campo' => 'ROL', 'ordem' => 'DESC'];
 
             $this->setCallbackData($data);
 

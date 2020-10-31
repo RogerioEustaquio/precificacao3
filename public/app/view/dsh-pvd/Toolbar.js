@@ -76,8 +76,28 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         btnConfirmar.on('click',
             function(){
 
-                var niveis = objWindow.down('panel').down('form').down('#bxElement').getValue();
+                var myform = objWindow.down('panel').down('form');
+                var niveis = myform.down('#bxElement').getValue();
                 me.vNiveis = niveis;
+
+                var gridOrder = myform.down('grid').getStore().getData();
+                // var pstring  = '';
+                var arrayOrder = new Array();
+                gridOrder.items.forEach(function(record){
+
+                    if(record.data.ordem){
+                        // if(!pstring){
+                        //     pstring  = record.data.campo+' '+record.data.ordem
+                        // }else{
+                        //     pstring += ', '+record.data.campo+' '+record.data.ordem;
+                        // }
+                        arrayOrder.push(record.data);
+                    }
+                    
+                });
+                // console.log(arrayOrder);
+
+                me.vOrdem = arrayOrder;
 
                 objWindow.close();
 
@@ -142,6 +162,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
             curvas: Ext.encode(me.vCurvas),
             niveis: Ext.encode(me.vNiveis),
             produtos: Ext.encode(me.vProdutos),
+            ordem : Ext.encode(me.vOrdem)
         };
 
         grid.getStore().getProxy().setExtraParams(params);

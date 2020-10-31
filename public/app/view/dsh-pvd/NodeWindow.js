@@ -2,11 +2,12 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
     extend: 'Ext.window.Window',
     xtype: 'nodewindow',
     itemId: 'nodewindow',
-    height: 200,
+    height: 300,
     width: 800,
     title: 'Níveis de Agrupamentos',
     requires:[
-        'App.view.dsh-pvd.PluginDragDropTag'
+        'App.view.dsh-pvd.PluginDragDropTag',
+        'Ext.grid.plugin.CellEditing'
     ],
     layout: 'fit',
     constructor: function() {
@@ -39,6 +40,26 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
             filterPickList: true,
             publishes: 'value'
         });
+        elementbx.store.load();
+
+        var myStore = Ext.create('Ext.data.Store', {
+            model: Ext.create('Ext.data.Model', {
+                    fields:[{name:'campo', type: 'string'},
+                            {name:'ordem', type: 'string'},
+                            ]
+            }),
+            proxy: {
+                type: 'ajax',
+                method:'POST',
+                url : BASEURL + '/api/dshpvd/listarordemagrupamento',
+                timeout: 240000,
+                reader: {
+                    type: 'json',
+                    root: 'data'
+                }
+            },
+            autoLoad : true
+        });
 
         var btnConfirm = Ext.create('Ext.button.Button',{
 
@@ -48,7 +69,6 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
             // }
         });
 
-        elementbx.store.load();
 
         Ext.applyIf(me, {
             
@@ -61,7 +81,42 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
                             xtype: 'form',
                             region: 'center',
                             items: [
-                                elementbx
+                                elementbx,
+                                {
+                                    xtype: 'grid',
+                                    margin: '10 0 0 0',
+                                    store: myStore,
+                                    columns: [
+                                        {
+                                            text: 'Campo',
+                                            dataIndex: 'campo',
+                                            width: 130,
+                                            align: 'center'
+                                        },
+                                        {
+                                            text: 'Ordem',
+                                            dataIndex: 'ordem',
+                                            // width: 140,
+                                            flex:1,
+                                            align: 'left',
+                                            editor: {
+                                                xtype: 'combo',
+                                                typeAhead: true,
+                                                triggerAction: 'all',
+                                                selectOnFocus: false,
+                                                store: [
+                                                    ['DESC', 'Decrescente'],
+                                                    ['ASC', 'Crescente']
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    selModel: 'cellmodel',
+                                    plugins: {
+                                        ptype: 'cellediting',
+                                        clicksToEdit: 1
+                                    }
+                                }
                             ]
                         },
                         {
