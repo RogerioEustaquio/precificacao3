@@ -17,6 +17,9 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
     initComponent: function() {
         var me = this;
 
+        var today = new Date();
+        var sysdate = today.getMonth() +'/'+ today.getFullYear();
+
         var btnGrupo = Ext.create('Ext.button.Button',{
             iconCls: 'fa fa-list',
             margin: '1 1 1 4',
@@ -53,7 +56,7 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
                     itemId: 'dataRef',
                     labelWidth: 100,
                     margin: '1 40 1 1',
-                    value: null
+                    value: sysdate
                 }
             ]
         });

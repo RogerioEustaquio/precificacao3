@@ -15,6 +15,9 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
     constructor: function() {
         var me = this;
 
+        var today = new Date();
+        var sysdate = today.getMonth() +'/'+ today.getFullYear();
+
         var fielData = Ext.create('Ext.form.field.Date',{
             name: 'data',
             itemId: 'data',
@@ -25,7 +28,8 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
             labelWidth: 120,
             format: 'm/Y',
             altFormats: 'dmY',
-            emptyText: '__/__/____'
+            emptyText: '__/__/____',
+            value: sysdate
         });
 
         var elTagEmpresa = Ext.create('Ext.form.field.Tag',{
