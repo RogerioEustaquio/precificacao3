@@ -128,7 +128,18 @@ Ext.define('App.view.dsh-pvd.Toolbar',{
         if(me.vCurvas)
             objWindow.down('#elCurva').setValue(me.vCurvas);
         
-        me.vProdutos = [];
+        // me.vProdutos = [];
+        if(me.vProdutos.length){
+            console.log(me.vProdutos);
+            var objProduto = objWindow.down('#elProduto');
+            //Load na tag dos produtos selecionados //
+
+            objProduto.getStore().getProxy().setExtraParams({tipoSql:2, codItem: Ext.encode(me.vProdutos)});
+            objProduto.getStore().load();
+
+            objProduto.setValue(me.vProdutos);
+
+        }
 
         objWindow.down('button[name=confirmar]').on('click',function(){
 

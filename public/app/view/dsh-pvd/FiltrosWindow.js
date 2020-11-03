@@ -163,7 +163,7 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
                     type: 'ajax',
                     url: BASEURL + '/api/dshpvd/listarprodutos',
                     reader: { type: 'json', root: 'data' },
-                    // extraParams: { emp: this.empresa }
+                    extraParams: { tipoSql: 0}
                 }
             }),
             queryParam: 'codItem',
@@ -342,6 +342,7 @@ Ext.define('App.view.dsh-pvd.FiltrosWindow', {
         me.down('panel').down('tagfield[name=elEmp]').setValue(null);
         me.down('panel').down('tagfield[name=elMarca]').setValue(null);
         me.down('panel').down('tagfield[name=elCurva]').setValue(null);
+        me.down('panel').down('tagfield[name=elProduto]').setValue(null);
 
     }
 

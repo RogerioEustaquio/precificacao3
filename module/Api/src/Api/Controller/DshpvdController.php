@@ -653,14 +653,22 @@ class DshpvdController extends AbstractRestfulController
         
         try {
 
-            $pEmp = $this->params()->fromQuery('emp',null);
-            $pCod = $this->params()->fromQuery('codItem',null);
+            $pEmp    = $this->params()->fromQuery('emp',null);
+            $pCod    = $this->params()->fromQuery('codItem',null);
+            $tipoSql = $this->params()->fromQuery('tipoSql',null);
 
             if(!$pCod){
                 throw new \Exception('Parâmetros não informados.');
             }
 
             $em = $this->getEntityManager();
+
+            if(!$tipoSql){
+                $filtroProduto = "like upper('".$pCod."%')";
+            }else{
+                $produtos =  implode("','",json_decode($pCod));
+                $filtroProduto = "in ('".$produtos."')";
+            }
             
             $sql = "select i.cod_item||c.descricao as cod_item,
                            i.descricao,
@@ -672,8 +680,10 @@ class DshpvdController extends AbstractRestfulController
                     where ic.id_item = i.id_item
                     and ic.id_categoria = c.id_categoria
                     and ic.id_marca = m.id_marca
-                    and i.cod_item||c.descricao like upper('$pCod%')
+                    and i.cod_item||c.descricao $filtroProduto
                     order by cod_item asc";
+            
+
 
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
