@@ -121,36 +121,42 @@ class DshpvdController extends AbstractRestfulController
 
             //loop order by//
             $orderBy = '';
-            foreach($arrayOrder as $linha){
+            if($arrayOrder){
 
-                if($linha->ordem){
-                    if($linha->campo == $groupDescription){
-                        if($orderBy){
-                            $orderBy .= ',GRUPO '.$linha->ordem;
-                        }else{
-                            $orderBy = 'GRUPO '.$linha->ordem;
-                        }
-                    }else{
+                foreach($arrayOrder as $linha){
 
-                        $SemOrder = false;
-                        foreach($lvs as $idGrupo){
-                            if($linha->campo == $idGrupo){
-                                $SemOrder = true;
-                            }
-                        }
-                        if(!$SemOrder){
+                    if($linha->ordem){
+                        if($linha->campo == $groupDescription){
                             if($orderBy){
-                                $orderBy .= ', '.$linha->campo.' '.$linha->ordem;
+                                $orderBy .= ',GRUPO '.$linha->ordem;
                             }else{
-                                $orderBy = ' '.$linha->campo.' '.$linha->ordem;
+                                $orderBy = 'GRUPO '.$linha->ordem;
                             }
+                        }else{
+    
+                            $SemOrder = false;
+                            foreach($lvs as $idGrupo){
+                                if($linha->campo == $idGrupo){
+                                    $SemOrder = true;
+                                }
+                            }
+                            if(!$SemOrder){
+                                if($orderBy){
+                                    $orderBy .= ', '.$linha->campo.' '.$linha->ordem;
+                                }else{
+                                    $orderBy = ' '.$linha->campo.' '.$linha->ordem;
+                                }
+                            }
+                            
                         }
-                        
                     }
                 }
             }
+            
             if($orderBy){
                 $orderBy = 'order by '.$orderBy;
+            }else{
+                $orderBy = 'order by GRUPO';
             }
             // Fim order by
 

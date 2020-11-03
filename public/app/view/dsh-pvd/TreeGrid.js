@@ -70,7 +70,7 @@ Ext.define('App.view.dsh-pvd.TreeGrid',{
 
         var mystore = Ext.create('Ext.data.TreeStore', {
             model: myModel,
-            autoLoad: true,
+            autoLoad: false,
             proxy: {
                 type: 'ajax',
                 url: BASEURL + '/api/dshpvd/listartreepvd',

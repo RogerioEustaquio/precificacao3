@@ -38,7 +38,19 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
             margin: '1 1 1 1',
             plugins:'dragdroptag',
             filterPickList: true,
-            publishes: 'value'
+            publishes: 'value',
+            listeners: {
+                // select: function(record){
+                //     console.log(record.getValue());
+                //     var grid = this.up('form').down('grid');
+
+                //     // if(record.getValue()){
+                //     // }
+
+                //     console.log(grid);
+                    
+                // }
+            }
         });
         elementbx.store.load();
 
@@ -91,7 +103,7 @@ Ext.define('App.view.dsh-pvd.NodeWindow', {
                                             text: 'Campo',
                                             dataIndex: 'campo',
                                             width: 130,
-                                            align: 'center'
+                                            align: 'right'
                                         },
                                         {
                                             text: 'Ordem',
