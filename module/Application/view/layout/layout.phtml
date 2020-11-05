@@ -22,6 +22,11 @@
 
         <!-- Scripts -->
         <?= $this->headScript()
+            ->appendFile($this->basePath('../../js/highcharts-dist/highcharts.js'))
+            ->appendFile($this->basePath('../../js/highcharts-dist/exporting.js'))
+            ->appendFile($this->basePath('../../js/highcharts-dist/export-data.js'))
+            ->appendFile($this->basePath('../../js/highcharts-dist/accessibility.js'))
+            ->appendFile($this->basePath('../../js/highcharts-dist/modules/drilldown.js'))
             ->appendFile($this->basePath('../../js/jquery-3.4.1.min.js'))
             ->appendFile($this->basePath('../../js/ext-6.2.0/ext-all.js'))
             ->appendFile($this->basePath('../../js/ext-6.2.0/locale-pt_BR.js'))
