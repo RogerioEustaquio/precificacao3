@@ -209,50 +209,50 @@ Ext.define('App.view.fii.Toolbar',{
 
         grid.getStore().getProxy().setExtraParams(params);
         grid.getStore().load(
-            function(record){
-                var columns = grid.getView().getHeaderCt().getGridColumns();
-                Ext.each(columns, function (col) {
+            // function(record){
+            //     var columns = grid.getView().getHeaderCt().getGridColumns();
+            //     Ext.each(columns, function (col) {
 
-                    switch (col.texto) {
-                        case 'M0':
-                          col.setText(meses[parseFloat(record[0].data.mesM0)]);
-                          break;
-                        case 'M1':
-                            col.setText(meses[parseFloat(record[0].data.mesM1)]);
-                            break;
-                        case 'M2':
-                          col.setText(meses[parseFloat(record[0].data.mesM2)]);
-                          break;
-                        case 'M3':
-                            col.setText(meses[parseFloat(record[0].data.mesM3)]);
-                            break;
-                        case 'M4':
-                            col.setText(meses[parseFloat(record[0].data.mesM4)]);
-                            break;
-                        case 'M5':
-                            col.setText(meses[parseFloat(record[0].data.mesM5)]);
-                            break;
-                        case 'M6':
-                            col.setText(meses[parseFloat(record[0].data.mesM6)]);
-                            break;
-                        case 'M7':
-                            col.setText(meses[parseFloat(record[0].data.mesM7)]);
-                            break;
-                        case 'M8':
-                            col.setText(meses[parseFloat(record[0].data.mesM8)]);
-                            break;
-                        case 'M9':
-                            col.setText(meses[parseFloat(record[0].data.mesM9)]);
-                            break;
-                        case 'M10':
-                            col.setText(meses[parseFloat(record[0].data.mesM10)]);
-                            break;
-                        case 'M11':
-                            col.setText(meses[parseFloat(record[0].data.mesM11)]);
-                            break;
-                      }
-                });
-            }
+            //         switch (col.texto) {
+            //             case 'M0':
+            //               col.setText(meses[parseFloat(record[0].data.mesM0)]);
+            //               break;
+            //             case 'M1':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM1)]);
+            //                 break;
+            //             case 'M2':
+            //               col.setText(meses[parseFloat(record[0].data.mesM2)]);
+            //               break;
+            //             case 'M3':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM3)]);
+            //                 break;
+            //             case 'M4':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM4)]);
+            //                 break;
+            //             case 'M5':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM5)]);
+            //                 break;
+            //             case 'M6':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM6)]);
+            //                 break;
+            //             case 'M7':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM7)]);
+            //                 break;
+            //             case 'M8':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM8)]);
+            //                 break;
+            //             case 'M9':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM9)]);
+            //                 break;
+            //             case 'M10':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM10)]);
+            //                 break;
+            //             case 'M11':
+            //                 col.setText(meses[parseFloat(record[0].data.mesM11)]);
+            //                 break;
+            //           }
+            //     });
+            // }
         );
 
     }
