@@ -9,7 +9,7 @@ Ext.define('App.view.fii.Main', {
     requires: [
         'App.view.fii.Toolbar',
         'App.view.fii.ContainerHighCharts',
-        'App.view.fii.Grid',
+        'App.view.fii.ContainerGrid',
         'App.view.fii.PanelFiltro'
     ],
     
@@ -18,6 +18,7 @@ Ext.define('App.view.fii.Main', {
 
     initComponent: function() {
         var me = this;
+        var utilFormat = Ext.create('Ext.ux.util.Format');
         
         Ext.applyIf(me, {
 
@@ -44,8 +45,9 @@ Ext.define('App.view.fii.Main', {
                                     region: 'north'
                                 },
                                 {
-                                    xtype: 'fiigrid',
-                                    region: 'center'
+                                        xtype: 'containergrid',
+                                        region: 'center'
+                                    
                                 }
 
                             ]
