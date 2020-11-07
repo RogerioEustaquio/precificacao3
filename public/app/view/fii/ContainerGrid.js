@@ -1,5 +1,4 @@
 Ext.define('App.view.fii.ContainerGrid', {
-    // extend: 'Ext.grid.Panel',
     extend: 'Ext.container.Container',
     xtype: 'containergrid',
     itemId: 'containergrid',
@@ -39,7 +38,6 @@ Ext.define('App.view.fii.ContainerGrid', {
                 if(result.success){
 
                     var rsarray = result.data;
-
                     rsarray.forEach(function(record){
                         seqMes.push(meses[parseFloat(record.id)]);
                     });

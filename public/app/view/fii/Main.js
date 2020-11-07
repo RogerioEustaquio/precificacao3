@@ -18,7 +18,6 @@ Ext.define('App.view.fii.Main', {
 
     initComponent: function() {
         var me = this;
-        var utilFormat = Ext.create('Ext.ux.util.Format');
         
         Ext.applyIf(me, {
 
@@ -47,9 +46,7 @@ Ext.define('App.view.fii.Main', {
                                 {
                                         xtype: 'containergrid',
                                         region: 'center'
-                                    
                                 }
-
                             ]
 
                         }
