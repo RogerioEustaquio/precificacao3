@@ -52,7 +52,6 @@ Ext.define('App.view.fii.ContainerGrid', {
         // console.log(seqMes);
         /////////////////////////////////////
 
-
         Ext.define('App.view.fii.modelgrid', {
             extend: 'Ext.data.Model',
             fields:[{name:'tipo'},
@@ -139,8 +138,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                             },
                             {
                                 text: seqMes[0],
-                                texto: 'M0',
-                                dataIndex: 'valorM0',            
+                                texto: 'M11',
+                                dataIndex: 'valorM11',
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
@@ -155,15 +154,15 @@ Ext.define('App.view.fii.ContainerGrid', {
             
                                     for (; i < length; ++i) {
                                         record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM0'));
+                                        totalOpe += parseFloat(record.get('valorM11'));
                                     }
                                     return utilFormat.Value(totalOpe);
                                 }
                             },
                             {
                                 text: seqMes[1],
-                                texto: 'M1',
-                                dataIndex: 'valorM1',
+                                texto: 'M10',
+                                dataIndex: 'valorM10',
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
@@ -178,15 +177,15 @@ Ext.define('App.view.fii.ContainerGrid', {
             
                                     for (; i < length; ++i) {
                                         record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM1'));
+                                        totalOpe += parseFloat(record.get('valorM10'));
                                     }
                                     return utilFormat.Value(totalOpe);
                                 }
                             },
                             {
                                 text: seqMes[2],
-                                texto: 'M2',
-                                dataIndex: 'valorM2',
+                                texto: 'M9',
+                                dataIndex: 'valorM9',
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
@@ -201,128 +200,13 @@ Ext.define('App.view.fii.ContainerGrid', {
             
                                     for (; i < length; ++i) {
                                         record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM2'));
+                                        totalOpe += parseFloat(record.get('valorM9'));
                                     }
                                     return utilFormat.Value(totalOpe);
                                 }
                             },
                             {
                                 text: seqMes[3],
-                                texto: 'M3',
-                                dataIndex: 'valorM3',            
-                                width: 110,
-                                summaryType: 'sum',
-                                align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
-                                },
-                                summaryType: function(records) {
-            
-                                    var i = 0,
-                                        length = records.length,
-                                        totalOpe = 0;
-            
-                                    for (; i < length; ++i) {
-                                        record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM3'));
-                                    }
-                                    return utilFormat.Value(totalOpe);
-                                }
-                            },
-                            {
-                                text: seqMes[4],
-                                texto: 'M4',
-                                dataIndex: 'valorM4',            
-                                width: 110,
-                                summaryType: 'sum',
-                                align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
-                                },
-                                summaryType: function(records) {
-            
-                                    var i = 0,
-                                        length = records.length,
-                                        totalOpe = 0;
-            
-                                    for (; i < length; ++i) {
-                                        record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM4'));
-                                    }
-                                    return utilFormat.Value(totalOpe);
-                                }
-                            },
-                            {
-                                text: seqMes[5],
-                                texto: 'M5',
-                                dataIndex: 'valorM5',            
-                                width: 110,
-                                summaryType: 'sum',
-                                align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
-                                },
-                                summaryType: function(records) {
-            
-                                    var i = 0,
-                                        length = records.length,
-                                        totalOpe = 0;
-            
-                                    for (; i < length; ++i) {
-                                        record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM5'));
-                                    }
-                                    return utilFormat.Value(totalOpe);
-                                }
-                            },
-                            {
-                                text: seqMes[6],
-                                texto: 'M6',
-                                dataIndex: 'valorM6',            
-                                width: 110,
-                                summaryType: 'sum',
-                                align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
-                                },
-                                summaryType: function(records) {
-            
-                                    var i = 0,
-                                        length = records.length,
-                                        totalOpe = 0;
-            
-                                    for (; i < length; ++i) {
-                                        record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM6'));
-                                    }
-                                    return utilFormat.Value(totalOpe);
-                                }
-                            },
-                            {
-                                text: seqMes[7],
-                                texto: 'M7',
-                                dataIndex: 'valorM7',            
-                                width: 110,
-                                summaryType: 'sum',
-                                align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
-                                },
-                                summaryType: function(records) {
-            
-                                    var i = 0,
-                                        length = records.length,
-                                        totalOpe = 0;
-            
-                                    for (; i < length; ++i) {
-                                        record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM7'));
-                                    }
-                                    return utilFormat.Value(totalOpe);
-                                }
-                            },
-                            {
-                                text: seqMes[8],
                                 texto: 'M8',
                                 dataIndex: 'valorM8',            
                                 width: 110,
@@ -345,9 +229,9 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 }
                             },
                             {
-                                text: seqMes[9],
-                                texto: 'M9',
-                                dataIndex: 'valorM9',            
+                                text: seqMes[4],
+                                texto: 'M7',
+                                dataIndex: 'valorM7',            
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
@@ -362,15 +246,130 @@ Ext.define('App.view.fii.ContainerGrid', {
             
                                     for (; i < length; ++i) {
                                         record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM9'));
+                                        totalOpe += parseFloat(record.get('valorM7'));
+                                    }
+                                    return utilFormat.Value(totalOpe);
+                                }
+                            },
+                            {
+                                text: seqMes[5],
+                                texto: 'M6',
+                                dataIndex: 'valorM6',            
+                                width: 110,
+                                summaryType: 'sum',
+                                align: 'right',
+                                renderer: function (v) {
+                                    return utilFormat.Value(v);
+                                },
+                                summaryType: function(records) {
+            
+                                    var i = 0,
+                                        length = records.length,
+                                        totalOpe = 0;
+            
+                                    for (; i < length; ++i) {
+                                        record = records[i];
+                                        totalOpe += parseFloat(record.get('valorM6'));
+                                    }
+                                    return utilFormat.Value(totalOpe);
+                                }
+                            },
+                            {
+                                text: seqMes[6],
+                                texto: 'M5',
+                                dataIndex: 'valorM5',            
+                                width: 110,
+                                summaryType: 'sum',
+                                align: 'right',
+                                renderer: function (v) {
+                                    return utilFormat.Value(v);
+                                },
+                                summaryType: function(records) {
+            
+                                    var i = 0,
+                                        length = records.length,
+                                        totalOpe = 0;
+            
+                                    for (; i < length; ++i) {
+                                        record = records[i];
+                                        totalOpe += parseFloat(record.get('valorM5'));
+                                    }
+                                    return utilFormat.Value(totalOpe);
+                                }
+                            },
+                            {
+                                text: seqMes[7],
+                                texto: 'M4',
+                                dataIndex: 'valorM4',            
+                                width: 110,
+                                summaryType: 'sum',
+                                align: 'right',
+                                renderer: function (v) {
+                                    return utilFormat.Value(v);
+                                },
+                                summaryType: function(records) {
+            
+                                    var i = 0,
+                                        length = records.length,
+                                        totalOpe = 0;
+            
+                                    for (; i < length; ++i) {
+                                        record = records[i];
+                                        totalOpe += parseFloat(record.get('valorM4'));
+                                    }
+                                    return utilFormat.Value(totalOpe);
+                                }
+                            },
+                            {
+                                text: seqMes[8],
+                                texto: 'M3',
+                                dataIndex: 'valorM3',            
+                                width: 110,
+                                summaryType: 'sum',
+                                align: 'right',
+                                renderer: function (v) {
+                                    return utilFormat.Value(v);
+                                },
+                                summaryType: function(records) {
+            
+                                    var i = 0,
+                                        length = records.length,
+                                        totalOpe = 0;
+            
+                                    for (; i < length; ++i) {
+                                        record = records[i];
+                                        totalOpe += parseFloat(record.get('valorM3'));
+                                    }
+                                    return utilFormat.Value(totalOpe);
+                                }
+                            },
+                            {
+                                text: seqMes[9],
+                                texto: 'M2',
+                                dataIndex: 'valorM2',            
+                                width: 110,
+                                summaryType: 'sum',
+                                align: 'right',
+                                renderer: function (v) {
+                                    return utilFormat.Value(v);
+                                },
+                                summaryType: function(records) {
+            
+                                    var i = 0,
+                                        length = records.length,
+                                        totalOpe = 0;
+            
+                                    for (; i < length; ++i) {
+                                        record = records[i];
+                                        totalOpe += parseFloat(record.get('valorM2'));
                                     }
                                     return utilFormat.Value(totalOpe);
                                 }
                             },
                             {
                                 text: seqMes[10],
-                                texto: 'M10',
-                                dataIndex: 'valorM10',            
+                                texto: 'M1',
+                                dataIndex: 'valorM1',            
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
@@ -385,15 +384,15 @@ Ext.define('App.view.fii.ContainerGrid', {
             
                                     for (; i < length; ++i) {
                                         record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM10'));
+                                        totalOpe += parseFloat(record.get('valorM1'));
                                     }
                                     return utilFormat.Value(totalOpe);
                                 }
                             },
                             {
                                 text: seqMes[11],
-                                texto: 'M11',
-                                dataIndex: 'valorM11',            
+                                texto: 'M0',
+                                dataIndex: 'valorM0',            
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
@@ -408,7 +407,7 @@ Ext.define('App.view.fii.ContainerGrid', {
             
                                     for (; i < length; ++i) {
                                         record = records[i];
-                                        totalOpe += parseFloat(record.get('valorM11'));
+                                        totalOpe += parseFloat(record.get('valorM0'));
                                     }
                                     return utilFormat.Value(totalOpe);
                                 }

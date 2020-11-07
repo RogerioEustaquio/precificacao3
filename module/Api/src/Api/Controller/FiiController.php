@@ -55,18 +55,19 @@ class FiiController extends AbstractRestfulController
             $em = $this->getEntityManager();
             
             
-            $sql = "select to_char(add_months(trunc(sysdate,'MM'),-0), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-1), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-2), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-3), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-4), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-5), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-6), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-7), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-8), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-9), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-10), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-11), 'MM') as id from dual";
+            $sql = "select to_char(add_months(trunc(sysdate,'MM'),-11), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-10), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-9), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-8), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-7), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-6), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-5), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-4), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-3), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-2), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-1), 'MM') as id from dual union all
+            select to_char(add_months(trunc(sysdate,'MM'),-0), 'MM') as id from dual
+            ";
             
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
