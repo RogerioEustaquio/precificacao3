@@ -98,8 +98,17 @@ class FiiController extends AbstractRestfulController
         $data = array();
         
         try {
+
+            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
+            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
+            $codProdutos= $this->params()->fromQuery('codProdutos',null);
+
+            if($idEmpresas){
+                $idEmpresas =  implode(",",json_decode($idEmpresas));
+                $andSql = " and id_empresa in ($idEmpresas)";
+            }
+
             $em = $this->getEntityManager();
-            
             
             $sql = "select 'PVM' as tipo,
                             t.id_empresa,
@@ -119,7 +128,7 @@ class FiiController extends AbstractRestfulController
                             t.valor_m0
                         from VW_PRODUTO_PRECO_TIMELINE t 
                         where 1 = 1
-                        and id_empresa in (2,18,15,17,19)
+                        $andSql
                         and id_item = 84307
                         and id_categoria = 1";
             
@@ -323,11 +332,12 @@ class FiiController extends AbstractRestfulController
                         'series' => array(
                             array(
                                 'name' => 'Rol',
-                                // 'yAxis'=> 2,
+                                'yAxis'=> 0,
                                 'color' => 'rgba(126,86,134,.9)',
                                 'data' => $arrayRol,
+                                'visible' => true,
                                 'dataLabels' => array(
-                                    'enabled' => 'true',
+                                    'enabled' => true,
                                     'format' => 'R$ {y}',
                                     'style' => array( 'fontSize' => '8')
                                     )
@@ -337,19 +347,21 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 1,
                                 'color' => 'rgba(165,170,217,1)',
                                 'data' => $arrayPreco,
+                                'visible' => false,
                                 'dataLabels' => array(
-                                    'enabled' => 'true',
+                                    'enabled' => true,
                                     'format' => '{y}',
                                     'style' => array( 'fontSize' => '8')
-                                    )
+                                ),
                             ),
                             array(
                                 'name' => 'Lb',
                                 'yAxis'=> 2,
                                 'color' => 'rgba(46, 36, 183, 1)',
                                 'data' => $arrayLb,
+                                'visible' => true,
                                 'dataLabels' => array(
-                                    'enabled' => 'true',
+                                    'enabled' => true,
                                     'format' => 'R$ {y}',
                                     'style' => array( 'fontSize' => '8')
                                     )
@@ -360,7 +372,7 @@ class FiiController extends AbstractRestfulController
                                 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayMb,
                                 'dataLabels' => array(
-                                    'enabled' => 'true',
+                                    'enabled' => true,
                                     'format' => '% {y}',
                                     'style' => array( 'fontSize' => '8')
                                     )

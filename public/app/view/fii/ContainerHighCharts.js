@@ -17,20 +17,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     constructor: function(config) {
         var me = this;
 
-        Ext.Ajax.request({
-            url: BASEURL +'/api/fii/listarfichaitemgrafico',
-            method: 'POST',
-            async: false,
-            success: function (response) {
-                var result = Ext.decode(response.responseText);
-                if(result.success){
-
-                    rsarray = result.data;
-
-                }
-            }
-        });
-    
         Ext.applyIf(me, {
             items: [
                 {
@@ -44,6 +30,21 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         afterrender: function(el){
+                            
+                            Ext.Ajax.request({
+                                url: BASEURL +'/api/fii/listarfichaitemgrafico',
+                                method: 'POST',
+                                async: false,
+                                success: function (response) {
+                                    var result = Ext.decode(response.responseText);
+                                    if(result.success){
+
+                                        rsarray = result.data;
+
+                                    }
+                                }
+                            });
+
                             me.buildChartContainer(el,rsarray.categories,rsarray.series)
                         }
                     }
@@ -141,6 +142,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             color: 'rgba(165,170,217,1)'
                         }
                     },
+                    // showEmpty: false,
+                    visible: false,
                     opposite: true
                 },
                 { // Secondary yAxis

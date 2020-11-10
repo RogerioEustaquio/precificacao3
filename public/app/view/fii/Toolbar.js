@@ -4,6 +4,7 @@ Ext.define('App.view.fii.Toolbar',{
     itemId: 'fiitoolbar',
     region: 'north',
     requires:[
+        'App.view.fii.ContainerHighCharts'
     ],
 
     initComponent: function() {
@@ -56,12 +57,23 @@ Ext.define('App.view.fii.Toolbar',{
         var codProdutos = me.up('container').down('#panelwest').down('#elProduto').getValue();
 
         var grid = me.up('container').down('#panelcenter').down('grid');
+        var charts = me.up('container').down('#panelcenter').down('#fiichart');
+
+        charts.setHidden(true);
 
         var params = {
             idEmpresas: Ext.encode(idEmpresas),
             idMarcas: Ext.encode(idMarcas),
             codProdutos: Ext.encode(codProdutos)
         };
+        
+        var newCharts = Ext.create('App.view.fii.ContainerHighCharts',{
+            region: 'north',
+            params: params
+        });
+
+        console.log(newCharts);
+        me.up('container').down('#panelcenter').add(newCharts);
 
         grid.getStore().getProxy().setExtraParams(params);
         grid.getStore().load(
