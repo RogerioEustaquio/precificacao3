@@ -196,6 +196,26 @@ Ext.define('App.view.fii.PanelFiltro',{
                             }
                         }
                     ]
+                },
+                {
+                    xtype: 'toolbar',
+                    // layout: 'hbox',
+                    width: '100%',
+                    border: false,
+                    items:[
+                        '->',
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            text: 'Limpar Filtros',
+                            tooltip: 'Limpar Filtros',
+                            handler: function(form) {
+                                form.up('toolbar').up('panel').down('tagfield[name=elEmp]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elProduto]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elMarca]').setValue(null);
+                            }
+                        }
+                    ]
                 }
             ]
         });
