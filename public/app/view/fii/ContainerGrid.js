@@ -74,7 +74,6 @@ Ext.define('App.view.fii.ContainerGrid', {
                     ]
         });
 
-
         Ext.applyIf(this, {
 
             items: [

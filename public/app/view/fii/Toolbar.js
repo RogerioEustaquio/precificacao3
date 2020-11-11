@@ -19,7 +19,7 @@ Ext.define('App.view.fii.Toolbar',{
         });
 
         var btnConsultar = Ext.create('Ext.button.Button',{
-            
+
             iconCls: 'fa fa-search',
             tooltip: 'Consultar',
             margin: '1 1 1 4',
@@ -55,24 +55,26 @@ Ext.define('App.view.fii.Toolbar',{
         var idEmpresas  = me.up('container').down('#panelwest').down('#elEmp').getValue();
         var idMarcas    = me.up('container').down('#panelwest').down('#elMarca').getValue();
         var codProdutos = me.up('container').down('#panelwest').down('#elProduto').getValue();
-
+        
         var grid = me.up('container').down('#panelcenter').down('grid');
         var charts = me.up('container').down('#panelcenter').down('#fiichart');
 
-        charts.setHidden(true);
+        charts.setLoading(true);
 
         var params = {
             idEmpresas: Ext.encode(idEmpresas),
             idMarcas: Ext.encode(idMarcas),
             codProdutos: Ext.encode(codProdutos)
         };
-        
+
         var newCharts = Ext.create('App.view.fii.ContainerHighCharts',{
             region: 'north',
             params: params
         });
 
-        console.log(newCharts);
+        charts.setLoading(false);
+        charts.setHidden(true);
+
         me.up('container').down('#panelcenter').add(newCharts);
 
         grid.getStore().getProxy().setExtraParams(params);
@@ -87,5 +89,5 @@ Ext.define('App.view.fii.Toolbar',{
         );
 
     }
-    
+
 });

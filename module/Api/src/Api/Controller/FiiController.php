@@ -21,30 +21,45 @@ class FiiController extends AbstractRestfulController
     {
         
     }
-
-    public function listarempresasAction()
-    {   
+    
+    public function listarEmpresasAction()
+    {
         $data = array();
         
         try {
+
+            $pNode = $this->params()->fromQuery('node',null);
+
+            $sql = "select e.apelido emp, e.id_empresa
+                        from ms.empresa e
+                    where e.id_empresa not in (26, 11, 28, 27, 20)
+                    order by e.apelido";
             $em = $this->getEntityManager();
-            
-            
-            $sql = "
-                SELECT ID_EMPRESA, APELIDO AS EMPRESA, NOME FROM MS.EMPRESA WHERE ID_MATRIZ = 1 ORDER BY EMPRESA
-            ";
-            
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
+            
             $stmt->execute();
-            $data = $stmt->fetchAll();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+
+            $objReturn = $this->getCallbackModel();
             
         } catch (\Exception $e) {
-            $message = $e->getMessage();
+            $objReturn = $this->setCallbackError($e->getMessage());
         }
         
-        $json = new JsonModel($data);
-        return $this->getResponseWithHeader()->setContent($json->serialize());
+        return $objReturn;
     }
 
     public function listarfichaitemheaderAction()
@@ -53,8 +68,7 @@ class FiiController extends AbstractRestfulController
         
         try {
             $em = $this->getEntityManager();
-            
-            
+
             $sql = "select to_char(add_months(trunc(sysdate,'MM'),-11),'MM') as id from dual union all
                     select to_char(add_months(trunc(sysdate,'MM'),-10),'MM') as id from dual union all
                     select to_char(add_months(trunc(sysdate,'MM'),-9), 'MM') as id from dual union all
@@ -173,6 +187,15 @@ class FiiController extends AbstractRestfulController
         $data = array();
         
         try {
+            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
+            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
+            $codProdutos= $this->params()->fromQuery('codProdutos',null);
+
+            if($idEmpresas){
+                $idEmpresas =  implode(",",json_decode($idEmpresas));
+                $andSql = " and id_empresa in ($idEmpresas)";
+            }
+            
             $em = $this->getEntityManager();
             
             $meses = [null,
@@ -383,6 +406,132 @@ class FiiController extends AbstractRestfulController
             );
             
         }  catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    
+    public function listarprodutosAction()
+    {
+        $data = array();
+        
+        try {
+
+            $pEmp    = $this->params()->fromQuery('emp',null);
+            $pCod    = $this->params()->fromQuery('codItem',null);
+            $tipoSql = $this->params()->fromQuery('tipoSql',null);
+
+            if(!$pCod){
+                throw new \Exception('Parâmetros não informados.');
+            }
+
+            $em = $this->getEntityManager();
+
+            if(!$tipoSql){
+                $filtroProduto = "like upper('".$pCod."%')";
+            }else{
+                $produtos =  implode("','",json_decode($pCod));
+                $filtroProduto = "in ('".$produtos."')";
+            }
+            
+            $sql = "select i.cod_item||c.descricao as cod_item,
+                           i.descricao,
+                           m.descricao as marca
+                        from ms.tb_item_categoria ic,
+                        ms.tb_marca m,
+                        ms.tb_item i,
+                        ms.tb_categoria c
+                    where ic.id_item = i.id_item
+                    and ic.id_categoria = c.id_categoria
+                    and ic.id_marca = m.id_marca
+                    and i.cod_item||c.descricao $filtroProduto
+                    order by cod_item asc";
+
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindValue(1, $pEmp);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('custo_contabil', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+    
+    public function listarmarcaAction()
+    {
+        $data = array();
+
+        $emp = $this->params()->fromQuery('emp',null);
+
+        try {
+
+            $session = $this->getSession();
+            $usuario = $session['info'];
+
+            $em = $this->getEntityManager();
+            
+            $sql = "select  g.id_grupo_marca,
+                            m.id_marca,
+                            m.descricao as marca,
+                            count(*) as skus
+                    from ms.tb_estoque e,
+                            ms.tb_item i,
+                            ms.tb_categoria c,
+                            ms.tb_item_categoria ic,
+                            ms.tb_marca m,
+                            ms.tb_grupo_marca g,
+                            ms.empresa em
+                    where e.id_item = i.id_item
+                    and e.id_categoria = c.id_categoria
+                    and e.id_item = ic.id_item
+                    and e.id_categoria = ic.id_categoria
+                    and ic.id_marca = m.id_marca
+                    and m.id_grupo_marca = g.id_grupo_marca
+                    and e.id_empresa = em.id_empresa
+                    --and e.id_curva_abc = 'E'
+                    and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
+                    group by g.id_grupo_marca, m.id_marca, m.descricao
+                    order by skus desc
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
             $this->setCallbackError($e->getMessage());
         }
         

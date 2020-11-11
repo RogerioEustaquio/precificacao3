@@ -648,7 +648,7 @@ class DshpvdController extends AbstractRestfulController
     }
 
     public function listarprodutosAction()
-    {   
+    {
         $data = array();
         
         try {

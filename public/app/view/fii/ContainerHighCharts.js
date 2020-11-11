@@ -34,6 +34,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             Ext.Ajax.request({
                                 url: BASEURL +'/api/fii/listarfichaitemgrafico',
                                 method: 'POST',
+                                params: me.params,
                                 async: false,
                                 success: function (response) {
                                     var result = Ext.decode(response.responseText);
@@ -77,15 +78,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         }
                     },
-                    // dataLabels: {
-                    //     enabled: true,
-                    //     format: 'R$ {y}',
-                    //     style: {
-                    //         // color: 'blue',
-                    //         // fontWeight: 'bold'
-                    //         fontSize: 8
-                    //     }
-                    // }
                 }
             },
             title: {
@@ -96,7 +88,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 crosshair: true
             },
             yAxis: [
-                
+
                 { // Primary yAxis
                     title: {
                         text: 'Rol',
@@ -114,15 +106,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             color: 'rgba(126,86,134,.9)'
                         }
                     },
-                    // dataLabels: {
-                    //     enabled: true,
-                    //     format: '{y}',
-                    //     style: {
-                    //         // color: 'blue',
-                    //         // fontWeight: 'bold'
-                    //         fontSize: 8
-                    //     }
-                    // },
                     opposite: true
                 },
                 { // Primary yAxis
@@ -189,18 +172,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     // shared: true,
                     // outside: true
                 },
-                // legend: {
-                //     layout: 'vertical',
-                //     align: 'left',
-                //     x: 80,
-                //     verticalAlign: 'top',
-                //     y: 55,
-                //     floating: true,
-                //     backgroundColor:
-                //         Highcharts.defaultOptions.legend.backgroundColor || // theme
-                //         'rgba(255,255,255,0.25)'
-                // },
-            series: series
+                series: series
         });
 
     }

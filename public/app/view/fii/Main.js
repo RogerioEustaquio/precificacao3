@@ -44,8 +44,8 @@ Ext.define('App.view.fii.Main', {
                                     region: 'north'
                                 },
                                 {
-                                        xtype: 'containergrid',
-                                        region: 'center'
+                                    xtype: 'containergrid',
+                                    region: 'center'
                                 }
                             ]
 

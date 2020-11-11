@@ -26,7 +26,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                 ],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/dshpvd/listarEmpresas',
+                    url: BASEURL + '/api/fii/listarEmpresas',
                     timeout: 120000,
                     reader: {
                         type: 'json',
@@ -43,7 +43,6 @@ Ext.define('App.view.fii.PanelFiltro',{
             fieldLabel: 'Empresas',
             labelWidth: 60,
             margin: '1 1 1 1',
-            // padding: 1,
             plugins:'dragdroptag',
             filterPickList: true,
             publishes: 'value',
@@ -66,7 +65,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                 fields: [{ name: 'coditem' }, { name: 'descricao' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/dshpvd/listarprodutos',
+                    url: BASEURL + '/api/fii/listarprodutos',
                     reader: { type: 'json', root: 'data' },
                     extraParams: { tipoSql: 0}
                 }
@@ -116,7 +115,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                 ],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/dshpvd/listarmarca',
+                    url: BASEURL + '/api/fii/listarmarca',
                     timeout: 120000,
                     reader: {
                         type: 'json',
@@ -213,12 +212,12 @@ Ext.define('App.view.fii.PanelFiltro',{
         }else{
             me.up('container').down('#panelwest').setHidden(true);
         }
-        
+
     },
 
     onBtnConsultar: function(btn){
         var me = this.up('toolbar');
 
     }
-    
+
 });

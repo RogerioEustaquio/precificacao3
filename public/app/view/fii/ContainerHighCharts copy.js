@@ -203,7 +203,5 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 ]
             });
 
-        console.log(me.chart);
-
     }
 });
