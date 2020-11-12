@@ -143,6 +143,34 @@ Ext.define('App.view.fii.PanelFiltro',{
             }
         );
 
+        var elTagPessoa = Ext.create('Ext.form.field.Tag',{
+            name: 'elPessoa',
+            itemId: 'elPessoa',
+            multiSelect: true,
+            labelAlign: 'top',
+            width: 180,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'tppessoa', type: 'string' },
+                    { name: 'name', type: 'string' }
+                ],
+                
+                data: [
+                    {"tppessoa":"F", "name":"Física"},
+                    {"tppessoa":"J", "name":"Jurídica"}
+                ]
+            }),
+            queryMode: 'local',
+            displayField: 'name',
+            valueField: 'tppessoa',
+            emptyText: 'Pessoa',
+            fieldLabel: 'Tipo Pessoa',
+            // labelWidth: 60,
+            margin: '1 1 1 1',
+            filterPickList: true,
+            disabled: false
+        });
+
         Ext.applyIf(me, {
 
             items : [
@@ -198,8 +226,24 @@ Ext.define('App.view.fii.PanelFiltro',{
                     ]
                 },
                 {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elTagPessoa,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
                     xtype: 'toolbar',
-                    // layout: 'hbox',
                     width: '100%',
                     border: false,
                     items:[
@@ -213,6 +257,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                                 form.up('toolbar').up('panel').down('tagfield[name=elEmp]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elProduto]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elMarca]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elPessoa]').setValue(null);
                             }
                         }
                     ]

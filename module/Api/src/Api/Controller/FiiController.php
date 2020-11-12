@@ -116,9 +116,22 @@ class FiiController extends AbstractRestfulController
             $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
             $idMarcas   = $this->params()->fromQuery('idMarcas',null);
             $codProdutos= $this->params()->fromQuery('codProdutos',null);
+            $tpPessoas  = $this->params()->fromQuery('tpPessoas',null);
 
             if($idEmpresas){
-                $idEmpresas =  implode(",",json_decode($idEmpresas));
+                $idEmpresas   =  implode(",",json_decode($idEmpresas));
+            }
+            if($idMarcas){
+                $idMarcas =  implode(",",json_decode($idMarcas));
+            }
+            if($codProdutos){
+                $codProdutos =  implode("','",json_decode($codProdutos));
+            }
+            if($tpPessoas){
+                $tpPessoas =  implode("','",json_decode($tpPessoas));
+            }
+
+            if($idEmpresas){
                 $andSql = " and id_empresa in ($idEmpresas)";
             }
 
@@ -187,13 +200,39 @@ class FiiController extends AbstractRestfulController
         $data = array();
         
         try {
-            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
-            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
-            $codProdutos= $this->params()->fromQuery('codProdutos',null);
+            $idEmpresas = $this->params()->fromPost('idEmpresas',null);
+            $idMarcas   = $this->params()->fromPost('idMarcas',null);
+            $codProdutos= $this->params()->fromPost('codProdutos',null);
+            $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
 
             if($idEmpresas){
-                $idEmpresas =  implode(",",json_decode($idEmpresas));
-                $andSql = " and id_empresa in ($idEmpresas)";
+                $idEmpresas   =  implode(",",json_decode($idEmpresas));
+            }
+            if($idMarcas){
+                $idMarcas =  implode(",",json_decode($idMarcas));
+            }
+            if($codProdutos){
+                $codProdutos =  implode("','",json_decode($codProdutos));
+            }
+            if($tpPessoas){
+                $tpPessoas =  implode("','",json_decode($tpPessoas));
+            }
+
+            $andSql = '';
+            if($idEmpresas){
+                $andSql = " and vi.id_empresa in ($idEmpresas)";
+            }
+
+            if($idMarcas){
+                $andSql .= " and m.id_marcas in ($idMarcas)";
+            }
+
+            if($codProdutos){
+                $andSql .= " and i.cod_item||c.descricao in ('$codProdutos')";
+            }
+
+            if($tpPessoas){
+                $andSql .= " and p.tipo_pessoa in ('$tpPessoas')";
             }
             
             $em = $this->getEntityManager();
@@ -227,7 +266,7 @@ class FiiController extends AbstractRestfulController
                     select to_char(add_months(trunc(sysdate,'MM'),-1), 'MM') as id from dual union all
                     select to_char(add_months(trunc(sysdate,'MM'),-0), 'MM') as id from dual
             ";
-            
+
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
@@ -244,96 +283,95 @@ class FiiController extends AbstractRestfulController
                 $categories[] = $meses[(float)$data1['id']];
             }
 
-            $sql = "select 'PVM' as tipo,
-                            t.id_empresa,
-                            t.id_item,
-                            t.id_categoria,
-                            t.valor_m11,
-                            t.valor_m10,
-                            t.valor_m9,
-                            t.valor_m8,
-                            t.valor_m7,
-                            t.valor_m6,
-                            t.valor_m5,
-                            t.valor_m4,
-                            t.valor_m3,
-                            t.valor_m2,
-                            t.valor_m1,
-                            t.valor_m0
-                        from VW_PRODUTO_PRECO_TIMELINE t 
-                        where 1 = 1
-                        and id_empresa in (2)
-                        and id_item = 84307
-                        and id_categoria = 1";
+            $sql = "select a.data,
+                           b.desconto_uni,
+                           b.preco_uni,
+                           b.imposto_uni,
+                           b.rol_uni,
+                           b.custo_uni,
+                           b.desconto_perc,
+                           b.rol,
+                           b.cmv,
+                           b.lb,
+                           b.qtde,
+                           b.nf,
+                           b.cc
+                    from (select distinct trunc(data_emissao, 'MM') as data
+                            from pricing.vm_ie_ve_venda_item 
+                          where trunc(data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)
+                          order by data asc) a,
+                         (select trunc(vi.data_emissao, 'MM') as data,
+                                 round(sum(vi.desconto)/sum(qtde),2) as desconto_uni,
+                                 round(sum(vi.rob)/sum(qtde),2) as preco_uni,
+                                 round((sum(vi.rob)-sum(vi.rol))/sum(qtde),2) as imposto_uni,
+                                 round(sum(vi.rol)/sum(qtde),2) as rol_uni,
+                                 round(sum(vi.custo)/sum(qtde),2) as custo_uni,
+                                 round((sum(vi.desconto)/sum(rob))*100,2) as desconto_perc,
+                                 sum(vi.rol) as rol,
+                                 sum(vi.custo) as cmv,
+                                 sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                 sum(vi.qtde) as qtde,
+                                 count(distinct vi.numero_nf) as nf,
+                                 count(distinct vi.id_pessoa) as cc
+                            from pricing.vm_ie_ve_venda_item vi,
+                                 ms.empresa e,
+                                 ms.tb_item_categoria ic,
+                                 ms.tb_item i,
+                                 ms.tb_categoria c,
+                                 ms.tb_marca m, ms.pessoa p
+                           where vi.id_empresa = e.id_empresa
+                           and vi.id_item = ic.id_item
+                           and vi.id_categoria = ic.id_categoria
+                           and vi.id_item = i.id_item
+                           and vi.id_categoria = c.id_categoria
+                           and ic.id_marca = m.id_marca
+                           and vi.id_pessoa = p.id_pessoa(+)                           
+                           and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)
+                           $andSql
+                           --and e.apelido in ('RE')
+                           --and m.descricao in('MWM')
+                           --and i.cod_item||c.descricao in('JS00506.0')
+                           --and p.tipo_pessoa in ('F')
+                           group by trunc(vi.data_emissao, 'MM')) b
+                    where a.data = b.data(+)
+            ";
+
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
-            $hydrator->addStrategy('valor_m11', new ValueStrategy);
-            $hydrator->addStrategy('valor_m10', new ValueStrategy);
-            $hydrator->addStrategy('valor_m9', new ValueStrategy);
-            $hydrator->addStrategy('valor_m8', new ValueStrategy);
-            $hydrator->addStrategy('valor_m7', new ValueStrategy);
-            $hydrator->addStrategy('valor_m6', new ValueStrategy);
-            $hydrator->addStrategy('valor_m5', new ValueStrategy);
-            $hydrator->addStrategy('valor_m4', new ValueStrategy);
-            $hydrator->addStrategy('valor_m3', new ValueStrategy);
-            $hydrator->addStrategy('valor_m2', new ValueStrategy);
-            $hydrator->addStrategy('valor_m1', new ValueStrategy);
-            $hydrator->addStrategy('valor_m0', new ValueStrategy);
+            $hydrator->addStrategy('preco_uni', new ValueStrategy);
+            $hydrator->addStrategy('imposto_uni', new ValueStrategy);
+            $hydrator->addStrategy('rol_uni', new ValueStrategy);
+            $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('desconto_perc', new ValueStrategy);
+            $hydrator->addStrategy('rol', new ValueStrategy);
+            $hydrator->addStrategy('cmv', new ValueStrategy);
+            $hydrator->addStrategy('lb', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
 
             $data = array();
-            // $arrayPreco = array();
-            // $arrayRol = array();
+            $arrayPreco = array();
+            $arrayRol = array();
+            $arrayCmv = array();
+            $arrayLb = array();
+
             foreach ($resultSet as $row) {
-                $data[] = $hydrator->extract($row);
-                            
-                $arrayPreco= [(float)$data[0]['valorM11'],
-                              (float)$data[0]['valorM10'],
-                              (float)$data[0]['valorM9'],
-                              (float)$data[0]['valorM8'],
-                              (float)$data[0]['valorM7'],
-                              (float)$data[0]['valorM6'],
-                              (float)$data[0]['valorM5'],
-                              (float)$data[0]['valorM4'],
-                              (float)$data[0]['valorM3'],
-                              (float)$data[0]['valorM2'],
-                              (float)$data[0]['valorM1'],
-                              (float)$data[0]['valorM0']
-                             ];
+
+                $elementos = $hydrator->extract($row);
+
+                $arrayPreco[] = (float)$elementos['precoUni'];
+                $arrayRol[] = (float)$elementos['rol'];
+                $arrayCmv[] = (float)$elementos['cmv'];
+                $arrayLb[] = (float)$elementos['lb'];
             }
 
-            $arrayRol = [1271.569,
-                        1339.661,
-                        1258.922,
-                        1192.778,
-                        1123.123,
-                        1044.219,
-                        883.384,
-                        824.531,
-                        952.093,
-                        1059.469,
-                        1001.275,
-                        961.114
-                        ];
-            $arrayLb = [377.161,
-                        399.948,
-                        378.895,
-                        361.835,
-                        340.188,
-                        321.671,
-                        270.296,
-                        251.719,
-                        281.072,
-                        315.821,
-                        298.878,
-                        286.233
-                    ];
             $arrayMb = [29.66,
                         29.85,
                         30.10,
@@ -370,7 +408,7 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 1,
                                 'color' => 'rgba(165,170,217,1)',
                                 'data' => $arrayPreco,
-                                'visible' => false,
+                                'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'format' => '{y}',

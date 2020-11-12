@@ -126,7 +126,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         }
                     },
                     // showEmpty: false,
-                    visible: false,
+                    visible: true,
                     opposite: true
                 },
                 { // Secondary yAxis
@@ -156,7 +156,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         }
                     },
                     labels: {
-                        format: 'R$ {value}',
+                        format: '% {value}',
                         // align: 'right',
                         x: 0,
                         y: 0,
