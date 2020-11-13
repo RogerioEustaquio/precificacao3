@@ -224,7 +224,7 @@ class FiiController extends AbstractRestfulController
             }
 
             if($idMarcas){
-                $andSql .= " and m.id_marcas in ($idMarcas)";
+                $andSql .= " and m.id_marca in ($idMarcas)";
             }
 
             if($codProdutos){
@@ -331,6 +331,9 @@ class FiiController extends AbstractRestfulController
                            group by trunc(vi.data_emissao, 'MM')) b
                     where a.data = b.data(+)
             ";
+
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -459,10 +462,10 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'Rol',
+                                'name' => 'ROL',
                                 'yAxis'=> 6,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayDescPc,
+                                'data' => $arrayRol,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => 'R$',

@@ -173,7 +173,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 },
                 { 
                     title: {
-                        text: 'Rol Unitário',
+                        text: 'ROL Unitário',
                         style: {
                             color: Highcharts.getOptions().colors[3]
                         }
