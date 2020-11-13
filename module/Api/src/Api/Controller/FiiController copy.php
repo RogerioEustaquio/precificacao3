@@ -375,7 +375,7 @@ class FiiController extends AbstractRestfulController
                 $arrayLb[]      = (float)$elementos['lb'];
                 // $arrayMb[] = (float)$elementos['lb'];
             }
-
+            
             // $this->setCallbackData($data);
             return new JsonModel(
                 array(
@@ -384,14 +384,13 @@ class FiiController extends AbstractRestfulController
                         'categories' => $categories,
                         'series' => array(
                             array(
-                                'name' => 'Desconto',
+                                'name' => 'Rol',
                                 'yAxis'=> 0,
-                                // 'color' => 'rgba(126,86,134,.9)',
-                                'data' => $arrayDesc,
+                                'color' => 'rgba(126,86,134,.9)',
+                                'data' => $arrayRol,
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
-                                    'keyformat' => '',
                                     'format' => 'R$ {y}',
                                     'style' => array( 'fontSize' => '8')
                                     )
@@ -399,98 +398,35 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Preço',
                                 'yAxis'=> 1,
-                                // 'color' => 'rgba(165,170,217,1)',
+                                'color' => 'rgba(165,170,217,1)',
                                 'data' => $arrayPreco,
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
-                                    'keyformat' => '',
-                                    'format' => 'R$ {y}',
+                                    'format' => '{y}',
                                     'style' => array( 'fontSize' => '8')
                                 ),
                             ),
                             array(
-                                'name' => 'Imposto',
+                                'name' => 'Lb',
                                 'yAxis'=> 2,
-                                // 'color' => 'rgba(46, 36, 183, 1)',
-                                'data' => $arrayImposto,
+                                'color' => 'rgba(46, 36, 183, 1)',
+                                'data' => $arrayLb,
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
-                                    'keyformat' => '',
-                                    'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
-                                    )
-                            ),
-                            array(
-                                'name' => 'Rol Unitário',
-                                'yAxis'=> 3,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayRolUni,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => '$',
-                                    'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
-                                    )
-                            ),
-                            array(
-                                'name' => 'Custo',
-                                'yAxis'=> 4,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayCusto,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => '',
-                                    'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
-                                    )
-                            ),
-                            array(
-                                'name' => '% Desconto',
-                                'yAxis'=> 5,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayDescPc,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => '%',
-                                    'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
-                                    )
-                            ),
-                            array(
-                                'name' => 'Rol',
-                                'yAxis'=> 6,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayDescPc,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => 'R$',
-                                    'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
-                                    )
-                            ),
-                            array(
-                                'name' => 'CMV',
-                                'yAxis'=> 7,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayCmv,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => '$',
-                                    'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
-                                    )
-                            ),
-                            array(
-                                'name' => 'LB',
-                                'yAxis'=> 8,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
-                                'data' => $arrayLb,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => '$',
                                     'format' => 'R$ {y}',
+                                    'style' => array( 'fontSize' => '8')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Mb',
+                                'yAxis'=> 3,
+                                'color' => 'rgba(221, 117, 85, 1)',
+                                'data' => $arrayMb,
+                                'dataLabels' => array(
+                                    'enabled' => true,
+                                    'format' => '% {y}',
                                     'style' => array( 'fontSize' => '8')
                                     )
                             )

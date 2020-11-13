@@ -16,6 +16,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
     constructor: function(config) {
         var me = this;
+        var utilFormat = Ext.create('Ext.ux.util.Format');
 
         Ext.applyIf(me, {
             items: [
@@ -42,10 +43,18 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
                                         rsarray = result.data;
 
+                                        // for (let index = 0; index < rsarray.series.length; index++) {
+
+                                        //     rsarray.series[index].dataLabels.format = utilFormat.Value(rsarray.series[index].data[index]);
+                                            
+                                        // }
+
+
                                     }
                                 }
                             });
 
+                            // console.log(rsarray.series);
                             me.buildChartContainer(el,rsarray.categories,rsarray.series)
                         }
                     }
@@ -58,6 +67,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
     buildChartContainer: function(el,meses,series){
         var me = this;
+        var utilFormat = Ext.create('Ext.ux.util.Format');
 
         me.chart =  Highcharts.chart(el.id, {
 
@@ -78,6 +88,13 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         }
                     },
+                    dataLabels: {
+                        // format: '{series}'
+                        // formatter: function () {
+                        //     // return utilFormat.Value(this.y);
+                        //     return '{series}';
+                        // }
+                    }
                 }
             },
             title: {
@@ -91,19 +108,22 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
                 { // Primary yAxis
                     title: {
-                        text: 'Rol',
+                        text: 'Desconto',
                         style: {
-                            color: 'rgba(126,86,134,.9)'
+                            color: Highcharts.getOptions().colors[0]
                         }
                     },
                     labels: {
-                        format: 'R$ {value}',
+                        // format: utilFormat.Value(parseFloat('{value}')),
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
                         align: 'right',
                         x: 0,
                         y: 0,
                         padding: 0,
                         style: {
-                            color: 'rgba(126,86,134,.9)'
+                            color: Highcharts.getOptions().colors[0]
                         }
                     },
                     opposite: true
@@ -112,17 +132,19 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     title: {
                         text: 'Preço',
                         style: {
-                            color: 'rgba(165,170,217,1)'
+                            color: Highcharts.getOptions().colors[1]
                         }
                     },
                     labels: {
-                        format: 'R$ {value}',
-                        // align: 'right',
+                        // format: utilFormat.Value(parseFloat('{value}')),
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
                         x: 0,
                         y: 0,
                         padding: 0,
                         style: {
-                            color: 'rgba(165,170,217,1)'
+                            color: Highcharts.getOptions().colors[1]
                         }
                     },
                     // showEmpty: false,
@@ -131,42 +153,144 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 },
                 { // Secondary yAxis
                     title: {
-                        text: 'Lb',
+                        text: 'Imposto',
                         style: {
-                            color: 'rgba(46, 36, 183, 1)'
+                            color: Highcharts.getOptions().colors[2]
                         }
                     },
                     labels: {
-                        format: 'R$ {value}',
-                        // align: 'right',
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
                         x: 0,
                         y: 0,
                         padding: 0,
                         style: {
-                            color: 'rgba(46, 36, 183, 1)'
+                            color: Highcharts.getOptions().colors[2]
                         }
                     },
                     opposite: true
                 },
-                { // Tertiary yAxis
+                { 
                     title: {
-                        text: 'Mb',
+                        text: 'Rol Unitário',
                         style: {
-                            color: 'rgba(221, 117, 85, 1)'
+                            color: Highcharts.getOptions().colors[3]
                         }
                     },
                     labels: {
-                        format: '% {value}',
-                        // align: 'right',
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
                         x: 0,
                         y: 0,
                         padding: 0,
                         style: {
-                            color: 'rgba(221, 117, 85, 1)'
+                            color: Highcharts.getOptions().colors[3]
                         }
                     },
                     opposite: true
-                 }
+                 },
+                 {
+                     title: {
+                         text: 'Custo',
+                         style: {
+                             color: Highcharts.getOptions().colors[4]
+                         }
+                     },
+                     labels: {
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
+                         x: 0,
+                         y: 0,
+                         padding: 0,
+                         style: {
+                             color: Highcharts.getOptions().colors[4]
+                         }
+                     },
+                     opposite: true
+                  },
+                  {
+                      title: {
+                          text: '% Desconto',
+                          style: {
+                              color: Highcharts.getOptions().colors[5]
+                          }
+                      },
+                      labels: {
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
+                          x: 0,
+                          y: 0,
+                          padding: 0,
+                          style: {
+                              color: Highcharts.getOptions().colors[5]
+                          }
+                      },
+                      opposite: true
+                   },
+                   {
+                       title: {
+                           text: 'ROL',
+                           style: {
+                               color: Highcharts.getOptions().colors[6]
+                           }
+                       },
+                       labels: {
+                            formatter: function () {
+                                return utilFormat.Value(parseFloat(this.value));
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: Highcharts.getOptions().colors[6]
+                            }
+                       },
+                       opposite: true
+                    },
+                    {
+                        title: {
+                            text: 'CMV',
+                            style: {
+                                color: Highcharts.getOptions().colors[7]
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value(parseFloat(this.value));
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: Highcharts.getOptions().colors[7]
+                            }
+                        },
+                        opposite: true
+                     },
+                     {
+                         title: {
+                             text: 'LB',
+                             style: {
+                                 color: Highcharts.getOptions().colors[8]
+                             }
+                         },
+                         labels: {
+                            formatter: function () {
+                                return utilFormat.Value(parseFloat(this.value));
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: Highcharts.getOptions().colors[8]
+                            }
+                         },
+                         opposite: true
+                      }
                 ],
                 tooltip: {
                     // shared: true,
