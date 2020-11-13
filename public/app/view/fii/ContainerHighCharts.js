@@ -43,14 +43,28 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
                                         rsarray = result.data;
 
-                                        // for (let index = 0; index < rsarray.series.length; index++) {
+                                    }else{
+                                        rsarray = [];
 
-                                        //     rsarray.series[index].dataLabels.format = utilFormat.Value(rsarray.series[index].data[index]);
-                                            
-                                        // }
-
-
+                                        new Noty({
+                                            theme: 'relax',
+                                            layout: 'bottomRight',
+                                            type: 'error',
+                                            closeWith: [],
+                                            text: 'Erro sistema: '+ result.message.substr(0,20)
+                                        }).show();
                                     }
+                                },
+                                error: function() {
+                                    rsarray = [];
+
+                                    new Noty({
+                                        theme: 'relax',
+                                        layout: 'bottomRight',
+                                        type: 'error',
+                                        closeWith: [],
+                                        text: 'Erro sistema: '+ result.message.substr(0,20)
+                                    }).show();
                                 }
                             });
 

@@ -382,7 +382,7 @@ class FiiController extends AbstractRestfulController
             // $this->setCallbackData($data);
             return new JsonModel(
                 array(
-                    'success' => 'true',
+                    'success' => true,
                     'data' => array(
                         'categories' => $categories,
                         'series' => array(
