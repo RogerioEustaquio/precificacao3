@@ -104,10 +104,16 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     },
                     dataLabels: {
                         // format: '{series}'
-                        // formatter: function () {
-                        //     // return utilFormat.Value(this.y);
-                        //     return '{series}';
-                        // }
+                        formatter: function () {
+
+                            var vFormat = this.point.series.options.vFormat.toString();
+
+                            if(vFormat == 'NAO'){
+                                return this.y;
+                            }
+
+                            return vFormat+' '+utilFormat.Value(this.y);
+                        }
                     }
                 }
             },
@@ -207,7 +213,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                  },
                  {
                      title: {
-                         text: 'Custo',
+                         text: 'Custo Unitário',
                          style: {
                              color: Highcharts.getOptions().colors[4]
                          }
@@ -304,7 +310,67 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                          },
                          opposite: true
-                      }
+                      },
+                      {
+                          title: {
+                              text: 'Quantidade',
+                              style: {
+                                  color: Highcharts.getOptions().colors[9]
+                              }
+                          },
+                          labels: {
+                            //  formatter: function () {
+                            //      return utilFormat.Value(parseFloat(this.value));
+                            //  },
+                             x: 0,
+                             y: 0,
+                             padding: 0,
+                             style: {
+                                 color: Highcharts.getOptions().colors[9]
+                             }
+                          },
+                          opposite: true
+                       },
+                       {
+                           title: {
+                               text: 'Nota Fiscal',
+                               style: {
+                                   color: Highcharts.getOptions().colors[10]
+                               }
+                           },
+                           labels: {
+                            //   formatter: function () {
+                            //       return utilFormat.Value(parseFloat(this.value));
+                            //   },
+                              x: 0,
+                              y: 0,
+                              padding: 0,
+                              style: {
+                                  color: Highcharts.getOptions().colors[10]
+                              }
+                           },
+                           opposite: true
+                        },
+                        {
+                            title: {
+                                text: 'Cliente',
+                                style: {
+                                    color: Highcharts.getOptions().colors[11]
+                                }
+                            },
+                            labels: {
+                            //    formatter: function () {
+                            //        return utilFormat.Value(parseFloat(this.value));
+                            //    },
+                               x: 0,
+                               y: 0,
+                               padding: 0,
+                               style: {
+                                   color: Highcharts.getOptions().colors[11]
+                               }
+                            },
+                            opposite: true
+                         }
                 ],
                 tooltip: {
                     // shared: true,
