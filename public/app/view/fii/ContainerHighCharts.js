@@ -128,15 +128,21 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             yAxis: [
 
                 { // Primary yAxis
+                    
                     title: {
                         text: 'Desconto',
                         style: {
-                            color: Highcharts.getOptions().colors[0]
+                            color: Highcharts.getOptions().colors[0],
+                            visibility: 'visible'
                         }
                     },
                     labels: {
                         // format: utilFormat.Value(parseFloat('{value}')),
                         formatter: function () {
+                            
+                            // console.log(this.axis.options.title.text);
+                            // console.log(this.axis.visible);
+                            // console.log(this.axis.options.title.style.visibility);
                             return utilFormat.Value(parseFloat(this.value));
                         },
                         align: 'right',

@@ -451,7 +451,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Custo Unitário',
-                                'yAxis'=> 4,
+                                'yAxis'=> 3,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCusto,
                                 'vFormat' => '',
