@@ -16,7 +16,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
     constructor: function(config) {
         var me = this;
-        var utilFormat = Ext.create('Ext.ux.util.Format');
+        // var utilFormat = Ext.create('Ext.ux.util.Format');
 
         Ext.applyIf(me, {
             items: [
@@ -82,6 +82,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     buildChartContainer: function(el,meses,series){
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
+        colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"];
 
         me.chart =  Highcharts.chart(el.id, {
 
@@ -319,9 +320,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                               }
                           },
                           labels: {
-                            //  formatter: function () {
-                            //      return utilFormat.Value(parseFloat(this.value));
-                            //  },
                              x: 0,
                              y: 0,
                              padding: 0,
@@ -335,18 +333,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                            title: {
                                text: 'Nota Fiscal',
                                style: {
-                                   color: Highcharts.getOptions().colors[10]
+                                   color: colors[0]
                                }
                            },
                            labels: {
-                            //   formatter: function () {
-                            //       return utilFormat.Value(parseFloat(this.value));
-                            //   },
                               x: 0,
                               y: 0,
                               padding: 0,
                               style: {
-                                  color: Highcharts.getOptions().colors[10]
+                                  color: colors[0]
                               }
                            },
                            opposite: true
@@ -355,18 +350,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             title: {
                                 text: 'Cliente',
                                 style: {
-                                    color: Highcharts.getOptions().colors[11]
+                                    color: colors[1]
                                 }
                             },
                             labels: {
-                            //    formatter: function () {
-                            //        return utilFormat.Value(parseFloat(this.value));
-                            //    },
                                x: 0,
                                y: 0,
                                padding: 0,
                                style: {
-                                   color: Highcharts.getOptions().colors[11]
+                                   color: colors[1]
                                }
                             },
                             opposite: true
