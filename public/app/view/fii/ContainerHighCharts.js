@@ -85,7 +85,14 @@ Ext.define('App.view.fii.ContainerHighCharts', {
         colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"];
 
         me.chart =  Highcharts.chart(el.id, {
-
+            loading: {
+                labelStyle: {
+                    color: 'white'
+                },
+                style: {
+                    backgroundColor: 'gray'
+                }
+            },
             credits:{
                 enabled: false
             },
@@ -95,12 +102,18 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             },
             plotOptions: {
                 series: {
-                    cursor: 'pointer',
-                    point: {
-                        events: {
-                            click: function () {
-                                alert('Category: ' + this.category + ', value: ' + this.y);
+                    events: {
+                        legendItemClick: function () {
+
+                            var index = this.index;
+                            
+                            if(this.chart.yAxis[index].visible){
+                                this.chart.yAxis[index].update({visible: false});
+                            }else{
+                                this.chart.yAxis[index].update({visible: true});
                             }
+
+                            return this;
                         }
                     },
                     dataLabels: {
@@ -131,9 +144,10 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     
                     title: {
                         text: 'Desconto',
+                        vteste: 'aqui',
                         style: {
                             color: Highcharts.getOptions().colors[0],
-                            visibility: 'visible'
+                            display: 'inline'
                         }
                     },
                     labels: {
@@ -153,13 +167,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             color: Highcharts.getOptions().colors[0]
                         }
                     },
-                    opposite: true
+                    opposite: true,
+                    visible: true
                 },
                 { // Primary yAxis
                     title: {
                         text: 'Preço',
                         style: {
-                            color: Highcharts.getOptions().colors[1]
+                            color: Highcharts.getOptions().colors[1],
+                            display: 'inline'
                         }
                     },
                     labels: {
@@ -174,15 +190,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             color: Highcharts.getOptions().colors[1]
                         }
                     },
-                    // showEmpty: false,
-                    visible: true,
-                    opposite: true
+                    opposite: true,
+                    visible: true
                 },
                 { // Secondary yAxis
                     title: {
                         text: 'Imposto',
                         style: {
-                            color: Highcharts.getOptions().colors[2]
+                            color: Highcharts.getOptions().colors[2],
+                            display: 'inline'
                         }
                     },
                     labels: {
@@ -196,13 +212,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             color: Highcharts.getOptions().colors[2]
                         }
                     },
-                    opposite: true
+                    opposite: true,
+                    visible: true
                 },
                 { 
                     title: {
                         text: 'ROL Unitário',
                         style: {
-                            color: Highcharts.getOptions().colors[3]
+                            color: Highcharts.getOptions().colors[3],
+                            display: 'inline'
                         }
                     },
                     labels: {
@@ -216,33 +234,37 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             color: Highcharts.getOptions().colors[3]
                         }
                     },
-                    opposite: true
+                    opposite: true,
+                    visible: true
                  },
                  {
                      title: {
                          text: 'Custo Unitário',
                          style: {
-                             color: Highcharts.getOptions().colors[4]
+                             color: Highcharts.getOptions().colors[4],
+                             display: 'inline'
                          }
                      },
-                     labels: {
-                        formatter: function () {
-                            return utilFormat.Value(parseFloat(this.value));
-                        },
-                         x: 0,
-                         y: 0,
-                         padding: 0,
-                         style: {
-                             color: Highcharts.getOptions().colors[4]
-                         }
-                     },
-                     opposite: true
+                    //  labels: {
+                    //     formatter: function () {
+                    //         return utilFormat.Value(parseFloat(this.value));
+                    //     },
+                    //      x: 0,
+                    //      y: 0,
+                    //      padding: 0,
+                    //      style: {
+                    //          color: Highcharts.getOptions().colors[4]
+                    //      }
+                    //  },
+                     opposite: true,
+                     visible: true
                   },
                   {
                       title: {
                           text: '% Desconto',
                           style: {
-                              color: Highcharts.getOptions().colors[5]
+                              color: Highcharts.getOptions().colors[5],
+                              display: 'inline'
                           }
                       },
                       labels: {
@@ -256,13 +278,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                               color: Highcharts.getOptions().colors[5]
                           }
                       },
-                      opposite: true
+                      opposite: true,
+                      visible: true
                    },
                    {
                        title: {
                            text: 'ROL',
                            style: {
-                               color: Highcharts.getOptions().colors[6]
+                               color: Highcharts.getOptions().colors[6],
+                               display: 'inline'
                            }
                        },
                        labels: {
@@ -276,13 +300,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 color: Highcharts.getOptions().colors[6]
                             }
                        },
-                       opposite: true
+                       opposite: true,
+                       visible: true
                     },
                     {
                         title: {
                             text: 'CMV',
                             style: {
-                                color: Highcharts.getOptions().colors[7]
+                                color: Highcharts.getOptions().colors[7],
+                                display: 'inline'
                             }
                         },
                         labels: {
@@ -296,13 +322,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 color: Highcharts.getOptions().colors[7]
                             }
                         },
-                        opposite: true
+                        opposite: true,
+                        visible: true
                      },
                      {
                          title: {
                              text: 'LB',
                              style: {
-                                 color: Highcharts.getOptions().colors[8]
+                                 color: Highcharts.getOptions().colors[8],
+                                 display: 'inline'
                              }
                          },
                          labels: {
@@ -316,13 +344,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 color: Highcharts.getOptions().colors[8]
                             }
                          },
-                         opposite: true
+                         opposite: true,
+                         visible: true
                       },
                       {
                           title: {
                               text: 'Quantidade',
                               style: {
-                                  color: Highcharts.getOptions().colors[9]
+                                  color: Highcharts.getOptions().colors[9],
+                                  display: 'inline'
                               }
                           },
                           labels: {
@@ -333,13 +363,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                  color: Highcharts.getOptions().colors[9]
                              }
                           },
-                          opposite: true
+                          opposite: true,
+                          visible: true
                        },
                        {
                            title: {
                                text: 'Nota Fiscal',
                                style: {
-                                   color: colors[0]
+                                   color: colors[0],
+                                   display: 'inline'
                                }
                            },
                            labels: {
@@ -350,13 +382,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                   color: colors[0]
                               }
                            },
-                           opposite: true
+                           opposite: true,
+                           visible: true
                         },
                         {
                             title: {
                                 text: 'Cliente',
                                 style: {
-                                    color: colors[1]
+                                    color: colors[1],
+                                    display: 'inline'
                                 }
                             },
                             labels: {
@@ -367,7 +401,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                    color: colors[1]
                                }
                             },
-                            opposite: true
+                            opposite: true,
+                            visible: true
                          }
                 ],
                 tooltip: {
