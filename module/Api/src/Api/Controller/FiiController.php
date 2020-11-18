@@ -395,11 +395,12 @@ class FiiController extends AbstractRestfulController
                         'categories' => $categories,
                         'series' => array(
                             array(
-                                'name' => 'Desconto',
+                                'name' => 'Desconto Unitário',
                                 'yAxis'=> 0,
                                 // 'color' => 'rgba(126,86,134,.9)',
                                 'data' => $arrayDesc,
                                 'vFormat' => 'R$',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -408,11 +409,12 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'Preço',
+                                'name' => 'Preço Unitário',
                                 'yAxis'=> 1,
                                 // 'color' => 'rgba(165,170,217,1)',
                                 'data' => $arrayPreco,
                                 'vFormat' => 'R$',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -422,11 +424,12 @@ class FiiController extends AbstractRestfulController
                                 ),
                             ),
                             array(
-                                'name' => 'Imposto',
+                                'name' => 'Imposto Unitário',
                                 'yAxis'=> 2,
                                 // 'color' => 'rgba(46, 36, 183, 1)',
                                 'data' => $arrayImposto,
                                 'vFormat' => '',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -441,6 +444,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRolUni,
                                 'vFormat' => '',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -455,6 +459,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCusto,
                                 'vFormat' => '',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -469,6 +474,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayDescPc,
                                 'vFormat' => '%',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -483,6 +489,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRol,
                                 'vFormat' => '',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -497,6 +504,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCmv,
                                 'vFormat' => '',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -511,6 +519,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayLb,
                                 'vFormat' => '%',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -524,7 +533,8 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 9,
                                 // 'color' => 'rgba(126,86,134,.9)',
                                 'data' => $arrayQtde,
-                                'vFormat' => 'NAO',
+                                'vFormat' => 'N',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -537,7 +547,8 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 10,
                                 'color' => $colors[0],
                                 'data' => $arrayNf,
-                                'vFormat' => 'NAO',
+                                'vFormat' => 'N',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -550,7 +561,8 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 11,
                                 'color' => $colors[1],
                                 'data' => $arrayCc,
-                                'vFormat' => 'NAO',
+                                'vFormat' => 'N',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,

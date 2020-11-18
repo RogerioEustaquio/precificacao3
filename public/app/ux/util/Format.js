@@ -19,6 +19,16 @@ Ext.define("Ext.ux.util.Format", {
         }
         return val;
     },
+    Value2: function(v,d) {
+        var val = '';
+        d = !d ? 0 : d;
+        if (v) {
+            val = Ext.util.Format.currency(v, ' ', d, false);
+        } else {
+            val = 0;
+        }
+        return val;
+    },
     Percent: function(v) {
         var val = '';
         if (v) {

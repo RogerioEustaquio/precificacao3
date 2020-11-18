@@ -58,12 +58,27 @@ Ext.define('App.view.fii.Toolbar',{
         var tpPessoas = me.up('container').down('#panelwest').down('#elPessoa').getValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
+        var charts = me.up('container').down('#panelcenter').down('#fiichart');
+
+        charts.setLoading(true);
+
         var params = {
             idEmpresas: Ext.encode(idEmpresas),
             idMarcas: Ext.encode(idMarcas),
             codProdutos: Ext.encode(codProdutos),
             tpPessoas: Ext.encode(tpPessoas),
         };
+
+        var newCharts = Ext.create('App.view.fii.ContainerHighCharts',{
+            region: 'north',
+            params: params
+        });
+
+        charts.setLoading(false);
+        charts.setHidden(true);
+
+        me.up('container').down('#panelcenter').add(newCharts);
+
         grid.getStore().getProxy().setExtraParams(params);
         grid.getStore().load(
             // function(record){
@@ -74,69 +89,6 @@ Ext.define('App.view.fii.Toolbar',{
             //     });
             // }
         );
-
-        var charts = me.up('container').down('#panelcenter').down('#fiichart');
-
-        // var seriesLength = charts.chart.series.length;
-
-        // for(var i = seriesLength - 1; i > -1; i--)
-        // {
-        //     //chart.series[i].remove();
-        //     if(chart.series[i].name == )
-        //         charts.chart.series[i].remove();
-        // }
-
-        // console.log(charts.chart.series);
-
-        Ext.Ajax.request({
-            url: BASEURL +'/api/fii/listarfichaitemgrafico',
-            method: 'POST',
-            params: params,
-            async: false,
-            success: function (response) {
-                var result = Ext.decode(response.responseText);
-                if(result.success){
-
-                    rsarray = result.data;
-
-                    // charts.chart.addSeries(rsarray.series);
-
-                    charts.chart.update(
-                        {
-                            title: {
-                                text: 'teste'
-                            },
-
-                            series: rsarray.series
-                        }
-                    );
-
-                }else{
-                    rsarray = [];
-
-                    new Noty({
-                        theme: 'relax',
-                        layout: 'bottomRight',
-                        type: 'error',
-                        closeWith: [],
-                        text: 'Erro sistema: '+ result.message.substr(0,20)
-                    }).show();
-                }
-            },
-            error: function() {
-                rsarray = [];
-
-                new Noty({
-                    theme: 'relax',
-                    layout: 'bottomRight',
-                    type: 'error',
-                    closeWith: [],
-                    text: 'Erro sistema: '+ result.message.substr(0,20)
-                }).show();
-            }
-        });
-
-        
 
     }
 
