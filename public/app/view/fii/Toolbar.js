@@ -77,16 +77,23 @@ Ext.define('App.view.fii.Toolbar',{
 
         var charts = me.up('container').down('#panelcenter').down('#fiichart');
 
-        // var seriesLength = charts.chart.series.length;
+        var seriesOrig = Array();
+        var seriesLength = charts.chart.series.length;
 
-        // for(var i = seriesLength - 1; i > -1; i--)
-        // {
-        //     //chart.series[i].remove();
-        //     if(chart.series[i].name == )
-        //         charts.chart.series[i].remove();
-        // }
-
-        // console.log(charts.chart.series);
+        for (let index = 0; index < seriesLength; index++) {
+            
+            if(charts.chart.series[index].visible){
+                seriesOrig.push({visible: true});
+            }else{
+                seriesOrig.push({visible: false});
+            }
+            
+        }
+  
+        for(var i = seriesLength - 1; i > -1; i--)
+        {
+            charts.chart.series[i].remove();
+        }
 
         Ext.Ajax.request({
             url: BASEURL +'/api/fii/listarfichaitemgrafico',
@@ -98,18 +105,23 @@ Ext.define('App.view.fii.Toolbar',{
                 if(result.success){
 
                     rsarray = result.data;
+                    var cont = 0;
+                    rsarray.series.forEach(function(record){
+                        
+                        record.visible = seriesOrig[cont].visible;
+                        charts.chart.addSeries(record);
+                        cont++;
+                    });
 
-                    // charts.chart.addSeries(rsarray.series);
+                    // charts.chart.update(
+                    //     {
+                    //         title: {
+                    //             text: 'teste'
+                    //         },
 
-                    charts.chart.update(
-                        {
-                            title: {
-                                text: 'teste'
-                            },
-
-                            series: rsarray.series
-                        }
-                    );
+                    //         series: rsarray.series
+                    //     }
+                    // );
 
                 }else{
                     rsarray = [];
