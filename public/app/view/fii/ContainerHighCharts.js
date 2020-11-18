@@ -154,6 +154,27 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             },
             yAxis: [
 
+                { // 2 yAxis
+                    title: {
+                        text: 'Preço Unitário',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    labels: {
+                        formatter: function () {
+                            return utilFormat.Value(parseFloat(this.value));
+                        },
+                        x: 0,
+                        y: 0,
+                        padding: 0,
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    opposite: true,
+                    visible: true
+                },
                 { // Primary yAxis
                     
                     title: {
@@ -178,27 +199,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         padding: 0,
                         style: {
                             color: Highcharts.getOptions().colors[0]
-                        }
-                    },
-                    opposite: true,
-                    visible: true
-                },
-                { // 2 yAxis
-                    title: {
-                        text: 'Preço Unitário',
-                        style: {
-                            color: Highcharts.getOptions().colors[1]
-                        }
-                    },
-                    labels: {
-                        formatter: function () {
-                            return utilFormat.Value(parseFloat(this.value));
-                        },
-                        x: 0,
-                        y: 0,
-                        padding: 0,
-                        style: {
-                            color: Highcharts.getOptions().colors[1]
                         }
                     },
                     opposite: true,

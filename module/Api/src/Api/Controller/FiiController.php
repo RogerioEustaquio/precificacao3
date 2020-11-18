@@ -393,7 +393,22 @@ class FiiController extends AbstractRestfulController
                     'success' => true,
                     'data' => array(
                         'categories' => $categories,
-                        'series' => array(
+                        'series' => array(                            
+                            array(
+                                'name' => 'Preço Unitário',
+                                'yAxis'=> 0,
+                                // 'color' => 'rgba(165,170,217,1)',
+                                'data' => $arrayPreco,
+                                'vFormat' => 'R$',
+                                'vDecimos' => '2',
+                                'visible' => true,
+                                'dataLabels' => array(
+                                    'enabled' => true,
+                                    'keyformat' => '',
+                                    // 'format' => 'R$ {y}',
+                                    'style' => array( 'fontSize' => '8')
+                                ),
+                            ),
                             array(
                                 'name' => 'Desconto Unitário',
                                 'yAxis'=> 0,
@@ -409,23 +424,8 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'Preço Unitário',
-                                'yAxis'=> 1,
-                                // 'color' => 'rgba(165,170,217,1)',
-                                'data' => $arrayPreco,
-                                'vFormat' => 'R$',
-                                'vDecimos' => '2',
-                                'visible' => true,
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'keyformat' => '',
-                                    // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
-                                ),
-                            ),
-                            array(
                                 'name' => 'Imposto Unitário',
-                                'yAxis'=> 2,
+                                'yAxis'=> 0,
                                 // 'color' => 'rgba(46, 36, 183, 1)',
                                 'data' => $arrayImposto,
                                 'vFormat' => '',
@@ -440,7 +440,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'ROL Unitário',
-                                'yAxis'=> 3,
+                                'yAxis'=> 0,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRolUni,
                                 'vFormat' => '',
@@ -455,7 +455,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Custo Unitário',
-                                'yAxis'=> 3,
+                                'yAxis'=> 0,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCusto,
                                 'vFormat' => '',
