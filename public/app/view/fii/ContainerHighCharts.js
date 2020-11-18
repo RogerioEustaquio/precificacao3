@@ -5,6 +5,9 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     width: '100%',
     height: 300,
     margin: '10 2 2 2',
+    style: {
+        background: '#ffffff'
+    },
     requires: [ 
     ],
     
@@ -31,13 +34,17 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         afterrender: function(el){
+
+                            me.setLoading({msg: 'Carregando...'});
                             
                             Ext.Ajax.request({
                                 url: BASEURL +'/api/fii/listarfichaitemgrafico',
                                 method: 'POST',
                                 params: me.params,
-                                async: false,
+                                async: true,
                                 success: function (response) {
+                                    
+                                    me.setLoading(false);
                                     var result = Ext.decode(response.responseText);
                                     if(result.success){
 
@@ -54,9 +61,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                             text: 'Erro sistema: '+ result.message.substr(0,20)
                                         }).show();
                                     }
+
+                                    me.buildChartContainer(el,rsarray.categories,rsarray.series)
                                 },
                                 error: function() {
+                                    
+                                    me.setLoading(false);
                                     rsarray = [];
+
+                                    me.buildChartContainer(el,rsarray.categories,rsarray.series)
 
                                     new Noty({
                                         theme: 'relax',
@@ -69,7 +82,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             });
 
                             // console.log(rsarray.series);
-                            me.buildChartContainer(el,rsarray.categories,rsarray.series)
                         }
                     }
                 }
@@ -87,11 +99,11 @@ Ext.define('App.view.fii.ContainerHighCharts', {
         me.chart =  Highcharts.chart(el.id, {
             loading: {
                 labelStyle: {
-                    color: 'white'
+                    color: 'gray'
                 },
-                style: {
-                    backgroundColor: 'gray'
-                }
+                // style: {
+                //     backgroundColor: 'gray'
+                // }
             },
             credits:{
                 enabled: false

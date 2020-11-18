@@ -50,7 +50,12 @@ Ext.define('App.view.fii.Toolbar',{
     },
 
     onBtnConsultar: function(btn){
+
         var me = this.up('toolbar');
+        
+        var charts = me.up('container').down('#panelcenter').down('#fiichart');
+        // charts.chart.showLoading();
+        charts.setLoading({msg: 'Carregando...'});
 
         var idEmpresas  = me.up('container').down('#panelwest').down('#elEmp').getValue();
         var codProdutos = me.up('container').down('#panelwest').down('#elProduto').getValue();
@@ -64,19 +69,6 @@ Ext.define('App.view.fii.Toolbar',{
             codProdutos: Ext.encode(codProdutos),
             tpPessoas: Ext.encode(tpPessoas),
         };
-        grid.getStore().getProxy().setExtraParams(params);
-        grid.getStore().load(
-            // function(record){
-            //     var columns = grid.getView().getHeaderCt().getGridColumns();
-            //     Ext.each(columns, function (col) {
-            //               col.setText();
-            //           }
-            //     });
-            // }
-        );
-
-        var charts = me.up('container').down('#panelcenter').down('#fiichart');
-
         var seriesOrig = Array();
         var seriesLength = charts.chart.series.length;
 
@@ -99,15 +91,18 @@ Ext.define('App.view.fii.Toolbar',{
             url: BASEURL +'/api/fii/listarfichaitemgrafico',
             method: 'POST',
             params: params,
-            async: false,
+            async: true,
             success: function (response) {
                 var result = Ext.decode(response.responseText);
+
+                charts.setLoading(false);
+                // charts.chart.hideLoading();
                 if(result.success){
 
                     rsarray = result.data;
                     var cont = 0;
                     rsarray.series.forEach(function(record){
-                        
+
                         record.visible = seriesOrig[cont].visible;
                         charts.chart.addSeries(record);
                         cont++;
@@ -134,9 +129,12 @@ Ext.define('App.view.fii.Toolbar',{
                         text: 'Erro sistema: '+ result.message.substr(0,20)
                     }).show();
                 }
+                
             },
             error: function() {
                 rsarray = [];
+                charts.setLoading(false);
+                // charts.chart.hideLoading();
 
                 new Noty({
                     theme: 'relax',
@@ -147,6 +145,17 @@ Ext.define('App.view.fii.Toolbar',{
                 }).show();
             }
         });
+
+        grid.getStore().getProxy().setExtraParams(params);
+        grid.getStore().load(
+            // function(record){
+            //     var columns = grid.getView().getHeaderCt().getGridColumns();
+            //     Ext.each(columns, function (col) {
+            //               col.setText();
+            //           }
+            //     });
+            // }
+        );
 
         
 
