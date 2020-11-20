@@ -13,7 +13,7 @@ Ext.define('App.view.fii.Main', {
         'App.view.fii.PanelFiltro'
     ],
     
-    title: 'Ficha de Item',
+    title: 'Ficha de Indicadores',
     layout: 'fit',
 
     initComponent: function() {

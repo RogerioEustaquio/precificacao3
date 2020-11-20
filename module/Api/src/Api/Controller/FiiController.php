@@ -433,13 +433,13 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(165,170,217,1)',
                                 'data' => $arrayPreco,
                                 'vFormat' => '',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                 ),
                             ),
                             array(
@@ -448,12 +448,12 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(126,86,134,.9)',
                                 'data' => $arrayDesc,
                                 'vFormat' => '',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -462,13 +462,13 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(46, 36, 183, 1)',
                                 'data' => $arrayImposto,
                                 'vFormat' => '',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -477,13 +477,13 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRolUni,
                                 'vFormat' => '',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '$',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -492,13 +492,13 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCusto,
                                 'vFormat' => '',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -507,13 +507,13 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayImpostoPc,
                                 'vFormat' => '%',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -522,13 +522,13 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayDescPc,
                                 'vFormat' => '%',
-                                'vDecimos' => '0',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '%',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -543,7 +543,7 @@ class FiiController extends AbstractRestfulController
                                     'enabled' => true,
                                     'keyformat' => 'R$',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -558,7 +558,7 @@ class FiiController extends AbstractRestfulController
                                     'enabled' => true,
                                     'keyformat' => '$',
                                     // 'format' => '{y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -573,7 +573,7 @@ class FiiController extends AbstractRestfulController
                                     'enabled' => true,
                                     'keyformat' => '$',
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -581,14 +581,14 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 10,
                                 'color' => $colors[0],
                                 'data' => $arrayMb,
-                                'vFormat' => '%',
+                                'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '$',
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -602,7 +602,7 @@ class FiiController extends AbstractRestfulController
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -616,7 +616,7 @@ class FiiController extends AbstractRestfulController
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -630,7 +630,7 @@ class FiiController extends AbstractRestfulController
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '8')
+                                    'style' => array( 'fontSize' => '10')
                                     )
                             )
                         ),

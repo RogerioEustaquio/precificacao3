@@ -146,7 +146,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 }
             },
             title: {
-                text: 'Ficha'
+                text: 'Ficha de Indicadores'
             },
             xAxis: {
                 categories: meses,
@@ -170,7 +170,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         padding: 0,
                         style: {
                             color: Highcharts.getOptions().colors[1],
-                            fontSize: '10px'
+                            fontSize: '10px',
+                            border: '0px'
                         }
                     },
                     opposite: true,
