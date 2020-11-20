@@ -578,7 +578,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'MB',
-                                'yAxis'=> 7,
+                                'yAxis'=> 10,
                                 'color' => $colors[0],
                                 'data' => $arrayMb,
                                 'vFormat' => '%',
@@ -593,7 +593,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Quantidade',
-                                'yAxis'=> 9,
+                                'yAxis'=> 11,
                                 'color' => $colors[1],
                                 'data' => $arrayQtde,
                                 'vFormat' => '',
@@ -607,7 +607,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Nota Fiscal',
-                                'yAxis'=> 10,
+                                'yAxis'=> 12,
                                 'color' => $colors[2],
                                 'data' => $arrayNf,
                                 'vFormat' => '',
@@ -621,7 +621,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Cliente',
-                                'yAxis'=> 11,
+                                'yAxis'=> 13,
                                 'color' => $colors[3],
                                 'data' => $arrayCc,
                                 'vFormat' => '',
