@@ -60,7 +60,8 @@ Ext.define('App.view.fii.Toolbar',{
         var idEmpresas  = me.up('container').down('#panelwest').down('#elEmp').getValue();
         var codProdutos = me.up('container').down('#panelwest').down('#elProduto').getValue();
         var idMarcas    = me.up('container').down('#panelwest').down('#elMarca').getValue();
-        var tpPessoas = me.up('container').down('#panelwest').down('#elPessoa').getValue();
+        var tpPessoas   = me.up('container').down('#panelwest').down('#elPessoa').getValue();
+        var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
         var params = {
@@ -68,6 +69,7 @@ Ext.define('App.view.fii.Toolbar',{
             idMarcas: Ext.encode(idMarcas),
             codProdutos: Ext.encode(codProdutos),
             tpPessoas: Ext.encode(tpPessoas),
+            data: data
         };
         var seriesOrig = Array();
         var seriesLength = charts.chart.series.length;
@@ -101,6 +103,9 @@ Ext.define('App.view.fii.Toolbar',{
 
                     rsarray = result.data;
                     var cont = 0;
+                    
+                    charts.chart.xAxis[0].setCategories(rsarray.categories);
+
                     rsarray.series.forEach(function(record){
 
                         record.visible = seriesOrig[cont].visible;

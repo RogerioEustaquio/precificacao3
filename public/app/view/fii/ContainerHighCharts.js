@@ -158,7 +158,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     title: {
                         text: 'Preço Unitário',
                         style: {
-                            color: Highcharts.getOptions().colors[1]
+                            color: Highcharts.getOptions().colors[1],
+                            fontSize: '10px'
                         }
                     },
                     labels: {
@@ -169,7 +170,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         y: 0,
                         padding: 0,
                         style: {
-                            color: Highcharts.getOptions().colors[1]
+                            color: Highcharts.getOptions().colors[1],
+                            fontSize: '10px'
                         }
                     },
                     opposite: true,
@@ -181,7 +183,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         text: 'Desconto Unitário',
                         vteste: 'aqui',
                         style: {
-                            color: Highcharts.getOptions().colors[0]
+                            color: Highcharts.getOptions().colors[0],
+                            fontSize: '10px'
                         }
                     },
                     labels: {
@@ -198,7 +201,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         y: 0,
                         padding: 0,
                         style: {
-                            color: Highcharts.getOptions().colors[0]
+                            color: Highcharts.getOptions().colors[0],
+                            fontSize: '10px'
                         }
                     },
                     opposite: true,
@@ -208,7 +212,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     title: {
                         text: 'Imposto Unitário',
                         style: {
-                            color: Highcharts.getOptions().colors[2]
+                            color: Highcharts.getOptions().colors[2],
+                            fontSize: '10px'
                         }
                     },
                     labels: {
@@ -219,7 +224,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         y: 0,
                         padding: 0,
                         style: {
-                            color: Highcharts.getOptions().colors[2]
+                            color: Highcharts.getOptions().colors[2],
+                            fontSize: '10px'
                         }
                     },
                     opposite: true,
@@ -229,7 +235,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     title: {
                         text: 'ROL Unitário',
                         style: {
-                            color: Highcharts.getOptions().colors[3]
+                            color: Highcharts.getOptions().colors[3],
+                            fontSize: '10px'
                         }
                     },
                     labels: {
@@ -240,7 +247,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         y: 0,
                         padding: 0,
                         style: {
-                            color: Highcharts.getOptions().colors[3]
+                            color: Highcharts.getOptions().colors[3],
+                            fontSize: '10px'
                         }
                     },
                     opposite: true,
@@ -250,7 +258,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                      title: {
                          text: 'Custo Unitário',
                          style: {
-                             color: Highcharts.getOptions().colors[4]
+                             color: Highcharts.getOptions().colors[4],
+                             fontSize: '10px'
                          }
                      },
                      labels: {
@@ -261,7 +270,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                          y: 0,
                          padding: 0,
                          style: {
-                             color: Highcharts.getOptions().colors[4]
+                             color: Highcharts.getOptions().colors[4],
+                             fontSize: '10px'
                          }
                      },
                      opposite: true,
@@ -271,7 +281,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                       title: {
                           text: '% Desconto',
                           style: {
-                              color: Highcharts.getOptions().colors[5]
+                              color: Highcharts.getOptions().colors[5],
+                              fontSize: '10px'
                           }
                       },
                       labels: {
@@ -282,7 +293,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                           y: 0,
                           padding: 0,
                           style: {
-                              color: Highcharts.getOptions().colors[5]
+                              color: Highcharts.getOptions().colors[5],
+                              fontSize: '10px'
                           }
                       },
                       opposite: true,
@@ -292,7 +304,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                        title: {
                            text: 'ROL',
                            style: {
-                               color: Highcharts.getOptions().colors[6]
+                               color: Highcharts.getOptions().colors[6],
+                               fontSize: '10px'
                            }
                        },
                        labels: {
@@ -303,7 +316,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             y: 0,
                             padding: 0,
                             style: {
-                                color: Highcharts.getOptions().colors[6]
+                                color: Highcharts.getOptions().colors[6],
+                                fontSize: '10px'
                             }
                        },
                        opposite: true,
@@ -313,7 +327,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         title: {
                             text: 'CMV',
                             style: {
-                                color: Highcharts.getOptions().colors[7]
+                                color: Highcharts.getOptions().colors[7],
+                                fontSize: '10px'
                             }
                         },
                         labels: {
@@ -324,7 +339,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             y: 0,
                             padding: 0,
                             style: {
-                                color: Highcharts.getOptions().colors[7]
+                                color: Highcharts.getOptions().colors[7],
+                                fontSize: '10px'
                             }
                         },
                         opposite: true,
@@ -334,7 +350,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                          title: {
                              text: 'LB',
                              style: {
-                                 color: Highcharts.getOptions().colors[8]
+                                 color: Highcharts.getOptions().colors[8],
+                                 fontSize: '10px'
                              }
                          },
                          labels: {
@@ -345,7 +362,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             y: 0,
                             padding: 0,
                             style: {
-                                color: Highcharts.getOptions().colors[8]
+                                color: Highcharts.getOptions().colors[8],
+                                fontSize: '10px'
                             }
                          },
                          opposite: true,
@@ -355,7 +373,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                           title: {
                               text: 'Quantidade',
                               style: {
-                                  color: Highcharts.getOptions().colors[9]
+                                  color: Highcharts.getOptions().colors[9],
+                                  fontSize: '10px'
                               }
                           },
                           labels: {
@@ -363,7 +382,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                              y: 0,
                              padding: 0,
                              style: {
-                                 color: Highcharts.getOptions().colors[9]
+                                 color: Highcharts.getOptions().colors[9],
+                                 fontSize: '10px'
                              }
                           },
                           opposite: true,
@@ -373,7 +393,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                            title: {
                                text: 'Nota Fiscal',
                                style: {
-                                   color: colors[0]
+                                   color: colors[0],
+                                   fontSize: '10px'
                                }
                            },
                            labels: {
@@ -381,7 +402,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                               y: 0,
                               padding: 0,
                               style: {
-                                  color: colors[0]
+                                  color: colors[0],
+                                  fontSize: '10px'
                               }
                            },
                            opposite: true,
@@ -391,7 +413,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             title: {
                                 text: 'Cliente',
                                 style: {
-                                    color: colors[1]
+                                    color: colors[1],
+                                    fontSize: '10px'
                                 }
                             },
                             labels: {
@@ -399,7 +422,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                y: 0,
                                padding: 0,
                                style: {
-                                   color: colors[1]
+                                   color: colors[1],
+                                   fontSize: '10px'
                                }
                             },
                             opposite: true,

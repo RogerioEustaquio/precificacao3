@@ -131,6 +131,7 @@ class FiiController extends AbstractRestfulController
                 $tpPessoas =  implode("','",json_decode($tpPessoas));
             }
 
+            $andSql = '';
             if($idEmpresas){
                 $andSql = " and id_empresa in ($idEmpresas)";
             }
@@ -204,6 +205,7 @@ class FiiController extends AbstractRestfulController
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $codProdutos= $this->params()->fromPost('codProdutos',null);
             $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
+            $data       = $this->params()->fromPost('data',null);
 
             if($idEmpresas){
                 $idEmpresas   =  implode(",",json_decode($idEmpresas));
@@ -235,6 +237,19 @@ class FiiController extends AbstractRestfulController
                 $andSql .= " and p.tipo_pessoa in ('$tpPessoas')";
             }
             
+            if($data){
+                $sysdate = "to_date('01/".$data."')";
+            }else{
+                $sysdate = 'sysdate';
+            }
+
+            if($data){
+                $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'),-11)";
+                $andSql .= " and trunc(vi.data_emissao, 'MM') <= add_months(trunc($sysdate,'MM'),0)";
+            }else{
+                $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
+            }
+            
             $em = $this->getEntityManager();
             
             $meses = [null,
@@ -253,19 +268,23 @@ class FiiController extends AbstractRestfulController
 
             $conn = $em->getConnection();
 
-            $sql = "select to_char(add_months(trunc(sysdate,'MM'),-11),'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-10),'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-9), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-8), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-7), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-6), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-5), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-4), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-3), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-2), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-1), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-0), 'MM') as id from dual
+
+            $sql = "select to_char(add_months(trunc($sysdate,'MM'),-11),'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-10),'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-9), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-8), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-7), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-6), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-5), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-4), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-3), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-2), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-1), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-0), 'MM') as id from dual
             ";
+
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -298,7 +317,8 @@ class FiiController extends AbstractRestfulController
                            b.cc
                     from (select distinct trunc(data_emissao, 'MM') as data
                             from pricing.vm_ie_ve_venda_item 
-                          where trunc(data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)
+                          where trunc(data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'),-11)
+                          and trunc(data_emissao, 'MM') <= add_months(trunc($sysdate,'MM'),-0)
                           order by data asc) a,
                          (select trunc(vi.data_emissao, 'MM') as data,
                                  round(sum(vi.desconto)/sum(qtde),2) as desconto_uni,
@@ -325,12 +345,14 @@ class FiiController extends AbstractRestfulController
                            and vi.id_item = i.id_item
                            and vi.id_categoria = c.id_categoria
                            and ic.id_marca = m.id_marca
-                           and vi.id_pessoa = p.id_pessoa(+)                           
-                           and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)
+                           and vi.id_pessoa = p.id_pessoa(+)
                            $andSql
                            group by trunc(vi.data_emissao, 'MM')) b
                     where a.data = b.data(+)
             ";
+
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -399,8 +421,8 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 0,
                                 // 'color' => 'rgba(165,170,217,1)',
                                 'data' => $arrayPreco,
-                                'vFormat' => 'R$',
-                                'vDecimos' => '2',
+                                'vFormat' => '',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -414,8 +436,8 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 0,
                                 // 'color' => 'rgba(126,86,134,.9)',
                                 'data' => $arrayDesc,
-                                'vFormat' => 'R$',
-                                'vDecimos' => '2',
+                                'vFormat' => '',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -429,7 +451,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(46, 36, 183, 1)',
                                 'data' => $arrayImposto,
                                 'vFormat' => '',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -444,7 +466,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRolUni,
                                 'vFormat' => '',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -459,7 +481,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCusto,
                                 'vFormat' => '',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -474,7 +496,7 @@ class FiiController extends AbstractRestfulController
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayDescPc,
                                 'vFormat' => '%',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -500,11 +522,11 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'CMV',
-                                'yAxis'=> 7,
+                                'yAxis'=> 6,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCmv,
                                 'vFormat' => '',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -515,11 +537,11 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'LB',
-                                'yAxis'=> 8,
+                                'yAxis'=> 6,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayLb,
                                 'vFormat' => '%',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -533,7 +555,7 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 9,
                                 // 'color' => 'rgba(126,86,134,.9)',
                                 'data' => $arrayQtde,
-                                'vFormat' => 'N',
+                                'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
@@ -547,7 +569,7 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 10,
                                 'color' => $colors[0],
                                 'data' => $arrayNf,
-                                'vFormat' => 'N',
+                                'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(
@@ -561,7 +583,7 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 11,
                                 'color' => $colors[1],
                                 'data' => $arrayCc,
-                                'vFormat' => 'N',
+                                'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
                                 'dataLabels' => array(

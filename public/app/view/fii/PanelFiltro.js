@@ -14,6 +14,21 @@ Ext.define('App.view.fii.PanelFiltro',{
     initComponent: function() {
         var me = this;
 
+        var fielData = Ext.create('Ext.form.field.Date',{
+            name: 'data',
+            itemId: 'data',
+            labelAlign: 'top',
+            fieldLabel: 'Mês de Referência',
+            margin: '1 1 1 1',
+            padding: 1,
+            width: 180,
+            labelWidth: 60,
+            format: 'm/Y',
+            altFormats: 'dmY',
+            emptyText: '__/__/____',
+            // value: sysdate
+        });
+
         var elTagEmpresa = Ext.create('Ext.form.field.Tag',{
             name: 'elEmp',
             itemId: 'elEmp',
@@ -179,6 +194,23 @@ Ext.define('App.view.fii.PanelFiltro',{
                     layout: 'hbox',
                     border: false,
                     items:[
+                        fielData,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('datefield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
                         elTagEmpresa,
                         {
                             xtype: 'button',
@@ -258,6 +290,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                                 form.up('toolbar').up('panel').down('tagfield[name=elProduto]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elMarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elPessoa]').setValue(null);
+                                form.up('toolbar').up('panel').down('datefield[name=data]').setValue(null);
                             }
                         }
                     ]
