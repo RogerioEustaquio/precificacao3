@@ -8,7 +8,13 @@ Ext.define('App.view.Toolbar', {
         Ext.applyIf(me, {
             items: [
                 {
-                    text: 'teste'
+                    xtype: 'button',
+                    text: 'Fii',
+                    // href: BASEURL +'/#fii',
+                    handler: function(){
+                        var objWindow = Ext.create('App.view.fii.Main');
+                        objWindow.show();
+                    }
                 }
             ]
         });
