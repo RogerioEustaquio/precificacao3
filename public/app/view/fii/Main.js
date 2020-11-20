@@ -41,11 +41,11 @@ Ext.define('App.view.fii.Main', {
                             items:[
                                 {
                                     xtype: 'fiichart',
-                                    region: 'north'
+                                    region: 'center'
                                 },
                                 {
                                     xtype: 'containergrid',
-                                    region: 'center'
+                                    region: 'south'
                                 }
                             ]
 
