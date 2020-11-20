@@ -63,7 +63,7 @@ class FiiController extends AbstractRestfulController
     }
 
     public function listarfichaitemheaderAction()
-    {   
+    {
         $data = array();
         
         try {
@@ -303,42 +303,47 @@ class FiiController extends AbstractRestfulController
             }
 
             $sql = "select a.data,
-                           b.desconto_uni,
-                           b.preco_uni,
-                           b.imposto_uni,
-                           b.rol_uni,
-                           b.custo_uni,
-                           b.desconto_perc,
-                           b.rol,
-                           b.cmv,
-                           b.lb,
-                           b.qtde,
-                           b.nf,
-                           b.cc
+                            b.desconto_uni,
+                            b.preco_uni,
+                            b.imposto_uni,
+                            b.rol_uni,
+                            b.custo_uni,
+                            b.imposto_perc,
+                            b.desconto_perc,
+                            b.rol,
+                            b.cmv,
+                            b.lb,
+                            b.mb,
+                            b.qtde,
+                            b.nf,
+                            b.cc
                     from (select distinct trunc(data_emissao, 'MM') as data
                             from pricing.vm_ie_ve_venda_item 
                           where trunc(data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'),-11)
                           and trunc(data_emissao, 'MM') <= add_months(trunc($sysdate,'MM'),-0)
                           order by data asc) a,
-                         (select trunc(vi.data_emissao, 'MM') as data,
-                                 round(sum(vi.desconto)/sum(qtde),2) as desconto_uni,
-                                 round(sum(vi.rob)/sum(qtde),2) as preco_uni,
-                                 round((sum(vi.rob)-sum(vi.rol))/sum(qtde),2) as imposto_uni,
-                                 round(sum(vi.rol)/sum(qtde),2) as rol_uni,
-                                 round(sum(vi.custo)/sum(qtde),2) as custo_uni,
-                                 round((sum(vi.desconto)/sum(rob))*100,2) as desconto_perc,
-                                 sum(vi.rol) as rol,
-                                 sum(vi.custo) as cmv,
-                                 sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                 sum(vi.qtde) as qtde,
-                                 count(distinct vi.numero_nf) as nf,
-                                 count(distinct vi.id_pessoa) as cc
+                          (select trunc(vi.data_emissao, 'MM') as data,
+                                  round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
+                                  round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
+                                  round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
+                                  round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
+                                  round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                  round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
+                                  round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
+                                  sum(vi.rol) as rol,
+                                  sum(vi.custo) as cmv,
+                                  sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                  round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                  sum(vi.qtde) as qtde,
+                                  count(distinct vi.numero_nf) as nf,
+                                  count(distinct vi.id_pessoa) as cc
                             from pricing.vm_ie_ve_venda_item vi,
-                                 ms.empresa e,
-                                 ms.tb_item_categoria ic,
-                                 ms.tb_item i,
-                                 ms.tb_categoria c,
-                                 ms.tb_marca m, ms.pessoa p
+                                ms.empresa e,
+                                ms.tb_item_categoria ic,
+                                ms.tb_item i,
+                                ms.tb_categoria c,
+                                ms.tb_marca m,
+                                ms.pessoa p
                            where vi.id_empresa = e.id_empresa
                            and vi.id_item = ic.id_item
                            and vi.id_categoria = ic.id_categoria
@@ -363,10 +368,12 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('imposto_uni', new ValueStrategy);
             $hydrator->addStrategy('rol_uni', new ValueStrategy);
             $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('imposto_perc', new ValueStrategy);
             $hydrator->addStrategy('desconto_perc', new ValueStrategy);
             $hydrator->addStrategy('rol', new ValueStrategy);
             $hydrator->addStrategy('cmv', new ValueStrategy);
             $hydrator->addStrategy('lb', new ValueStrategy);
+            $hydrator->addStrategy('mb', new ValueStrategy);
             $hydrator->addStrategy('qtde', new ValueStrategy);
             $hydrator->addStrategy('nf', new ValueStrategy);
             $hydrator->addStrategy('cc', new ValueStrategy);
@@ -380,10 +387,12 @@ class FiiController extends AbstractRestfulController
             $arrayImposto   = array();
             $arrayRolUni    = array();
             $arrayCusto     = array();
+            $arrayImpostoPc = array();
             $arrayDescPc    = array();
             $arrayRol       = array();
             $arrayCmv       = array();
             $arrayLb        = array();
+            $arrayMb        = array();
             $arrayQtde      = array();
             $arrayNf        = array();
             $arrayCc        = array();
@@ -392,18 +401,20 @@ class FiiController extends AbstractRestfulController
 
                 $elementos = $hydrator->extract($row);
 
-                $arrayDesc[]    = (float)$elementos['descontoUni'];
-                $arrayPreco[]   = (float)$elementos['precoUni'];
-                $arrayImposto[] = (float)$elementos['impostoUni'];
-                $arrayRolUni[]  = (float)$elementos['rolUni'];
-                $arrayCusto[]   = (float)$elementos['custoUni'];
-                $arrayDescPc[]  = (float)$elementos['descontoPerc'];
-                $arrayRol[]     = (float)$elementos['rol'];
-                $arrayCmv[]     = (float)$elementos['cmv'];
-                $arrayLb[]      = (float)$elementos['lb'];
-                $arrayQtde[]    = (float)$elementos['qtde'];
-                $arrayNf[]      = (float)$elementos['nf'];
-                $arrayCc[]      = (float)$elementos['cc'];
+                $arrayDesc[]        = (float)$elementos['descontoUni'];
+                $arrayPreco[]       = (float)$elementos['precoUni'];
+                $arrayImposto[]     = (float)$elementos['impostoUni'];
+                $arrayRolUni[]      = (float)$elementos['rolUni'];
+                $arrayCusto[]       = (float)$elementos['custoUni'];
+                $arrayImpostoPc[]   = (float)$elementos['impostoPerc'];
+                $arrayDescPc[]      = (float)$elementos['descontoPerc'];
+                $arrayRol[]         = (float)$elementos['rol'];
+                $arrayCmv[]         = (float)$elementos['cmv'];
+                $arrayLb[]          = (float)$elementos['lb'];
+                $arrayMb[]          = (float)$elementos['mb'];
+                $arrayQtde[]        = (float)$elementos['qtde'];
+                $arrayNf[]          = (float)$elementos['nf'];
+                $arrayCc[]          = (float)$elementos['cc'];
                 // $arrayMb[] = (float)$elementos['lb'];
             }
 
@@ -491,8 +502,23 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => '% Desconto',
+                                'name' => '% Imposto',
                                 'yAxis'=> 5,
+                                // 'color' => 'rgba(221, 117, 85, 1)',
+                                'data' => $arrayImpostoPc,
+                                'vFormat' => '%',
+                                'vDecimos' => '0',
+                                'visible' => true,
+                                'dataLabels' => array(
+                                    'enabled' => true,
+                                    'keyformat' => '',
+                                    // 'format' => '{y}',
+                                    'style' => array( 'fontSize' => '8')
+                                    )
+                            ),
+                            array(
+                                'name' => '% Desconto',
+                                'yAxis'=> 6,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayDescPc,
                                 'vFormat' => '%',
@@ -507,7 +533,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'ROL',
-                                'yAxis'=> 6,
+                                'yAxis'=> 7,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRol,
                                 'vFormat' => '',
@@ -522,7 +548,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'CMV',
-                                'yAxis'=> 6,
+                                'yAxis'=> 7,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCmv,
                                 'vFormat' => '',
@@ -537,11 +563,26 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'LB',
-                                'yAxis'=> 6,
+                                'yAxis'=> 7,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayLb,
-                                'vFormat' => '%',
+                                'vFormat' => '',
                                 'vDecimos' => '0',
+                                'visible' => true,
+                                'dataLabels' => array(
+                                    'enabled' => true,
+                                    'keyformat' => '$',
+                                    // 'format' => 'R$ {y}',
+                                    'style' => array( 'fontSize' => '8')
+                                    )
+                            ),
+                            array(
+                                'name' => 'MB',
+                                'yAxis'=> 7,
+                                'color' => $colors[0],
+                                'data' => $arrayMb,
+                                'vFormat' => '%',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
@@ -553,7 +594,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Quantidade',
                                 'yAxis'=> 9,
-                                // 'color' => 'rgba(126,86,134,.9)',
+                                'color' => $colors[1],
                                 'data' => $arrayQtde,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -567,7 +608,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Nota Fiscal',
                                 'yAxis'=> 10,
-                                'color' => $colors[0],
+                                'color' => $colors[2],
                                 'data' => $arrayNf,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -581,7 +622,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Cliente',
                                 'yAxis'=> 11,
-                                'color' => $colors[1],
+                                'color' => $colors[3],
                                 'data' => $arrayCc,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
