@@ -125,8 +125,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -148,8 +148,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -171,8 +171,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -194,8 +194,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -217,8 +217,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -240,8 +240,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -263,8 +263,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -286,8 +286,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -309,8 +309,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -332,8 +332,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -355,8 +355,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
@@ -378,8 +378,8 @@ Ext.define('App.view.fii.ContainerGrid', {
                                 width: 110,
                                 summaryType: 'sum',
                                 align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.Value(v);
+                                renderer: function (v,record,index) {
+                                    return utilFormat.Value2(v,index.data.vDecimos);
                                 },
                                 summaryType: function(records) {
             
