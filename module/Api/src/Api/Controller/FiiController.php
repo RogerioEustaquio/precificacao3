@@ -240,6 +240,7 @@ class FiiController extends AbstractRestfulController
                 $arrayCusto[]       = 0;
                 $arrayImpostoPc[]   = 0;
                 $arrayDescPc[]      = 0;
+                $arrayRob[]         = 0;
                 $arrayRol[]         = 0;
                 $arrayCmv[]         = 0;
                 $arrayLb[]          = 0;
