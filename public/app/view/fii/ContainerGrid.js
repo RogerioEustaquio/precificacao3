@@ -4,6 +4,7 @@ Ext.define('App.view.fii.ContainerGrid', {
     itemId: 'containergrid',
     margin: '10 2 2 2',
     layout:'fit',
+    // params: [],
     requires: [
         'Ext.grid.feature.GroupingSummary'
     ],
@@ -32,6 +33,7 @@ Ext.define('App.view.fii.ContainerGrid', {
         Ext.Ajax.request({
             url: BASEURL +'/api/fii/listarfichaitemheader',
             method: 'POST',
+            params: me.params,
             async: false,
             success: function (response) {
                 var result = Ext.decode(response.responseText);
@@ -52,15 +54,9 @@ Ext.define('App.view.fii.ContainerGrid', {
 
         Ext.define('App.view.fii.modelgrid', {
             extend: 'Ext.data.Model',
-            fields:[{name:'tipo'},
-                    {name:'idEmpresa' },
-                    {name:'idItem' },
-                    {name:'idCategoria'},
-                    {name:'valorM14', type: 'number' },
-                    {name:'valorM13', type: 'number' },
-                    {name:'valorM12', type: 'number' },
-                    {name:'valorM11', type: 'number' },
-                    {name:'valorM10', type: 'number' },
+            fields:[{name:'indicador', type: 'string'},
+                    {name:'valorM11', type: 'number'},
+                    {name:'valorM10', type: 'number'},
                     {name:'valorM9', type: 'number' },
                     {name:'valorM8', type: 'number' },
                     {name:'valorM7', type: 'number' },
@@ -108,30 +104,19 @@ Ext.define('App.view.fii.ContainerGrid', {
                             //     enableGroupingMenu: false,
                             //     startCollapsed: false
                             // },
-                            {
-                                ftype: 'summary',
-                                dock: 'bottom'
-                            }
+                            // {
+                            //     ftype: 'summary',
+                            //     dock: 'bottom'
+                            // }
                         ],
                         listeners: {
                         },
 
                         columns: [
                             {
-                                text: 'Emp',
-                                width: 52,
-                                dataIndex: 'idEmpresa',
-                                summaryType: 'count'
-                            },
-                            {
-                                text: 'Item ',
-                                dataIndex: 'idItem',
+                                text: 'Indicador',
+                                dataIndex: 'indicador',
                                 width: 140
-                            },
-                            {
-                                text: 'Categoria',
-                                dataIndex: 'idCategoria',
-                                width: 110
                             },
                             {
                                 text: seqMes[0],

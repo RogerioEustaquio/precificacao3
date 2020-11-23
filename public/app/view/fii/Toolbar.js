@@ -151,6 +151,54 @@ Ext.define('App.view.fii.Toolbar',{
             }
         });
 
+        var meses = [null,
+                    'Janeiro',
+                    'Fevereiro',
+                    'Março',
+                    'Abril',
+                    'Maio',
+                    'Junho',
+                    'Julho',
+                    'Agosto',
+                    'Setembro',
+                    'Outubro',
+                    'Novembro',
+                    'Dezembro'];
+
+        var arrayHeader = grid.getColumns();
+        var seqMes= [];
+        Ext.Ajax.request({
+            url: BASEURL +'/api/fii/listarfichaitemheader',
+            method: 'POST',
+            params: params,
+            async: false,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+                if(result.success){
+
+                    var rsarray = result.data;
+                    rsarray.forEach(function(record){
+                        seqMes.push(meses[parseFloat(record.id)]);
+                    });
+
+                    arrayHeader[1].setText(seqMes[0]);
+                    arrayHeader[2].setText(seqMes[1]);
+                    arrayHeader[3].setText(seqMes[2]);
+                    arrayHeader[4].setText(seqMes[3]);
+                    arrayHeader[5].setText(seqMes[4]);
+                    arrayHeader[6].setText(seqMes[5]);
+                    arrayHeader[7].setText(seqMes[6]);
+                    arrayHeader[8].setText(seqMes[7]);
+                    arrayHeader[9].setText(seqMes[8]);
+                    arrayHeader[10].setText(seqMes[9]);
+                    arrayHeader[11].setText(seqMes[10]);
+                    arrayHeader[12].setText(seqMes[11]);
+
+                }
+            }
+        });
+
+        console.log(arrayHeader);
         grid.getStore().getProxy().setExtraParams(params);
         grid.getStore().load(
             // function(record){

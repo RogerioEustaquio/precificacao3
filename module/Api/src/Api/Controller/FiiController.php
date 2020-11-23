@@ -67,20 +67,27 @@ class FiiController extends AbstractRestfulController
         $data = array();
         
         try {
+            $data = $this->params()->fromPost('data',null);
             $em = $this->getEntityManager();
 
-            $sql = "select to_char(add_months(trunc(sysdate,'MM'),-11),'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-10),'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-9), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-8), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-7), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-6), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-5), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-4), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-3), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-2), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-1), 'MM') as id from dual union all
-                    select to_char(add_months(trunc(sysdate,'MM'),-0), 'MM') as id from dual
+            if($data){
+                $sysdate = "to_date('01/".$data."')";
+            }else{
+                $sysdate = 'sysdate';
+            }
+
+            $sql = "select to_char(add_months(trunc($sysdate,'MM'),-11),'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-10),'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-9), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-8), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-7), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-6), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-5), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-4), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-3), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-2), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-1), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-0), 'MM') as id from dual
             ";
             
             $conn = $em->getConnection();
@@ -113,11 +120,11 @@ class FiiController extends AbstractRestfulController
         
         try {
 
-            $idEmpresas = $this->params()->fromPost('idEmpresas',null);
-            $idMarcas   = $this->params()->fromPost('idMarcas',null);
-            $codProdutos= $this->params()->fromPost('codProdutos',null);
-            $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
-            $data       = $this->params()->fromPost('data',null);
+            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
+            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
+            $codProdutos= $this->params()->fromQuery('codProdutos',null);
+            $tpPessoas  = $this->params()->fromQuery('tpPessoas',null);
+            $data       = $this->params()->fromQuery('data',null);
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
@@ -213,6 +220,7 @@ class FiiController extends AbstractRestfulController
             $arrayCusto     = array();
             $arrayImpostoPc = array();
             $arrayDescPc    = array();
+            $arrayRob       = array();
             $arrayRol       = array();
             $arrayCmv       = array();
             $arrayLb        = array();
@@ -250,6 +258,7 @@ class FiiController extends AbstractRestfulController
                             b.custo_uni,
                             b.imposto_perc,
                             b.desconto_perc,
+                            b.rob,
                             b.rol,
                             b.cmv,
                             b.lb,
@@ -265,6 +274,7 @@ class FiiController extends AbstractRestfulController
                                   round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
                                   round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
                                   round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
+                                  sum(vi.rob) as rob,
                                   sum(vi.rol) as rol,
                                   sum(vi.custo) as cmv,
                                   sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
@@ -291,9 +301,6 @@ class FiiController extends AbstractRestfulController
                     where 1 = 1
             ";
 
-            // print "$sql";
-            // exit;
-
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
@@ -305,6 +312,7 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('custo_uni', new ValueStrategy);
             $hydrator->addStrategy('imposto_perc', new ValueStrategy);
             $hydrator->addStrategy('desconto_perc', new ValueStrategy);
+            $hydrator->addStrategy('rob', new ValueStrategy);
             $hydrator->addStrategy('rol', new ValueStrategy);
             $hydrator->addStrategy('cmv', new ValueStrategy);
             $hydrator->addStrategy('lb', new ValueStrategy);
@@ -332,6 +340,7 @@ class FiiController extends AbstractRestfulController
                     $arrayCusto[$cont]       = (float)$elementos['custoUni'];
                     $arrayImpostoPc[$cont]   = (float)$elementos['impostoPerc'];
                     $arrayDescPc[$cont]      = (float)$elementos['descontoPerc'];
+                    $arrayRob[$cont]         = (float)$elementos['rob'];
                     $arrayRol[$cont]         = (float)$elementos['rol'];
                     $arrayCmv[$cont]         = (float)$elementos['cmv'];
                     $arrayLb[$cont]          = (float)$elementos['lb'];
@@ -345,8 +354,232 @@ class FiiController extends AbstractRestfulController
             }
 
             $data = array();
-            foreach ($resultSet as $row) {
-                $data[] = $hydrator->extract($row);
+            foreach ($data1 as $row) {
+                
+                $data[] = [ 'indicador'=>'Preço Unitário',
+                            'valorM11'=> $arrayPreco[0],
+                            'valorM10'=> $arrayPreco[1],
+                            'valorM9'=> $arrayPreco[2],
+                            'valorM8'=> $arrayPreco[3],
+                            'valorM7'=> $arrayPreco[4],
+                            'valorM6'=> $arrayPreco[5],
+                            'valorM5'=> $arrayPreco[6],
+                            'valorM4'=> $arrayPreco[7],
+                            'valorM3'=> $arrayPreco[8],
+                            'valorM2'=> $arrayPreco[9],
+                            'valorM1'=> $arrayPreco[10],
+                            'valorM0'=> $arrayPreco[11]
+                ];
+
+                $data[] = ['indicador'=>'Desconto Unitário',
+                           'valorM11'=> $arrayDesc[0],
+                           'valorM10'=> $arrayDesc[1],
+                           'valorM9'=> $arrayDesc[2],
+                           'valorM8'=> $arrayDesc[3],
+                           'valorM7'=> $arrayDesc[4],
+                           'valorM6'=> $arrayDesc[5],
+                           'valorM5'=> $arrayDesc[6],
+                           'valorM4'=> $arrayDesc[7],
+                           'valorM3'=> $arrayDesc[8],
+                           'valorM2'=> $arrayDesc[9],
+                           'valorM1'=> $arrayDesc[10],
+                           'valorM0'=> $arrayDesc[11]
+                ];
+
+                $data[] = ['indicador'=>'Imposto Unitário',
+                           'valorM11'=> $arrayImposto[0],
+                           'valorM10'=> $arrayImposto[1],
+                           'valorM9'=> $arrayImposto[2],
+                           'valorM8'=> $arrayImposto[3],
+                           'valorM7'=> $arrayImposto[4],
+                           'valorM6'=> $arrayImposto[5],
+                           'valorM5'=> $arrayImposto[6],
+                           'valorM4'=> $arrayImposto[7],
+                           'valorM3'=> $arrayImposto[8],
+                           'valorM2'=> $arrayImposto[9],
+                           'valorM1'=> $arrayImposto[10],
+                           'valorM0'=> $arrayImposto[11]
+                ];
+
+                $data[] = ['indicador'=>'ROL Unitário',
+                           'valorM11'=> $arrayRolUni[0],
+                           'valorM10'=> $arrayRolUni[1],
+                           'valorM9'=> $arrayRolUni[2],
+                           'valorM8'=> $arrayRolUni[3],
+                           'valorM7'=> $arrayRolUni[4],
+                           'valorM6'=> $arrayRolUni[5],
+                           'valorM5'=> $arrayRolUni[6],
+                           'valorM4'=> $arrayRolUni[7],
+                           'valorM3'=> $arrayRolUni[8],
+                           'valorM2'=> $arrayRolUni[9],
+                           'valorM1'=> $arrayRolUni[10],
+                           'valorM0'=> $arrayRolUni[11]
+                ];
+                
+                $data[] = ['indicador'=>'Custo Unitário',
+                           'valorM11'=> $arrayCusto[0],
+                           'valorM10'=> $arrayCusto[1],
+                           'valorM9'=> $arrayCusto[2],
+                           'valorM8'=> $arrayCusto[3],
+                           'valorM7'=> $arrayCusto[4],
+                           'valorM6'=> $arrayCusto[5],
+                           'valorM5'=> $arrayCusto[6],
+                           'valorM4'=> $arrayCusto[7],
+                           'valorM3'=> $arrayCusto[8],
+                           'valorM2'=> $arrayCusto[9],
+                           'valorM1'=> $arrayCusto[10],
+                           'valorM0'=> $arrayCusto[11]
+                ];
+
+                $data[] = ['indicador'=>'% Imposto',
+                           'valorM11'=> $arrayImpostoPc[0],
+                           'valorM10'=> $arrayImpostoPc[1],
+                           'valorM9'=> $arrayImpostoPc[2],
+                           'valorM8'=> $arrayImpostoPc[3],
+                           'valorM7'=> $arrayImpostoPc[4],
+                           'valorM6'=> $arrayImpostoPc[5],
+                           'valorM5'=> $arrayImpostoPc[6],
+                           'valorM4'=> $arrayImpostoPc[7],
+                           'valorM3'=> $arrayImpostoPc[8],
+                           'valorM2'=> $arrayImpostoPc[9],
+                           'valorM1'=> $arrayImpostoPc[10],
+                           'valorM0'=> $arrayImpostoPc[11]
+                ];
+
+                $data[] = ['indicador'=>'% Desconto',
+                           'valorM11'=> $arrayDescPc[0],
+                           'valorM10'=> $arrayDescPc[1],
+                           'valorM9'=> $arrayDescPc[2],
+                           'valorM8'=> $arrayDescPc[3],
+                           'valorM7'=> $arrayDescPc[4],
+                           'valorM6'=> $arrayDescPc[5],
+                           'valorM5'=> $arrayDescPc[6],
+                           'valorM4'=> $arrayDescPc[7],
+                           'valorM3'=> $arrayDescPc[8],
+                           'valorM2'=> $arrayDescPc[9],
+                           'valorM1'=> $arrayDescPc[10],
+                           'valorM0'=> $arrayDescPc[11]
+                ];
+
+                $data[] = ['indicador'=>'ROB',
+                           'valorM11'=> $arrayRob[0],
+                           'valorM10'=> $arrayRob[1],
+                           'valorM9'=> $arrayRob[2],
+                           'valorM8'=> $arrayRob[3],
+                           'valorM7'=> $arrayRob[4],
+                           'valorM6'=> $arrayRob[5],
+                           'valorM5'=> $arrayRob[6],
+                           'valorM4'=> $arrayRob[7],
+                           'valorM3'=> $arrayRob[8],
+                           'valorM2'=> $arrayRob[9],
+                           'valorM1'=> $arrayRob[10],
+                           'valorM0'=> $arrayRob[11]
+                ];
+
+                $data[] = ['indicador'=>'ROL',
+                           'valorM11'=> $arrayRol[0],
+                           'valorM10'=> $arrayRol[1],
+                           'valorM9'=> $arrayRol[2],
+                           'valorM8'=> $arrayRol[3],
+                           'valorM7'=> $arrayRol[4],
+                           'valorM6'=> $arrayRol[5],
+                           'valorM5'=> $arrayRol[6],
+                           'valorM4'=> $arrayRol[7],
+                           'valorM3'=> $arrayRol[8],
+                           'valorM2'=> $arrayRol[9],
+                           'valorM1'=> $arrayRol[10],
+                           'valorM0'=> $arrayRol[11]
+                ];
+
+                $data[] = ['indicador'=>'CMV',
+                           'valorM11'=> $arrayCmv[0],
+                           'valorM10'=> $arrayCmv[1],
+                           'valorM9'=> $arrayCmv[2],
+                           'valorM8'=> $arrayCmv[3],
+                           'valorM7'=> $arrayCmv[4],
+                           'valorM6'=> $arrayCmv[5],
+                           'valorM5'=> $arrayCmv[6],
+                           'valorM4'=> $arrayCmv[7],
+                           'valorM3'=> $arrayCmv[8],
+                           'valorM2'=> $arrayCmv[9],
+                           'valorM1'=> $arrayCmv[10],
+                           'valorM0'=> $arrayCmv[11]
+                ];
+
+                $data[] = ['indicador'=>'LB',
+                           'valorM11'=> $arrayLb[0],
+                           'valorM10'=> $arrayLb[1],
+                           'valorM9'=> $arrayLb[2],
+                           'valorM8'=> $arrayLb[3],
+                           'valorM7'=> $arrayLb[4],
+                           'valorM6'=> $arrayLb[5],
+                           'valorM5'=> $arrayLb[6],
+                           'valorM4'=> $arrayLb[7],
+                           'valorM3'=> $arrayLb[8],
+                           'valorM2'=> $arrayLb[9],
+                           'valorM1'=> $arrayLb[10],
+                           'valorM0'=> $arrayLb[11]
+                ];
+
+                $data[] = ['indicador'=>'MB',
+                           'valorM11'=> $arrayMb[0],
+                           'valorM10'=> $arrayMb[1],
+                           'valorM9'=> $arrayMb[2],
+                           'valorM8'=> $arrayMb[3],
+                           'valorM7'=> $arrayMb[4],
+                           'valorM6'=> $arrayMb[5],
+                           'valorM5'=> $arrayMb[6],
+                           'valorM4'=> $arrayMb[7],
+                           'valorM3'=> $arrayMb[8],
+                           'valorM2'=> $arrayMb[9],
+                           'valorM1'=> $arrayMb[10],
+                           'valorM0'=> $arrayMb[11]
+                ];
+
+                $data[] = ['indicador'=>'Quantidade',
+                           'valorM11'=> $arrayQtde[0],
+                           'valorM10'=> $arrayQtde[1],
+                           'valorM9'=> $arrayQtde[2],
+                           'valorM8'=> $arrayQtde[3],
+                           'valorM7'=> $arrayQtde[4],
+                           'valorM6'=> $arrayQtde[5],
+                           'valorM5'=> $arrayQtde[6],
+                           'valorM4'=> $arrayQtde[7],
+                           'valorM3'=> $arrayQtde[8],
+                           'valorM2'=> $arrayQtde[9],
+                           'valorM1'=> $arrayQtde[10],
+                           'valorM0'=> $arrayQtde[11]
+                ];
+
+                $data[] = ['indicador'=>'Nota Fiscal',
+                           'valorM11'=> $arrayNf[0],
+                           'valorM10'=> $arrayNf[1],
+                           'valorM9'=> $arrayNf[2],
+                           'valorM8'=> $arrayNf[3],
+                           'valorM7'=> $arrayNf[4],
+                           'valorM6'=> $arrayNf[5],
+                           'valorM5'=> $arrayNf[6],
+                           'valorM4'=> $arrayNf[7],
+                           'valorM3'=> $arrayNf[8],
+                           'valorM2'=> $arrayNf[9],
+                           'valorM1'=> $arrayNf[10],
+                           'valorM0'=> $arrayNf[11]
+                ];
+
+                $data[] = ['indicador'=>'Cliente',
+                           'valorM11'=> $arrayCc[0],
+                           'valorM10'=> $arrayCc[1],
+                           'valorM9'=> $arrayCc[2],
+                           'valorM8'=> $arrayCc[3],
+                           'valorM7'=> $arrayCc[4],
+                           'valorM6'=> $arrayCc[5],
+                           'valorM5'=> $arrayCc[6],
+                           'valorM4'=> $arrayCc[7],
+                           'valorM3'=> $arrayCc[8],
+                           'valorM2'=> $arrayCc[9],
+                           'valorM1'=> $arrayCc[10],
+                           'valorM0'=> $arrayCc[11]
+                ];
             }
 
             $this->setCallbackData($data);
@@ -359,7 +592,7 @@ class FiiController extends AbstractRestfulController
     }
 
     public function listarfichaitemgraficoAction()
-    {   
+    {
         $data = array();
         
         try {
