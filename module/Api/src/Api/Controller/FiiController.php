@@ -356,19 +356,19 @@ class FiiController extends AbstractRestfulController
 
             $data = array();
 
-            $data[] = [ 'indicador'=>'Preço Unitário',
-                        'valorM11'=> $arrayPreco[0],
-                        'valorM10'=> $arrayPreco[1],
-                        'valorM9'=> $arrayPreco[2],
-                        'valorM8'=> $arrayPreco[3],
-                        'valorM7'=> $arrayPreco[4],
-                        'valorM6'=> $arrayPreco[5],
-                        'valorM5'=> $arrayPreco[6],
-                        'valorM4'=> $arrayPreco[7],
-                        'valorM3'=> $arrayPreco[8],
-                        'valorM2'=> $arrayPreco[9],
-                        'valorM1'=> $arrayPreco[10],
-                        'valorM0'=> $arrayPreco[11]
+            $data[] = ['indicador'=>'% Desconto',
+                        'valorM11'=> $arrayDescPc[0],
+                        'valorM10'=> $arrayDescPc[1],
+                        'valorM9'=> $arrayDescPc[2],
+                        'valorM8'=> $arrayDescPc[3],
+                        'valorM7'=> $arrayDescPc[4],
+                        'valorM6'=> $arrayDescPc[5],
+                        'valorM5'=> $arrayDescPc[6],
+                        'valorM4'=> $arrayDescPc[7],
+                        'valorM3'=> $arrayDescPc[8],
+                        'valorM2'=> $arrayDescPc[9],
+                        'valorM1'=> $arrayDescPc[10],
+                        'valorM0'=> $arrayDescPc[11]
             ];
 
             $data[] = ['indicador'=>'Desconto Unitário',
@@ -384,6 +384,21 @@ class FiiController extends AbstractRestfulController
                         'valorM2'=> $arrayDesc[9],
                         'valorM1'=> $arrayDesc[10],
                         'valorM0'=> $arrayDesc[11]
+            ];  
+
+            $data[] = [ 'indicador'=>'Preço Unitário',
+                        'valorM11'=> $arrayPreco[0],
+                        'valorM10'=> $arrayPreco[1],
+                        'valorM9'=> $arrayPreco[2],
+                        'valorM8'=> $arrayPreco[3],
+                        'valorM7'=> $arrayPreco[4],
+                        'valorM6'=> $arrayPreco[5],
+                        'valorM5'=> $arrayPreco[6],
+                        'valorM4'=> $arrayPreco[7],
+                        'valorM3'=> $arrayPreco[8],
+                        'valorM2'=> $arrayPreco[9],
+                        'valorM1'=> $arrayPreco[10],
+                        'valorM0'=> $arrayPreco[11]
             ];
 
             $data[] = ['indicador'=>'Imposto Unitário',
@@ -399,6 +414,21 @@ class FiiController extends AbstractRestfulController
                         'valorM2'=> $arrayImposto[9],
                         'valorM1'=> $arrayImposto[10],
                         'valorM0'=> $arrayImposto[11]
+            ];
+
+            $data[] = ['indicador'=>'% Imposto',
+                        'valorM11'=> $arrayImpostoPc[0],
+                        'valorM10'=> $arrayImpostoPc[1],
+                        'valorM9'=> $arrayImpostoPc[2],
+                        'valorM8'=> $arrayImpostoPc[3],
+                        'valorM7'=> $arrayImpostoPc[4],
+                        'valorM6'=> $arrayImpostoPc[5],
+                        'valorM5'=> $arrayImpostoPc[6],
+                        'valorM4'=> $arrayImpostoPc[7],
+                        'valorM3'=> $arrayImpostoPc[8],
+                        'valorM2'=> $arrayImpostoPc[9],
+                        'valorM1'=> $arrayImpostoPc[10],
+                        'valorM0'=> $arrayImpostoPc[11]
             ];
 
             $data[] = ['indicador'=>'ROL Unitário',
@@ -429,36 +459,6 @@ class FiiController extends AbstractRestfulController
                         'valorM2'=> $arrayCusto[9],
                         'valorM1'=> $arrayCusto[10],
                         'valorM0'=> $arrayCusto[11]
-            ];
-
-            $data[] = ['indicador'=>'% Imposto',
-                        'valorM11'=> $arrayImpostoPc[0],
-                        'valorM10'=> $arrayImpostoPc[1],
-                        'valorM9'=> $arrayImpostoPc[2],
-                        'valorM8'=> $arrayImpostoPc[3],
-                        'valorM7'=> $arrayImpostoPc[4],
-                        'valorM6'=> $arrayImpostoPc[5],
-                        'valorM5'=> $arrayImpostoPc[6],
-                        'valorM4'=> $arrayImpostoPc[7],
-                        'valorM3'=> $arrayImpostoPc[8],
-                        'valorM2'=> $arrayImpostoPc[9],
-                        'valorM1'=> $arrayImpostoPc[10],
-                        'valorM0'=> $arrayImpostoPc[11]
-            ];
-
-            $data[] = ['indicador'=>'% Desconto',
-                        'valorM11'=> $arrayDescPc[0],
-                        'valorM10'=> $arrayDescPc[1],
-                        'valorM9'=> $arrayDescPc[2],
-                        'valorM8'=> $arrayDescPc[3],
-                        'valorM7'=> $arrayDescPc[4],
-                        'valorM6'=> $arrayDescPc[5],
-                        'valorM5'=> $arrayDescPc[6],
-                        'valorM4'=> $arrayDescPc[7],
-                        'valorM3'=> $arrayDescPc[8],
-                        'valorM2'=> $arrayDescPc[9],
-                        'valorM1'=> $arrayDescPc[10],
-                        'valorM0'=> $arrayDescPc[11]
             ];
 
             $data[] = ['indicador'=>'ROB',
@@ -1011,7 +1011,7 @@ class FiiController extends AbstractRestfulController
                                 'color' => $colors[1],
                                 'data' => $arrayMb,
                                 'vFormat' => '',
-                                'vDecimos' => '',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
