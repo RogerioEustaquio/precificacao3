@@ -269,19 +269,22 @@ class FiiController extends AbstractRestfulController
             $conn = $em->getConnection();
 
 
-            $sql = "select add_months(trunc($sysdate,'MM'),-11) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-10) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-9) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-8) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-7) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-6) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-5) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-4) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-3) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-2) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-1) as id from dual union all
-                    select add_months(trunc($sysdate,'MM'),-0) as id from dual            
+            $sql = "select to_char(add_months(trunc($sysdate,'MM'),-11),'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-10),'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-9), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-8), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-7), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-6), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-5), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-4), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-3), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-2), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-1), 'MM') as id from dual union all
+                    select to_char(add_months(trunc($sysdate,'MM'),-0), 'MM') as id from dual
             ";
+
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -294,44 +297,12 @@ class FiiController extends AbstractRestfulController
 
             $data1 = array();
             $categories = array();
-
-            $arrayDesc      = array();
-            $arrayPreco     = array();
-            $arrayImposto   = array();
-            $arrayRolUni    = array();
-            $arrayCusto     = array();
-            $arrayImpostoPc = array();
-            $arrayDescPc    = array();
-            $arrayRol       = array();
-            $arrayCmv       = array();
-            $arrayLb        = array();
-            $arrayMb        = array();
-            $arrayQtde      = array();
-            $arrayNf        = array();
-            $arrayCc        = array();
-
             foreach ($resultSet as $row) {
                 $data1 = $hydrator->extract($row);
-                $categories[] = $meses[(float) substr($data1['id'], 3, 2)];
-
-                $arrayDesc[]        = 0;
-                $arrayPreco[]       = 0;
-                $arrayImposto[]     = 0;
-                $arrayRolUni[]      = 0;
-                $arrayCusto[]       = 0;
-                $arrayImpostoPc[]   = 0;
-                $arrayDescPc[]      = 0;
-                $arrayRol[]         = 0;
-                $arrayCmv[]         = 0;
-                $arrayLb[]          = 0;
-                $arrayMb[]          = 0;
-                $arrayQtde[]        = 0;
-                $arrayNf[]          = 0;
-                $arrayCc[]          = 0;
-
+                $categories[] = $meses[(float)$data1['id']];
             }
 
-            $sql = " select b.data,
+            $sql = "select a.data,
                             b.desconto_uni,
                             b.preco_uni,
                             b.imposto_uni,
@@ -346,7 +317,12 @@ class FiiController extends AbstractRestfulController
                             b.qtde,
                             b.nf,
                             b.cc
-                    from (select trunc(vi.data_emissao, 'MM') as data,
+                    from (select distinct trunc(data_emissao, 'MM') as data
+                            from pricing.vm_ie_ve_venda_item 
+                          where trunc(data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'),-11)
+                          and trunc(data_emissao, 'MM') <= add_months(trunc($sysdate,'MM'),-0)
+                          order by data asc) a,
+                          (select trunc(vi.data_emissao, 'MM') as data,
                                   round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
                                   round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
                                   round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
@@ -377,7 +353,7 @@ class FiiController extends AbstractRestfulController
                            and vi.id_pessoa = p.id_pessoa(+)
                            $andSql
                            group by trunc(vi.data_emissao, 'MM')) b
-                    where 1 = 1
+                    where a.data = b.data(+)
             ";
 
             // print "$sql";
@@ -405,32 +381,41 @@ class FiiController extends AbstractRestfulController
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
 
-            $data = array();
-            $cont = 0;
+            $data           = array();
+            $arrayDesc      = array();
+            $arrayPreco     = array();
+            $arrayImposto   = array();
+            $arrayRolUni    = array();
+            $arrayCusto     = array();
+            $arrayImpostoPc = array();
+            $arrayDescPc    = array();
+            $arrayRol       = array();
+            $arrayCmv       = array();
+            $arrayLb        = array();
+            $arrayMb        = array();
+            $arrayQtde      = array();
+            $arrayNf        = array();
+            $arrayCc        = array();
 
             foreach ($resultSet as $row) {
 
                 $elementos = $hydrator->extract($row);
 
-                if($categories[$cont] == $meses[(float)substr($elementos['data'], 3, 2)]){
-
-                    $arrayDesc[$cont]        = (float)$elementos['descontoUni'];
-                    $arrayPreco[$cont]       = (float)$elementos['precoUni'];
-                    $arrayImposto[$cont]     = (float)$elementos['impostoUni'];
-                    $arrayRolUni[$cont]      = (float)$elementos['rolUni'];
-                    $arrayCusto[$cont]       = (float)$elementos['custoUni'];
-                    $arrayImpostoPc[$cont]   = (float)$elementos['impostoPerc'];
-                    $arrayDescPc[$cont]      = (float)$elementos['descontoPerc'];
-                    $arrayRol[$cont]         = (float)$elementos['rol'];
-                    $arrayCmv[$cont]         = (float)$elementos['cmv'];
-                    $arrayLb[$cont]          = (float)$elementos['lb'];
-                    $arrayMb[$cont]          = (float)$elementos['mb'];
-                    $arrayQtde[$cont]        = (float)$elementos['qtde'];
-                    $arrayNf[$cont]          = (float)$elementos['nf'];
-                    $arrayCc[$cont]          = (float)$elementos['cc'];
-                }
-
-                $cont++;
+                $arrayDesc[]        = (float)$elementos['descontoUni'];
+                $arrayPreco[]       = (float)$elementos['precoUni'];
+                $arrayImposto[]     = (float)$elementos['impostoUni'];
+                $arrayRolUni[]      = (float)$elementos['rolUni'];
+                $arrayCusto[]       = (float)$elementos['custoUni'];
+                $arrayImpostoPc[]   = (float)$elementos['impostoPerc'];
+                $arrayDescPc[]      = (float)$elementos['descontoPerc'];
+                $arrayRol[]         = (float)$elementos['rol'];
+                $arrayCmv[]         = (float)$elementos['cmv'];
+                $arrayLb[]          = (float)$elementos['lb'];
+                $arrayMb[]          = (float)$elementos['mb'];
+                $arrayQtde[]        = (float)$elementos['qtde'];
+                $arrayNf[]          = (float)$elementos['nf'];
+                $arrayCc[]          = (float)$elementos['cc'];
+                // $arrayMb[] = (float)$elementos['lb'];
             }
 
             $colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"];
@@ -597,7 +582,7 @@ class FiiController extends AbstractRestfulController
                                 'color' => $colors[0],
                                 'data' => $arrayMb,
                                 'vFormat' => '',
-                                'vDecimos' => '',
+                                'vDecimos' => '2',
                                 'visible' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
