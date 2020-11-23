@@ -108,99 +108,11 @@ class FiiController extends AbstractRestfulController
     }
 
     public function listarfichaitemAction()
-    {   
+    {
         $data = array();
         
         try {
 
-            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
-            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
-            $codProdutos= $this->params()->fromQuery('codProdutos',null);
-            $tpPessoas  = $this->params()->fromQuery('tpPessoas',null);
-
-            if($idEmpresas){
-                $idEmpresas   =  implode(",",json_decode($idEmpresas));
-            }
-            if($idMarcas){
-                $idMarcas =  implode(",",json_decode($idMarcas));
-            }
-            if($codProdutos){
-                $codProdutos =  implode("','",json_decode($codProdutos));
-            }
-            if($tpPessoas){
-                $tpPessoas =  implode("','",json_decode($tpPessoas));
-            }
-
-            $andSql = '';
-            if($idEmpresas){
-                $andSql = " and id_empresa in ($idEmpresas)";
-            }
-
-            $em = $this->getEntityManager();
-            
-            $sql = "select 'PVM' as tipo,
-                            t.id_empresa,
-                            t.id_item,
-                            t.id_categoria,
-                            t.valor_m11,
-                            t.valor_m10,
-                            t.valor_m9,
-                            t.valor_m8,
-                            t.valor_m7,
-                            t.valor_m6,
-                            t.valor_m5,
-                            t.valor_m4,
-                            t.valor_m3,
-                            t.valor_m2,
-                            t.valor_m1,
-                            t.valor_m0
-                        from VW_PRODUTO_PRECO_TIMELINE t 
-                        where 1 = 1
-                        $andSql
-                        and id_item = 84307
-                        and id_categoria = 1";
-            
-            $conn = $em->getConnection();
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $results = $stmt->fetchAll();
-
-            $hydrator = new ObjectProperty;
-            $hydrator->addStrategy('valor_m11', new ValueStrategy);
-            $hydrator->addStrategy('valor_m10', new ValueStrategy);
-            $hydrator->addStrategy('valor_m9', new ValueStrategy);
-            $hydrator->addStrategy('valor_m8', new ValueStrategy);
-            $hydrator->addStrategy('valor_m7', new ValueStrategy);
-            $hydrator->addStrategy('valor_m6', new ValueStrategy);
-            $hydrator->addStrategy('valor_m5', new ValueStrategy);
-            $hydrator->addStrategy('valor_m4', new ValueStrategy);
-            $hydrator->addStrategy('valor_m3', new ValueStrategy);
-            $hydrator->addStrategy('valor_m2', new ValueStrategy);
-            $hydrator->addStrategy('valor_m1', new ValueStrategy);
-            $hydrator->addStrategy('valor_m0', new ValueStrategy);
-            $stdClass = new StdClass;
-            $resultSet = new HydratingResultSet($hydrator, $stdClass);
-            $resultSet->initialize($results);
-
-            $data = array();
-            foreach ($resultSet as $row) {
-                $data[] = $hydrator->extract($row);
-            }
-
-            $this->setCallbackData($data);
-            
-        }  catch (\Exception $e) {
-            $this->setCallbackError($e->getMessage());
-        }
-        
-        return $this->getCallbackModel();
-    }
-
-    public function listarfichaitemgraficoAction()
-    {   
-        $data = array();
-        
-        try {
             $idEmpresas = $this->params()->fromPost('idEmpresas',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $codProdutos= $this->params()->fromPost('codProdutos',null);
@@ -208,16 +120,16 @@ class FiiController extends AbstractRestfulController
             $data       = $this->params()->fromPost('data',null);
 
             if($idEmpresas){
-                $idEmpresas   =  implode(",",json_decode($idEmpresas));
+                $idEmpresas =  implode(",",json_decode($idEmpresas));
             }
             if($idMarcas){
-                $idMarcas =  implode(",",json_decode($idMarcas));
+                $idMarcas = implode(",",json_decode($idMarcas));
             }
             if($codProdutos){
                 $codProdutos =  implode("','",json_decode($codProdutos));
             }
             if($tpPessoas){
-                $tpPessoas =  implode("','",json_decode($tpPessoas));
+                $tpPessoas = implode("','",json_decode($tpPessoas));
             }
 
             $andSql = '';
@@ -267,7 +179,6 @@ class FiiController extends AbstractRestfulController
                      'Dezembro'];
 
             $conn = $em->getConnection();
-
 
             $sql = "select add_months(trunc($sysdate,'MM'),-11) as id from dual union all
                     select add_months(trunc($sysdate,'MM'),-10) as id from dual union all
@@ -433,6 +344,262 @@ class FiiController extends AbstractRestfulController
                 $cont++;
             }
 
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        }  catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function listarfichaitemgraficoAction()
+    {   
+        $data = array();
+        
+        try {
+            $idEmpresas = $this->params()->fromPost('idEmpresas',null);
+            $idMarcas   = $this->params()->fromPost('idMarcas',null);
+            $codProdutos= $this->params()->fromPost('codProdutos',null);
+            $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
+            $data       = $this->params()->fromPost('data',null);
+
+            if($idEmpresas){
+                $idEmpresas =  implode(",",json_decode($idEmpresas));
+            }
+            if($idMarcas){
+                $idMarcas = implode(",",json_decode($idMarcas));
+            }
+            if($codProdutos){
+                $codProdutos =  implode("','",json_decode($codProdutos));
+            }
+            if($tpPessoas){
+                $tpPessoas = implode("','",json_decode($tpPessoas));
+            }
+
+            $andSql = '';
+            if($idEmpresas){
+                $andSql = " and vi.id_empresa in ($idEmpresas)";
+            }
+
+            if($idMarcas){
+                $andSql .= " and m.id_marca in ($idMarcas)";
+            }
+
+            if($codProdutos){
+                $andSql .= " and i.cod_item||c.descricao in ('$codProdutos')";
+            }
+
+            if($tpPessoas){
+                $andSql .= " and p.tipo_pessoa in ('$tpPessoas')";
+            }
+            
+            if($data){
+                $sysdate = "to_date('01/".$data."')";
+            }else{
+                $sysdate = 'sysdate';
+            }
+
+            if($data){
+                $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'),-11)";
+                $andSql .= " and trunc(vi.data_emissao, 'MM') <= add_months(trunc($sysdate,'MM'),0)";
+            }else{
+                $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
+            }
+            
+            $em = $this->getEntityManager();
+            
+            $meses = [null,
+                     'Janeiro',
+                     'Fevereiro',
+                     'Março',
+                     'Abril',
+                     'Maio',
+                     'Junho',
+                     'Julho',
+                     'Agosto',
+                     'Setembro',
+                     'Outubro',
+                     'Novembro',
+                     'Dezembro'];
+
+            $conn = $em->getConnection();
+
+            $sql = "select add_months(trunc($sysdate,'MM'),-11) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-10) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-9) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-8) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-7) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-6) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-5) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-4) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-3) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-2) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-1) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-0) as id from dual            
+            ";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data1 = array();
+            $categories = array();
+
+            $arrayDesc      = array();
+            $arrayPreco     = array();
+            $arrayImposto   = array();
+            $arrayRolUni    = array();
+            $arrayCusto     = array();
+            $arrayImpostoPc = array();
+            $arrayDescPc    = array();
+            $arrayRob       = array();
+            $arrayRol       = array();
+            $arrayCmv       = array();
+            $arrayLb        = array();
+            $arrayMb        = array();
+            $arrayQtde      = array();
+            $arrayNf        = array();
+            $arrayCc        = array();
+
+            foreach ($resultSet as $row) {
+                $data1 = $hydrator->extract($row);
+                $categories[] = $meses[(float) substr($data1['id'], 3, 2)];
+
+                $arrayDesc[]        = 0;
+                $arrayPreco[]       = 0;
+                $arrayImposto[]     = 0;
+                $arrayRolUni[]      = 0;
+                $arrayCusto[]       = 0;
+                $arrayImpostoPc[]   = 0;
+                $arrayDescPc[]      = 0;
+                $arrayRob[]         = 0;
+                $arrayRol[]         = 0;
+                $arrayCmv[]         = 0;
+                $arrayLb[]          = 0;
+                $arrayMb[]          = 0;
+                $arrayQtde[]        = 0;
+                $arrayNf[]          = 0;
+                $arrayCc[]          = 0;
+
+            }
+
+            $sql = " select b.data,
+                            b.desconto_uni,
+                            b.preco_uni,
+                            b.imposto_uni,
+                            b.rol_uni,
+                            b.custo_uni,
+                            b.imposto_perc,
+                            b.desconto_perc,
+                            b.rob,
+                            b.rol,
+                            b.cmv,
+                            b.lb,
+                            b.mb,
+                            b.qtde,
+                            b.nf,
+                            b.cc
+                    from (select trunc(vi.data_emissao, 'MM') as data,
+                                  round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
+                                  round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
+                                  round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
+                                  round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
+                                  round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                  round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
+                                  round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
+                                  sum(vi.rob) as rob,
+                                  sum(vi.rol) as rol,
+                                  sum(vi.custo) as cmv,
+                                  sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                  round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                  sum(vi.qtde) as qtde,
+                                  count(distinct vi.numero_nf) as nf,
+                                  count(distinct vi.id_pessoa) as cc
+                            from pricing.vm_ie_ve_venda_item vi,
+                                ms.empresa e,
+                                ms.tb_item_categoria ic,
+                                ms.tb_item i,
+                                ms.tb_categoria c,
+                                ms.tb_marca m,
+                                ms.pessoa p
+                           where vi.id_empresa = e.id_empresa
+                           and vi.id_item = ic.id_item
+                           and vi.id_categoria = ic.id_categoria
+                           and vi.id_item = i.id_item
+                           and vi.id_categoria = c.id_categoria
+                           and ic.id_marca = m.id_marca
+                           and vi.id_pessoa = p.id_pessoa(+)
+                           $andSql
+                           group by trunc(vi.data_emissao, 'MM')) b
+                    where 1 = 1
+            ";
+
+            // print "$sql";
+            // exit;
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('preco_uni', new ValueStrategy);
+            $hydrator->addStrategy('imposto_uni', new ValueStrategy);
+            $hydrator->addStrategy('rol_uni', new ValueStrategy);
+            $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('imposto_perc', new ValueStrategy);
+            $hydrator->addStrategy('desconto_perc', new ValueStrategy);
+            $hydrator->addStrategy('rob', new ValueStrategy);
+            $hydrator->addStrategy('rol', new ValueStrategy);
+            $hydrator->addStrategy('cmv', new ValueStrategy);
+            $hydrator->addStrategy('lb', new ValueStrategy);
+            $hydrator->addStrategy('mb', new ValueStrategy);
+            $hydrator->addStrategy('qtde', new ValueStrategy);
+            $hydrator->addStrategy('nf', new ValueStrategy);
+            $hydrator->addStrategy('cc', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            $cont = 0;
+
+            foreach ($resultSet as $row) {
+
+                $elementos = $hydrator->extract($row);
+
+                if($categories[$cont] == $meses[(float)substr($elementos['data'], 3, 2)]){
+
+                    $arrayDesc[$cont]        = (float)$elementos['descontoUni'];
+                    $arrayPreco[$cont]       = (float)$elementos['precoUni'];
+                    $arrayImposto[$cont]     = (float)$elementos['impostoUni'];
+                    $arrayRolUni[$cont]      = (float)$elementos['rolUni'];
+                    $arrayCusto[$cont]       = (float)$elementos['custoUni'];
+                    $arrayImpostoPc[$cont]   = (float)$elementos['impostoPerc'];
+                    $arrayDescPc[$cont]      = (float)$elementos['descontoPerc'];
+                    $arrayRob[$cont]         = (float)$elementos['rob'];
+                    $arrayRol[$cont]         = (float)$elementos['rol'];
+                    $arrayCmv[$cont]         = (float)$elementos['cmv'];
+                    $arrayLb[$cont]          = (float)$elementos['lb'];
+                    $arrayMb[$cont]          = (float)$elementos['mb'];
+                    $arrayQtde[$cont]        = (float)$elementos['qtde'];
+                    $arrayNf[$cont]          = (float)$elementos['nf'];
+                    $arrayCc[$cont]          = (float)$elementos['cc'];
+                }
+
+                $cont++;
+            }
+
             $colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"];
 
             // $this->setCallbackData($data);
@@ -547,6 +714,21 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
+                                'name' => 'ROB',
+                                'yAxis'=> 7,
+                                // 'color' => 'rgba(221, 117, 85, 1)',
+                                'data' => $arrayRob,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => true,
+                                'dataLabels' => array(
+                                    'enabled' => true,
+                                    'keyformat' => 'R$',
+                                    // 'format' => '{y}',
+                                    'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
                                 'name' => 'ROL',
                                 'yAxis'=> 7,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
@@ -579,7 +761,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'LB',
                                 'yAxis'=> 7,
-                                // 'color' => 'rgba(221, 117, 85, 1)',
+                                'color' => $colors[0],
                                 'data' => $arrayLb,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -594,7 +776,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'MB',
                                 'yAxis'=> 10,
-                                'color' => $colors[0],
+                                'color' => $colors[1],
                                 'data' => $arrayMb,
                                 'vFormat' => '',
                                 'vDecimos' => '',
@@ -609,7 +791,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Quantidade',
                                 'yAxis'=> 11,
-                                'color' => $colors[1],
+                                'color' => $colors[2],
                                 'data' => $arrayQtde,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -623,7 +805,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Nota Fiscal',
                                 'yAxis'=> 12,
-                                'color' => $colors[2],
+                                'color' => $colors[3],
                                 'data' => $arrayNf,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -637,7 +819,7 @@ class FiiController extends AbstractRestfulController
                             array(
                                 'name' => 'Cliente',
                                 'yAxis'=> 13,
-                                'color' => $colors[3],
+                                'color' => $colors[4],
                                 'data' => $arrayCc,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
