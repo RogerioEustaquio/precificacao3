@@ -120,6 +120,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 var recordSeries = record;
                                 element = {
                                     xtype: 'checkboxfield',
+                                    margin: '2 2 2 2',
                                     fieldLabel: record.name,
                                     name: record.name,
                                     checked: recordSeries.options.showInLegend,
@@ -139,6 +140,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 scrollable: true,
                                 height: 300,
                                 width: 260,
+                                // padding: '1 1 1 1',
                                 // layout: 'fit',
                                 items: lista
                             }).show();
@@ -320,16 +322,16 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                   },
                   {
                       title: {
-                          text: '% Imposto',
+                          text: 'Lucro Unitário',
                           style: {
                               color: Highcharts.getOptions().colors[5],
                               fontSize: '10px'
                           }
                       },
                       labels: {
-                          formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                          },
+                         formatter: function () {
+                             return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                         },
                           x: 0,
                           y: 0,
                           padding: 0,
@@ -343,7 +345,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                    },
                   {
                       title: {
-                          text: '% Desconto',
+                          text: '% Imposto',
                           style: {
                               color: Highcharts.getOptions().colors[6],
                               fontSize: '10px'
@@ -364,32 +366,32 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                       opposite: true,
                       visible: true
                    },
-                   {
-                       title: {
-                           text: 'ROB',
-                           style: {
-                               color: Highcharts.getOptions().colors[7],
-                               fontSize: '10px'
-                           }
-                       },
-                       labels: {
-                            formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                            },
-                            x: 0,
-                            y: 0,
-                            padding: 0,
-                            style: {
-                                color: Highcharts.getOptions().colors[7],
-                                fontSize: '10px'
-                            }
-                       },
-                       opposite: true,
-                       visible: true
+                  {
+                      title: {
+                          text: '% Desconto',
+                          style: {
+                              color: Highcharts.getOptions().colors[7],
+                              fontSize: '10px'
+                          }
+                      },
+                      labels: {
+                          formatter: function () {
+                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                          },
+                          x: 0,
+                          y: 0,
+                          padding: 0,
+                          style: {
+                              color: Highcharts.getOptions().colors[7],
+                              fontSize: '10px'
+                          }
+                      },
+                      opposite: true,
+                      visible: true
                    },
                    {
                        title: {
-                           text: 'ROL',
+                           text: 'ROB',
                            style: {
                                color: Highcharts.getOptions().colors[8],
                                fontSize: '10px'
@@ -409,12 +411,35 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                        },
                        opposite: true,
                        visible: true
+                   },
+                   {
+                       title: {
+                           text: 'ROL',
+                           style: {
+                               color: Highcharts.getOptions().colors[9],
+                               fontSize: '10px'
+                           }
+                       },
+                       labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: Highcharts.getOptions().colors[9],
+                                fontSize: '10px'
+                            }
+                       },
+                       opposite: true,
+                       visible: true
                     },
                     {
                         title: {
                             text: 'CMV',
                             style: {
-                                color: Highcharts.getOptions().colors[9],
+                                color: colors[0],
                                 fontSize: '10px'
                             }
                         },
@@ -426,7 +451,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             y: 0,
                             padding: 0,
                             style: {
-                                color: Highcharts.getOptions().colors[9],
+                                color: colors[0],
                                 fontSize: '10px'
                             }
                         },
@@ -437,7 +462,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                          title: {
                              text: 'LB',
                              style: {
-                                 color: colors[0],
+                                 color: colors[1],
                                  fontSize: '10px'
                              }
                          },
@@ -449,7 +474,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             y: 0,
                             padding: 0,
                             style: {
-                                color: colors[0],
+                                color: colors[1],
                                 fontSize: '10px'
                             }
                          },
@@ -459,29 +484,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                       {
                           title: {
                               text: 'MB',
-                              style: {
-                                  color: colors[1],
-                                  fontSize: '10px'
-                              }
-                          },
-                          labels: {
-                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                             },
-                             x: 0,
-                             y: 0,
-                             padding: 0,
-                             style: {
-                                 color: colors[1],
-                                 fontSize: '10px'
-                             }
-                          },
-                          opposite: true,
-                          visible: true
-                       },
-                      {
-                          title: {
-                              text: 'Quantidade',
                               style: {
                                   color: colors[2],
                                   fontSize: '10px'
@@ -502,11 +504,34 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                           opposite: true,
                           visible: true
                        },
+                      {
+                          title: {
+                              text: 'Quantidade',
+                              style: {
+                                  color: colors[3],
+                                  fontSize: '10px'
+                              }
+                          },
+                          labels: {
+                             formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                             },
+                             x: 0,
+                             y: 0,
+                             padding: 0,
+                             style: {
+                                 color: colors[3],
+                                 fontSize: '10px'
+                             }
+                          },
+                          opposite: true,
+                          visible: true
+                       },
                        {
                            title: {
                                text: 'Nota Fiscal',
                                style: {
-                                   color: colors[3],
+                                   color: colors[4],
                                    fontSize: '10px'
                                }
                            },
@@ -518,7 +543,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                               y: 0,
                               padding: 0,
                               style: {
-                                  color: colors[3],
+                                  color: colors[4],
                                   fontSize: '10px'
                               }
                            },
@@ -529,7 +554,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             title: {
                                 text: 'Cliente',
                                 style: {
-                                    color: colors[4],
+                                    color: colors[5],
                                     fontSize: '10px'
                                 }
                             },
@@ -541,7 +566,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 y: 0,
                                 padding: 0,
                                 style: {
-                                    color: colors[4],
+                                    color: colors[5],
                                     fontSize: '10px'
                                 }
                             },

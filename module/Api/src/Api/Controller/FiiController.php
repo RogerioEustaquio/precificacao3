@@ -728,6 +728,7 @@ class FiiController extends AbstractRestfulController
                 $arrayImposto[]     = 0;
                 $arrayRolUni[]      = 0;
                 $arrayCusto[]       = 0;
+                $arrayLucro[]       = 0;
                 $arrayImpostoPc[]   = 0;
                 $arrayDescPc[]      = 0;
                 $arrayRob[]         = 0;
@@ -747,6 +748,7 @@ class FiiController extends AbstractRestfulController
                             b.imposto_uni,
                             b.rol_uni,
                             b.custo_uni,
+                            b.lucro_uni,
                             b.imposto_perc,
                             b.desconto_perc,
                             b.rob,
@@ -763,6 +765,7 @@ class FiiController extends AbstractRestfulController
                                   round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
                                   round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
                                   round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                  round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
                                   round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
                                   round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
                                   sum(vi.rob) as rob,
@@ -832,6 +835,7 @@ class FiiController extends AbstractRestfulController
                     $arrayImposto[$cont]     = (float)$elementos['impostoUni'];
                     $arrayRolUni[$cont]      = (float)$elementos['rolUni'];
                     $arrayCusto[$cont]       = (float)$elementos['custoUni'];
+                    $arrayLucro[$cont]       = (float)$elementos['lucroUni'];
                     $arrayImpostoPc[$cont]   = (float)$elementos['impostoPerc'];
                     $arrayDescPc[$cont]      = (float)$elementos['descontoPerc'];
                     $arrayRob[$cont]         = (float)$elementos['rob'];
@@ -936,8 +940,24 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
+                                'name' => 'Lucro Unitário',
+                                'yAxis'=> 0,
+                                // 'color' => 'rgba(221, 117, 85, 1)',
+                                'data' => $arrayLucro,
+                                'vFormat' => '',
+                                'vDecimos' => '2',
+                                'visible' => true,
+                                'showInLegend' => true,
+                                'dataLabels' => array(
+                                    'enabled' => true,
+                                    'keyformat' => '',
+                                    // 'format' => '{y}',
+                                    'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
                                 'name' => '% Imposto',
-                                'yAxis'=> 5,
+                                'yAxis'=> 6,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayImpostoPc,
                                 'vFormat' => '%',
@@ -953,7 +973,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => '% Desconto',
-                                'yAxis'=> 6,
+                                'yAxis'=> 7,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayDescPc,
                                 'vFormat' => '%',
@@ -969,7 +989,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'ROB',
-                                'yAxis'=> 7,
+                                'yAxis'=> 8,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRob,
                                 'vFormat' => '',
@@ -985,7 +1005,7 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'ROL',
-                                'yAxis'=> 7,
+                                'yAxis'=> 8,
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayRol,
                                 'vFormat' => '',
@@ -1001,7 +1021,8 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'CMV',
-                                'yAxis'=> 7,
+                                'yAxis'=> 8,
+                                'color' => $colors[0],
                                 // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCmv,
                                 'vFormat' => '',
@@ -1017,8 +1038,8 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'LB',
-                                'yAxis'=> 7,
-                                'color' => $colors[0],
+                                'yAxis'=> 8,
+                                'color' => $colors[1],
                                 'data' => $arrayLb,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -1033,8 +1054,8 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'MB',
-                                'yAxis'=> 11,
-                                'color' => $colors[1],
+                                'yAxis'=> 12,
+                                'color' => $colors[2],
                                 'data' => $arrayMb,
                                 'vFormat' => '',
                                 'vDecimos' => '2',
@@ -1049,8 +1070,8 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Quantidade',
-                                'yAxis'=> 12,
-                                'color' => $colors[2],
+                                'yAxis'=> 13,
+                                'color' => $colors[3],
                                 'data' => $arrayQtde,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -1064,8 +1085,8 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Nota Fiscal',
-                                'yAxis'=> 13,
-                                'color' => $colors[3],
+                                'yAxis'=> 14,
+                                'color' => $colors[4],
                                 'data' => $arrayNf,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -1079,8 +1100,8 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Cliente',
-                                'yAxis'=> 14,
-                                'color' => $colors[4],
+                                'yAxis'=> 15,
+                                'color' => $colors[5],
                                 'data' => $arrayCc,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
