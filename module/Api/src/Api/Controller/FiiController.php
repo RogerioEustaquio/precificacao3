@@ -864,6 +864,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
@@ -879,6 +880,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
@@ -893,6 +895,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
@@ -908,6 +911,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '$',
@@ -923,6 +927,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
@@ -938,6 +943,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '%',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '',
@@ -953,6 +959,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '%',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '%',
@@ -968,6 +975,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => 'R$',
@@ -983,6 +991,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => 'R$',
@@ -998,6 +1007,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '$',
@@ -1013,6 +1023,7 @@ class FiiController extends AbstractRestfulController
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '$',
@@ -1022,12 +1033,13 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'MB',
-                                'yAxis'=> 10,
+                                'yAxis'=> 11,
                                 'color' => $colors[1],
                                 'data' => $arrayMb,
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     'keyformat' => '$',
@@ -1037,12 +1049,13 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Quantidade',
-                                'yAxis'=> 11,
+                                'yAxis'=> 12,
                                 'color' => $colors[2],
                                 'data' => $arrayQtde,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
@@ -1051,12 +1064,13 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Nota Fiscal',
-                                'yAxis'=> 12,
+                                'yAxis'=> 13,
                                 'color' => $colors[3],
                                 'data' => $arrayNf,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',
@@ -1065,12 +1079,13 @@ class FiiController extends AbstractRestfulController
                             ),
                             array(
                                 'name' => 'Cliente',
-                                'yAxis'=> 13,
+                                'yAxis'=> 14,
                                 'color' => $colors[4],
                                 'data' => $arrayCc,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
                                 'visible' => true,
+                                'showInLegend' => true,
                                 'dataLabels' => array(
                                     'enabled' => true,
                                     // 'format' => 'R$ {y}',

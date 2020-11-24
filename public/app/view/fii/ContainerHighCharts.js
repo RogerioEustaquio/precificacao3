@@ -108,6 +108,52 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             credits:{
                 enabled: false
             },
+            exporting: {
+                menuItemDefinitions: {
+                    indicadores: {
+                        onclick: function () {
+                            var me = this;
+                            var lista = [];
+                            var element = '';
+                            me.series.forEach(function(record){
+
+                                var recordSeries = record;
+                                element = {
+                                    xtype: 'checkboxfield',
+                                    fieldLabel: record.name,
+                                    name: record.name,
+                                    checked: recordSeries.options.showInLegend,
+                                    handler: function(record,index){
+                                        
+                                        recordSeries.update({showInLegend: index, visible: index});
+                                        me.yAxis[recordSeries.index].update({visible: index});
+                                    }
+                                };
+                                
+                                lista.push(element);
+                            });
+
+                            Ext.create('Ext.window.Window', {
+                                title: 'Habilitar/Desabilitar Indicadores',
+                                // renderTo: me,
+                                scrollable: true,
+                                height: 300,
+                                width: 260,
+                                // layout: 'fit',
+                                items: lista
+                            }).show();
+                        },
+                        text: 'Indicadores'
+                    }
+
+                },
+                buttons: {
+                    contextButton: {
+                        menuItems: ['viewFullscreen','downloadPNG', 'downloadXLS', 'indicadores']
+                    }
+                }
+            },
+
             chart: {
                 type: 'line',
                 zoomType: 'xy'
