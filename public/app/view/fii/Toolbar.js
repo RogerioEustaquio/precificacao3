@@ -75,12 +75,18 @@ Ext.define('App.view.fii.Toolbar',{
         var seriesLength = charts.chart.series.length;
 
         for (let index = 0; index < seriesLength; index++) {
-            
+
             if(charts.chart.series[index].visible){
                 seriesOrig.push({visible: true});
             }else{
                 seriesOrig.push({visible: false});
             }
+
+            // if(charts.chart.series[index].showInLegend){
+            //     seriesOrig[index].showInLegend = true;
+            // }else{
+            //     seriesOrig[index].showInLegend = false;
+            // }
             
         }
   
@@ -109,7 +115,7 @@ Ext.define('App.view.fii.Toolbar',{
                     rsarray.series.forEach(function(record){
 
                         record.visible      = seriesOrig[cont].visible;
-                        // record.showInLegend = seriesOrig[cont].showInLegend;
+                        record.showInLegend = seriesOrig[cont].showInLegend;
                         charts.chart.addSeries(record);
                         cont++;
                     });
@@ -199,7 +205,6 @@ Ext.define('App.view.fii.Toolbar',{
             }
         });
 
-        console.log(arrayHeader);
         grid.getStore().getProxy().setExtraParams(params);
         grid.getStore().load(
             // function(record){

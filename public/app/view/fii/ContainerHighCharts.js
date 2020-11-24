@@ -3,7 +3,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     xtype: 'fiichart',
     itemId: 'fiichart',
     width: '100%',
-    height: 300,
+    height: '60%',
     margin: '10 2 2 2',
     style: {
         background: '#ffffff'
@@ -81,7 +81,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 }
                             });
 
-                            // console.log(rsarray.series);
                         }
                     }
                 }
@@ -112,10 +111,10 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 menuItemDefinitions: {
                     indicadores: {
                         onclick: function () {
-                            var me = this;
+                            var meChart = this;
                             var lista = [];
                             var element = '';
-                            me.series.forEach(function(record){
+                            meChart.series.forEach(function(record){
 
                                 var recordSeries = record;
                                 element = {
@@ -127,7 +126,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     handler: function(record,index){
                                         
                                         recordSeries.update({showInLegend: index, visible: index});
-                                        me.yAxis[recordSeries.index].update({visible: index});
+                                        meChart.yAxis[recordSeries.index].update({visible: index});
                                     }
                                 };
                                 
@@ -145,13 +144,25 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 items: lista
                             }).show();
                         },
-                        text: 'Indicadores'
+                        text: 'Selecionar Indicadores'
+                    },
+                    ocultar: {
+                        onclick: function () {
+                            var meChart = this;
+                            meChart.series.forEach(function(record){
+                                
+                                record.update({visible: false});
+                                meChart.yAxis[record.index].update({visible: false});
+                            });
+
+                        },
+                        text: 'Ocultar Indicadores'
                     }
 
                 },
                 buttons: {
                     contextButton: {
-                        menuItems: ['viewFullscreen','downloadPNG', 'downloadXLS', 'indicadores']
+                        menuItems: ['viewFullscreen','downloadPNG', 'downloadXLS', 'indicadores', 'ocultar']
                     }
                 }
             },

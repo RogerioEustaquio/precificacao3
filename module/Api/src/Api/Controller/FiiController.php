@@ -218,6 +218,7 @@ class FiiController extends AbstractRestfulController
             $arrayImposto   = array();
             $arrayRolUni    = array();
             $arrayCusto     = array();
+            $arrayLucro     = array();
             $arrayImpostoPc = array();
             $arrayDescPc    = array();
             $arrayRob       = array();
@@ -238,6 +239,7 @@ class FiiController extends AbstractRestfulController
                 $arrayImposto[]     = 0;
                 $arrayRolUni[]      = 0;
                 $arrayCusto[]       = 0;
+                $arrayLucro[]       = 0;
                 $arrayImpostoPc[]   = 0;
                 $arrayDescPc[]      = 0;
                 $arrayRob[]         = 0;
@@ -257,6 +259,7 @@ class FiiController extends AbstractRestfulController
                             b.imposto_uni,
                             b.rol_uni,
                             b.custo_uni,
+                            b.lucro_uni,
                             b.imposto_perc,
                             b.desconto_perc,
                             b.rob,
@@ -273,6 +276,7 @@ class FiiController extends AbstractRestfulController
                                   round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
                                   round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
                                   round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                  round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
                                   round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
                                   round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
                                   sum(vi.rob) as rob,
@@ -307,10 +311,12 @@ class FiiController extends AbstractRestfulController
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('desconto_uni', new ValueStrategy);
             $hydrator->addStrategy('preco_uni', new ValueStrategy);
             $hydrator->addStrategy('imposto_uni', new ValueStrategy);
             $hydrator->addStrategy('rol_uni', new ValueStrategy);
             $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('lucro_uni', new ValueStrategy);
             $hydrator->addStrategy('imposto_perc', new ValueStrategy);
             $hydrator->addStrategy('desconto_perc', new ValueStrategy);
             $hydrator->addStrategy('rob', new ValueStrategy);
@@ -339,6 +345,7 @@ class FiiController extends AbstractRestfulController
                     $arrayImposto[$cont]     = (float)$elementos['impostoUni'];
                     $arrayRolUni[$cont]      = (float)$elementos['rolUni'];
                     $arrayCusto[$cont]       = (float)$elementos['custoUni'];
+                    $arrayLucro[$cont]       = (float)$elementos['lucroUni'];
                     $arrayImpostoPc[$cont]   = (float)$elementos['impostoPerc'];
                     $arrayDescPc[$cont]      = (float)$elementos['descontoPerc'];
                     $arrayRob[$cont]         = (float)$elementos['rob'];
@@ -466,6 +473,22 @@ class FiiController extends AbstractRestfulController
                         'valorM2'=> $arrayCusto[9],
                         'valorM1'=> $arrayCusto[10],
                         'valorM0'=> $arrayCusto[11]
+            ];
+
+            $data[] = ['indicador'=>'Lucro Unitário',
+                        'vDecimos'=> 2,
+                        'valorM11'=> $arrayLucro[0],
+                        'valorM10'=> $arrayLucro[1],
+                        'valorM9'=> $arrayLucro[2],
+                        'valorM8'=> $arrayLucro[3],
+                        'valorM7'=> $arrayLucro[4],
+                        'valorM6'=> $arrayLucro[5],
+                        'valorM5'=> $arrayLucro[6],
+                        'valorM4'=> $arrayLucro[7],
+                        'valorM3'=> $arrayLucro[8],
+                        'valorM2'=> $arrayLucro[9],
+                        'valorM1'=> $arrayLucro[10],
+                        'valorM0'=> $arrayLucro[11]
             ];
 
             $data[] = ['indicador'=>'ROB',
@@ -803,6 +826,7 @@ class FiiController extends AbstractRestfulController
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('desconto_uni', new ValueStrategy);
             $hydrator->addStrategy('preco_uni', new ValueStrategy);
             $hydrator->addStrategy('imposto_uni', new ValueStrategy);
             $hydrator->addStrategy('rol_uni', new ValueStrategy);
