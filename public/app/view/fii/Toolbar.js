@@ -115,7 +115,7 @@ Ext.define('App.view.fii.Toolbar',{
                     rsarray.series.forEach(function(record){
 
                         record.visible      = seriesOrig[cont].visible;
-                        record.showInLegend = seriesOrig[cont].showInLegend;
+                        // record.showInLegend = seriesOrig[cont].showInLegend;
                         charts.chart.addSeries(record);
                         cont++;
                     });
