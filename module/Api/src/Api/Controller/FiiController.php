@@ -807,6 +807,7 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('imposto_uni', new ValueStrategy);
             $hydrator->addStrategy('rol_uni', new ValueStrategy);
             $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('lucro_uni', new ValueStrategy);
             $hydrator->addStrategy('imposto_perc', new ValueStrategy);
             $hydrator->addStrategy('desconto_perc', new ValueStrategy);
             $hydrator->addStrategy('rob', new ValueStrategy);
