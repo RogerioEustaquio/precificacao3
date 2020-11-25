@@ -1140,7 +1140,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'Nota Fiscal',
+                                'name' => 'Nota',
                                 'yAxis'=> 14,
                                 'color' => $colors[4],
                                 'data' => $arrayNf,
@@ -1182,7 +1182,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'TKM NF',
+                                'name' => 'TKM Nota',
                                 'yAxis'=> 17,
                                 'color' => $colors[7],
                                 'data' => $arrayTkmnf,
@@ -1210,7 +1210,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'LB NF',
+                                'name' => 'LB Nota',
                                 'yAxis'=> 19,
                                 'color' => $colors[9],
                                 'data' => $arrayLbnf,
@@ -1224,7 +1224,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'ROB dia',
+                                'name' => 'ROB Dia',
                                 'yAxis'=> 20,
                                 'color'=> $colors[10],
                                 'data' => $arrayRobdia,
@@ -1238,7 +1238,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'ROL dia',
+                                'name' => 'ROL Dia',
                                 'yAxis'=> 21,
                                 'color'=> $colors[11],
                                 'data' => $arrayRoldia,
@@ -1252,7 +1252,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'CMV dia',
+                                'name' => 'CMV Dia',
                                 'yAxis'=> 22,
                                 'color'=> $colors[12],
                                 'data' => $arrayCmvdia,
@@ -1266,7 +1266,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'LB dia',
+                                'name' => 'LB Dia',
                                 'yAxis'=> 23,
                                 'color'=> $colors[13],
                                 'data' => $arrayLbdia,
@@ -1280,7 +1280,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'Qtde dia',
+                                'name' => 'Qtde Dia',
                                 'yAxis'=> 24,
                                 'color'=> $colors[14],
                                 'data' => $arrayQtdedia,
@@ -1294,7 +1294,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'NF dia',
+                                'name' => 'Nota Dia',
                                 'yAxis'=> 25,
                                 'color'=> $colors[15],
                                 'data' => $arrayNfdia,
@@ -1308,7 +1308,7 @@ class FiiController extends AbstractRestfulController
                                     )
                             ),
                             array(
-                                'name' => 'Cliente dia',
+                                'name' => 'Cliente Dia',
                                 'yAxis'=> 26,
                                 'color'=> $colors[16],
                                 'data' => $arrayCcdia,

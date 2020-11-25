@@ -570,7 +570,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     },
                     {
                         title: {
-                            text: 'Nota Fiscal',
+                            text: 'Nota',
                             style: {
                                 color: colors[4],
                                 fontSize: '10px'
@@ -639,7 +639,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     },
                     {
                         title: {
-                            text: 'TKM NF',
+                            text: 'TKM Nota',
                             style: {
                                 color: colors[7],
                                 fontSize: '10px'
@@ -685,7 +685,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     },
                     {
                         title: {
-                            text: 'LB NF',
+                            text: 'LB Nota',
                             style: {
                                 color: colors[9],
                                 fontSize: '10px'
@@ -823,7 +823,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     },
                     {
                         title: {
-                            text: 'NF Dia',
+                            text: 'Nota Dia',
                             style: {
                                 color: colors[15],
                                 fontSize: '10px'
