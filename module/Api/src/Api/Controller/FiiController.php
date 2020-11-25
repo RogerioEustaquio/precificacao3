@@ -741,6 +741,17 @@ class FiiController extends AbstractRestfulController
             $arrayQtde      = array();
             $arrayNf        = array();
             $arrayCc        = array();
+            $arrayTkmcc     = array();
+            $arrayTkmnf     = array();
+            $arrayLbcc      = array();
+            $arrayLbnf      = array();
+            $arrayRobdia    = array();
+            $arrayRoldia    = array();
+            $arrayCmvdia    = array();
+            $arrayLbdia     = array();
+            $arrayQtdedia   = array();
+            $arrayNfdia     = array();
+            $arrayCcdia     = array();
 
             foreach ($resultSet as $row) {
                 $data1 = $hydrator->extract($row);
@@ -762,6 +773,17 @@ class FiiController extends AbstractRestfulController
                 $arrayQtde[]        = 0;
                 $arrayNf[]          = 0;
                 $arrayCc[]          = 0;
+                $arrayTkmcc[]       = 0;
+                $arrayTkmnf[]       = 0;
+                $arrayLbcc[]        = 0;
+                $arrayLbnf[]        = 0;
+                $arrayRobdia[]      = 0;
+                $arrayRoldia[]      = 0;
+                $arrayCmvdia[]      = 0;
+                $arrayLbdia[]       = 0;
+                $arrayQtdedia[]     = 0;
+                $arrayNfdia[]       = 0;
+                $arrayCcdia[]       = 0;
 
             }
 
@@ -781,45 +803,57 @@ class FiiController extends AbstractRestfulController
                             b.mb,
                             b.qtde,
                             b.nf,
-                            b.cc
-                    from (select trunc(vi.data_emissao, 'MM') as data,
-                                  round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
-                                  round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
-                                  round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
-                                  round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
-                                  round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
-                                  round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
-                                  round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
-                                  round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
-                                  sum(vi.rob) as rob,
-                                  sum(vi.rol) as rol,
-                                  sum(vi.custo) as cmv,
-                                  sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                  round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                                  sum(vi.qtde) as qtde,
-                                  count(distinct vi.numero_nf) as nf,
-                                  count(distinct vi.id_pessoa) as cc
-                            from pricing.vm_ie_ve_venda_item vi,
-                                ms.empresa e,
-                                ms.tb_item_categoria ic,
-                                ms.tb_item i,
-                                ms.tb_categoria c,
-                                ms.tb_marca m,
-                                ms.pessoa p
-                           where vi.id_empresa = e.id_empresa
-                           and vi.id_item = ic.id_item
-                           and vi.id_categoria = ic.id_categoria
-                           and vi.id_item = i.id_item
-                           and vi.id_categoria = c.id_categoria
-                           and ic.id_marca = m.id_marca
-                           and vi.id_pessoa = p.id_pessoa(+)
-                           $andSql
-                           group by trunc(vi.data_emissao, 'MM')) b
-                    where 1 = 1
+                            b.cc,
+                            round((case when b.rol > 0 then b.rob/b.cc end),2) as tkm_cc,
+                            round((case when b.rol > 0 then b.rob/b.nf end),2) as tkm_nf,
+                            round((case when b.rol > 0 then b.lb/b.cc end),2) as lb_cc,
+                            round((case when b.rol > 0 then b.lb/b.nf end),2) as lb_nf,
+                            round((case when b.rob > 0 then b.rob/c.dias_uteis end),2) as rob_dia,
+                            round((case when b.rol > 0 then b.rol/c.dias_uteis end),2) as rol_dia,
+                            round((case when b.cmv > 0 then b.cmv/c.dias_uteis end),2) as cmv_dia,
+                            round((case when b.lb > 0 then b.lb/c.dias_uteis end),2) as lb_dia,
+                            round((case when b.qtde > 0 then b.qtde/c.dias_uteis end),2) as qtde_dia,
+                            round((case when b.nf > 0 then b.nf/c.dias_uteis end),2) as nf_dia,
+                            round((case when b.cc > 0 then b.cc/c.dias_uteis end),2) as cc_dia
+                        from (select trunc(vi.data_emissao, 'MM') as data,
+                                     round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
+                                     round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
+                                     round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
+                                     round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
+                                     round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                     round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
+                                     round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
+                                     round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
+                                     sum(vi.rob) as rob,
+                                     sum(vi.rol) as rol,
+                                     sum(vi.custo) as cmv,
+                                     sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                     round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                     sum(vi.qtde) as qtde,
+                                     count(distinct vi.numero_nf) as nf,
+                                     count(distinct vi.id_pessoa) as cc
+                                from pricing.vm_ie_ve_venda_item vi,
+                                     ms.empresa e,
+                                     ms.tb_item_categoria ic,
+                                     ms.tb_item i,
+                                     ms.tb_categoria c,
+                                     ms.tb_marca m,
+                                     ms.pessoa p
+                               where vi.id_empresa = e.id_empresa
+                               and vi.id_item = ic.id_item
+                               and vi.id_categoria = ic.id_categoria
+                               and vi.id_item = i.id_item
+                               and vi.id_categoria = c.id_categoria
+                               and ic.id_marca = m.id_marca
+                               and vi.id_pessoa = p.id_pessoa(+)
+                               $andSql
+                               group by trunc(vi.data_emissao, 'MM')) b,
+                             (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
+                                from PRICING.VW_DIAS_UTEIS
+                              where EMP = 'REDE'
+                              and mes >= add_months(trunc($sysdate,'MM'),-11) ) c
+                     where b.data = c.data(+)
             ";
-
-            // print "$sql";
-            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -842,6 +876,17 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('qtde', new ValueStrategy);
             $hydrator->addStrategy('nf', new ValueStrategy);
             $hydrator->addStrategy('cc', new ValueStrategy);
+            $hydrator->addStrategy('tkm_cc', new ValueStrategy);
+            $hydrator->addStrategy('tkm_nf', new ValueStrategy);
+            $hydrator->addStrategy('lb_cc', new ValueStrategy);
+            $hydrator->addStrategy('lb_nf', new ValueStrategy);
+            $hydrator->addStrategy('rob_dia', new ValueStrategy);
+            $hydrator->addStrategy('rol_dia', new ValueStrategy);
+            $hydrator->addStrategy('cmv_dia', new ValueStrategy);
+            $hydrator->addStrategy('lb_dia', new ValueStrategy);
+            $hydrator->addStrategy('qtde_dia', new ValueStrategy);
+            $hydrator->addStrategy('nf_dia', new ValueStrategy);
+            $hydrator->addStrategy('cc_dia', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
@@ -871,12 +916,25 @@ class FiiController extends AbstractRestfulController
                     $arrayQtde[$cont]        = (float)$elementos['qtde'];
                     $arrayNf[$cont]          = (float)$elementos['nf'];
                     $arrayCc[$cont]          = (float)$elementos['cc'];
+                    $arrayTkmcc[$cont]       = (float)$elementos['tkmCc'];
+                    $arrayTkmnf[$cont]       = (float)$elementos['tkmNf'];
+                    $arrayLbcc[$cont]        = (float)$elementos['lbCc'];
+                    $arrayLbnf[$cont]        = (float)$elementos['lbNf'];
+                    $arrayRobdia[$cont]      = (float)$elementos['robDia'];
+                    $arrayRoldia[$cont]      = (float)$elementos['rolDia'];
+                    $arrayCmvdia[$cont]      = (float)$elementos['cmvDia'];
+                    $arrayLbdia[$cont]       = (float)$elementos['lbDia'];
+                    $arrayQtdedia[$cont]     = (float)$elementos['qtdeDia'];
+                    $arrayNfdia[$cont]       = (float)$elementos['nfDia'];
+                    $arrayCcdia[$cont]       = (float)$elementos['ccDia'];
+
                 }
 
                 $cont++;
             }
 
-            $colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"];
+            $colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"
+                      ,"#a4e43f","#d298e2","#6119d0","#d2737d","#c0a43c","#f2510e","#651be6","#79806e","#61da5e","#cd2f00"];
 
             // $this->setCallbackData($data);
             return new JsonModel(
@@ -896,7 +954,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                 ),
                             ),
                             array(
@@ -910,8 +968,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -925,7 +982,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -939,7 +996,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -953,7 +1010,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -967,7 +1024,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -981,7 +1038,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -995,7 +1052,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1009,7 +1066,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1023,14 +1080,13 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => true,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
                                 'name' => 'CMV',
                                 'yAxis'=> 8,
                                 'color' => $colors[0],
-                                // 'color' => 'rgba(221, 117, 85, 1)',
                                 'data' => $arrayCmv,
                                 'vFormat' => '',
                                 'vDecimos' => '0',
@@ -1038,7 +1094,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => false,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1052,7 +1108,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => false,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1066,7 +1122,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => false,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1080,8 +1136,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => false,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1095,8 +1150,7 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => false,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             ),
                             array(
@@ -1110,8 +1164,161 @@ class FiiController extends AbstractRestfulController
                                 'showInLegend' => false,
                                 'dataLabels' => array(
                                      'enabled' => true,
-                                    // 'format' => 'R$ {y}',
-                                    'style' => array( 'fontSize' => '10')
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'TKM Cliente',
+                                'yAxis'=> 16,
+                                'color' => $colors[6],
+                                'data' => $arrayTkmcc,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'TKM NF',
+                                'yAxis'=> 17,
+                                'color' => $colors[7],
+                                'data' => $arrayTkmnf,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'LB Cliente',
+                                'yAxis'=> 18,
+                                'color' => $colors[8],
+                                'data' => $arrayLbcc,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'LB NF',
+                                'yAxis'=> 19,
+                                'color' => $colors[9],
+                                'data' => $arrayLbnf,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'ROB dia',
+                                'yAxis'=> 20,
+                                'color'=> $colors[10],
+                                'data' => $arrayRobdia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'ROL dia',
+                                'yAxis'=> 21,
+                                'color'=> $colors[11],
+                                'data' => $arrayRoldia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'CMV dia',
+                                'yAxis'=> 22,
+                                'color'=> $colors[12],
+                                'data' => $arrayCmvdia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'LB dia',
+                                'yAxis'=> 23,
+                                'color'=> $colors[13],
+                                'data' => $arrayLbdia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Qtde dia',
+                                'yAxis'=> 24,
+                                'color'=> $colors[14],
+                                'data' => $arrayQtdedia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'NF dia',
+                                'yAxis'=> 25,
+                                'color'=> $colors[15],
+                                'data' => $arrayNfdia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Cliente dia',
+                                'yAxis'=> 26,
+                                'color'=> $colors[16],
+                                'data' => $arrayCcdia,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
                                     )
                             )
                         ),

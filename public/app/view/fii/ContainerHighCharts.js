@@ -96,7 +96,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     buildChartContainer: function(el,meses,series){
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
-        colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"];
+        colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"
+                 ,"#a4e43f","#d298e2","#6119d0","#d2737d","#c0a43c","#f2510e","#651be6","#79806e","#61da5e","#cd2f00"];
 
         me.chart =  Highcharts.chart(el.id, {
             loading: {
@@ -607,6 +608,259 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             padding: 0,
                             style: {
                                 color: colors[5],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'TKM Cliente',
+                            style: {
+                                color: colors[6],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[6],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'TKM NF',
+                            style: {
+                                color: colors[7],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[7],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'LB Cliente',
+                            style: {
+                                color: colors[8],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[8],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'LB NF',
+                            style: {
+                                color: colors[9],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[9],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'ROB Dia',
+                            style: {
+                                color: colors[10],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[10],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'ROL Dia',
+                            style: {
+                                color: colors[11],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[11],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'CMV Dia',
+                            style: {
+                                color: colors[12],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[12],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'LB Dia',
+                            style: {
+                                color: colors[13],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[13],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Qtde Dia',
+                            style: {
+                                color: colors[14],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[14],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'NF Dia',
+                            style: {
+                                color: colors[15],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[15],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Cliente Dia',
+                            style: {
+                                color: colors[16],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[16],
                                 fontSize: '10px'
                             }
                         },
