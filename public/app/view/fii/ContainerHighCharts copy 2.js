@@ -10,7 +10,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     },
     requires: [ 
     ],
-    showLegend: [],
+    
     // controller: 'chart',
     layout: 'border',
     border: true,
@@ -49,9 +49,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     if(result.success){
 
                                         rsarray = result.data;
-                                        rsarray.series.forEach(function(record){
-                                            me.showLegend.push(record.showInLegend);
-                                        })
 
                                     }else{
                                         rsarray = [];
@@ -128,10 +125,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     checked: recordSeries.options.showInLegend,
                                     handler: function(record,index){
                                         
-                                        me.showLegend[recordSeries.index] = index ;
-                                        recordSeries.update({showInLegend: index, visible: index},false);
-                                        meChart.yAxis[recordSeries.index].update({visible: index},false);
-                                        meChart.redraw();
+                                        recordSeries.update({showInLegend: index, visible: index});
+                                        meChart.yAxis[recordSeries.index].update({visible: index});
                                     }
                                 };
                                 
@@ -155,17 +150,21 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         onclick: function () {
                             var meChart = this;
 
-                            // var length = meChart.series.length;
-                            // for (let index = 0; index < length; index++) {
-                            //     // meChart.series[index].update({visible: false});
-                            //     // meChart.yAxis[index].update({visible: false});
-                            // }
+                            var length = meChart.series.length;
+                                for (let index = 0; index < length; index++) {
+    
+                                    meChart.series[index].setVisible(false, false);
+                                    // meChart.series[index].update({visible: false});
+                                    // meChart.yAxis[index].update({visible: false});
+                                    // console.log(meChart.series[index]);
+                                    
+                                }
 
-                            $(meChart.series).each(function(){
-                                //this.hide();
-                                this.setVisible(false, false);
-                            });
-                            meChart.redraw();
+                            // $(meChart.series).each(function(){
+                            //     //this.hide();
+                            //     this.setVisible(false, false);
+                            // });
+                            // meChart.redraw();
 
                             // $(meChart.series).each(function(i){
                             //     var serie = meChart.series[i];
@@ -193,29 +192,29 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             },
             plotOptions: {
                 series: {
-                    events: {
+                    // events: {
 
-                        hide: function(){
-                            this.chart.yAxis[this.index].update({visible: false},false);
-                            this.chart.redraw();
-                        },
-                        show: function(){
-                            this.chart.yAxis[this.index].update({visible: true},false);
-                            this.chart.redraw();
-                        },
-                        // legendItemClick: function () {
+                    //     // hide: function(){
+                    //     //     this.chart.yAxis[this.index].visible.update(false);
+                    //     //     // this.chart.redraw();
+                    //     // },
+                    //     // show: function(){
+                    //     //     this.chart.yAxis[this.index].update({visible: true});
+                    //     //     // this.chart.redraw();
+                    //     // },
+                    //     // legendItemClick: function () {
 
-                        //     var index = this.index;
+                    //     //     var index = this.index;
 
-                        //     if(this.chart.yAxis[index].visible){
-                        //         this.chart.yAxis[index].update({visible: false});
-                        //     }else{
-                        //         this.chart.yAxis[index].update({visible: true});
-                        //     }
+                    //     //     if(this.chart.yAxis[index].visible){
+                    //     //         this.chart.yAxis[index].update({visible: false});
+                    //     //     }else{
+                    //     //         this.chart.yAxis[index].update({visible: true});
+                    //     //     }
 
-                        //     return this;
-                        // }
-                    },
+                    //     //     return this;
+                    //     // }
+                    // },
                     dataLabels: {
                         // format: '{series}'
                         formatter: function () {
@@ -314,7 +313,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                     opposite: true,
                     visible: true
                 },
-                {
+                { 
                     title: {
                         text: 'ROL Unitário',
                         style: {
@@ -383,97 +382,97 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                       opposite: true,
                       visible: true
                    },
+                  {
+                      title: {
+                          text: '% Imposto',
+                          style: {
+                              color: Highcharts.getOptions().colors[6],
+                              fontSize: '10px'
+                          }
+                      },
+                      labels: {
+                          formatter: function () {
+                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                          },
+                          x: 0,
+                          y: 0,
+                          padding: 0,
+                          style: {
+                              color: Highcharts.getOptions().colors[6],
+                              fontSize: '10px'
+                          }
+                      },
+                      opposite: true,
+                      visible: true
+                   },
+                  {
+                      title: {
+                          text: '% Desconto',
+                          style: {
+                              color: Highcharts.getOptions().colors[7],
+                              fontSize: '10px'
+                          }
+                      },
+                      labels: {
+                          formatter: function () {
+                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                          },
+                          x: 0,
+                          y: 0,
+                          padding: 0,
+                          style: {
+                              color: Highcharts.getOptions().colors[7],
+                              fontSize: '10px'
+                          }
+                      },
+                      opposite: true,
+                      visible: true
+                   },
                    {
-                        title: {
-                            text: '% Imposto',
-                            style: {
-                                color: Highcharts.getOptions().colors[6],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
+                       title: {
+                           text: 'ROB',
+                           style: {
+                               color: Highcharts.getOptions().colors[8],
+                               fontSize: '10px'
+                           }
+                       },
+                       labels: {
                             formatter: function () {
                                 return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
                             },
                             x: 0,
                             y: 0,
                             padding: 0,
-                            style: {
-                                color: Highcharts.getOptions().colors[6],
-                                fontSize: '10px'
-                            }
-                        },
-                        opposite: true,
-                        visible: true
-                    },
-                    {
-                        title: {
-                            text: '% Desconto',
-                            style: {
-                                color: Highcharts.getOptions().colors[7],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
-                            formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                            },
-                            x: 0,
-                            y: 0,
-                            padding: 0,
-                            style: {
-                                color: Highcharts.getOptions().colors[7],
-                                fontSize: '10px'
-                            }
-                        },
-                        opposite: true,
-                        visible: true
-                    },
-                    {
-                        title: {
-                            text: 'ROB',
                             style: {
                                 color: Highcharts.getOptions().colors[8],
                                 fontSize: '10px'
                             }
-                        },
-                        labels: {
-                                formatter: function () {
-                                    return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                                },
-                                x: 0,
-                                y: 0,
-                                padding: 0,
-                                style: {
-                                    color: Highcharts.getOptions().colors[8],
-                                    fontSize: '10px'
-                                }
-                        },
-                        opposite: true,
-                        visible: true
-                    },
-                    {
-                        title: {
-                            text: 'ROL',
+                       },
+                       opposite: true,
+                       visible: true
+                   },
+                   {
+                       title: {
+                           text: 'ROL',
+                           style: {
+                               color: Highcharts.getOptions().colors[9],
+                               fontSize: '10px'
+                           }
+                       },
+                       labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
                             style: {
                                 color: Highcharts.getOptions().colors[9],
                                 fontSize: '10px'
                             }
-                        },
-                        labels: {
-                                formatter: function () {
-                                    return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                                },
-                                x: 0,
-                                y: 0,
-                                padding: 0,
-                                style: {
-                                    color: Highcharts.getOptions().colors[9],
-                                    fontSize: '10px'
-                                }
-                        },
-                        opposite: true,
-                        visible: true
+                       },
+                       opposite: true,
+                       visible: true
                     },
                     {
                         title: {
@@ -496,109 +495,17 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         opposite: true,
-                        visible: false
-                    },
-                    {
-                        title: {
-                            text: 'LB',
-                            style: {
-                                color: colors[1],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
-                        formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                        },
-                        x: 0,
-                        y: 0,
-                        padding: 0,
-                        style: {
-                            color: colors[1],
-                            fontSize: '10px'
-                        }
-                        },
-                        opposite: true,
-                        visible: false
-                    },
-                    {
-                        title: {
-                            text: 'MB',
-                            style: {
-                                color: colors[2],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
-                            formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                            },
-                            x: 0,
-                            y: 0,
-                            padding: 0,
-                            style: {
-                                color: colors[2],
-                                fontSize: '10px'
-                            }
-                        },
-                        opposite: true,
-                        visible: false
-                    },
-                    {
-                        title: {
-                            text: 'Quantidade',
-                            style: {
-                                color: colors[3],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
-                            formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                            },
-                            x: 0,
-                            y: 0,
-                            padding: 0,
-                            style: {
-                                color: colors[3],
-                                fontSize: '10px'
-                            }
-                        },
-                        opposite: true,
-                        visible: false
-                    },
-                    {
-                        title: {
-                            text: 'Nota Fiscal',
-                            style: {
-                                color: colors[4],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
-                            formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
-                            },
-                            x: 0,
-                            y: 0,
-                            padding: 0,
-                            style: {
-                                color: colors[4],
-                                fontSize: '10px'
-                            }
-                        },
-                        opposite: true,
-                        visible: false
-                    },
-                    {
-                        title: {
-                            text: 'Cliente',
-                            style: {
-                                color: colors[5],
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
+                        visible: true
+                     },
+                     {
+                         title: {
+                             text: 'LB',
+                             style: {
+                                 color: colors[1],
+                                 fontSize: '10px'
+                             }
+                         },
+                         labels: {
                             formatter: function () {
                                 return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
                             },
@@ -606,13 +513,105 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             y: 0,
                             padding: 0,
                             style: {
-                                color: colors[5],
+                                color: colors[1],
                                 fontSize: '10px'
                             }
+                         },
+                         opposite: true,
+                         visible: true
+                      },
+                      {
+                          title: {
+                              text: 'MB',
+                              style: {
+                                  color: colors[2],
+                                  fontSize: '10px'
+                              }
+                          },
+                          labels: {
+                             formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                             },
+                             x: 0,
+                             y: 0,
+                             padding: 0,
+                             style: {
+                                 color: colors[2],
+                                 fontSize: '10px'
+                             }
+                          },
+                          opposite: true,
+                          visible: true
+                       },
+                      {
+                          title: {
+                              text: 'Quantidade',
+                              style: {
+                                  color: colors[3],
+                                  fontSize: '10px'
+                              }
+                          },
+                          labels: {
+                             formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                             },
+                             x: 0,
+                             y: 0,
+                             padding: 0,
+                             style: {
+                                 color: colors[3],
+                                 fontSize: '10px'
+                             }
+                          },
+                          opposite: true,
+                          visible: true
+                       },
+                       {
+                           title: {
+                               text: 'Nota Fiscal',
+                               style: {
+                                   color: colors[4],
+                                   fontSize: '10px'
+                               }
+                           },
+                           labels: {
+                             formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                             },
+                              x: 0,
+                              y: 0,
+                              padding: 0,
+                              style: {
+                                  color: colors[4],
+                                  fontSize: '10px'
+                              }
+                           },
+                           opposite: true,
+                           visible: true
                         },
-                        opposite: true,
-                        visible: false
-                    }
+                        {
+                            title: {
+                                text: 'Cliente',
+                                style: {
+                                    color: colors[5],
+                                    fontSize: '10px'
+                                }
+                            },
+                            labels: {
+                                formatter: function () {
+                                    return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                },
+                                x: 0,
+                                y: 0,
+                                padding: 0,
+                                style: {
+                                    color: colors[5],
+                                    fontSize: '10px'
+                                }
+                            },
+                            opposite: true,
+                            visible: true
+                         }
                 ],
                 tooltip: {
                     // shared: true,

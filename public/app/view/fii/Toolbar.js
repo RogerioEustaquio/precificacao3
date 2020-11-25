@@ -81,12 +81,6 @@ Ext.define('App.view.fii.Toolbar',{
             }else{
                 seriesOrig.push({visible: false});
             }
-
-            // if(charts.chart.series[index].showInLegend){
-            //     seriesOrig[index].showInLegend = true;
-            // }else{
-            //     seriesOrig[index].showInLegend = false;
-            // }
             
         }
   
@@ -94,6 +88,8 @@ Ext.define('App.view.fii.Toolbar',{
         {
             charts.chart.series[i].remove();
         }
+
+        charts.chart.update(false,false);
 
         Ext.Ajax.request({
             url: BASEURL +'/api/fii/listarfichaitemgrafico',
@@ -115,20 +111,12 @@ Ext.define('App.view.fii.Toolbar',{
                     rsarray.series.forEach(function(record){
 
                         record.visible      = seriesOrig[cont].visible;
-                        // record.showInLegend = seriesOrig[cont].showInLegend;
+                        record.showInLegend = charts.showLegend[cont];
                         charts.chart.addSeries(record);
                         cont++;
                     });
 
-                    // charts.chart.update(
-                    //     {
-                    //         title: {
-                    //             text: 'teste'
-                    //         },
-
-                    //         series: rsarray.series
-                    //     }
-                    // );
+                    charts.chart.redraw();
 
                 }else{
                     rsarray = [];
@@ -157,6 +145,8 @@ Ext.define('App.view.fii.Toolbar',{
                 }).show();
             }
         });
+
+        charts.chart.redraw();
 
         var meses = [null,
                     'Janeiro',
