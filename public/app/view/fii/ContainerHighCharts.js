@@ -113,6 +113,14 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             },
             exporting: {
                 menuItemDefinitions: {
+                    fullscreen: {
+                        onclick: function() {
+                        //   Highcharts.FullScreen.prototype.open(this.renderTo);
+                            // this.fullscreen.prototype.open();
+                            this.fullscreen.toggle();
+                        },
+                        text: 'Full screen'
+                    },
                     indicadores: {
                         onclick: function () {
                             var meChart = this;
@@ -130,10 +138,36 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     checked: recordSeries.options.showInLegend,
                                     handler: function(record,index){
                                         
-                                        me.showLegend[recordSeries.index] = index ;
-                                        recordSeries.update({showInLegend: index, visible: index},false);
-                                        meChart.yAxis[recordSeries.index].update({visible: index},false);
+                                        let cont = 0;
+                                        if(index){
+
+                                            var listaCheck = record.up('window').items;
+
+                                                for (let i = 0; i < listaCheck.length; i++) {
+                                                    const element = listaCheck.items[i];
+
+                                                    cont = (element.checked) ? cont+1 : cont;
+                                                    
+                                                }
+                                        }
+
+                                        if(cont > 5){
+
+                                            Ext.Msg.alert('Alerta','Permitido selecionar 5 indicadores.');
+                                            record.setValue(false);
+                                            me.showLegend[recordSeries.index] = false ;
+                                            recordSeries.update({showInLegend: false, visible: false},false);
+                                            meChart.yAxis[recordSeries.index].update({visible: false},false);
+                                            cont--;
+
+                                        }else{
+
+                                            me.showLegend[recordSeries.index] = index ;
+                                            recordSeries.update({showInLegend: index, visible: index},false);
+                                            meChart.yAxis[recordSeries.index].update({visible: index},false);
+                                        }
                                         meChart.redraw();
+                                        record.up('window').down('displayfield[name=contCheck]').setValue(cont);
                                     }
                                 };
                                 
@@ -148,6 +182,51 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 width: 260,
                                 // padding: '1 1 1 1',
                                 // layout: 'fit',
+                                tbar: [
+                                    {
+                                        xtype: 'displayfield',
+                                        name: 'contCheck',
+                                        itemId: 'contCheck',
+                                        renderer: function(){
+                                            let cont =0;
+                                            me.showLegend.forEach(function(record){
+                                                if(record){
+                                                    cont++
+                                                }
+                                            })
+                                            return cont;
+                                        }
+                                    },
+                                    '->',
+                                    {
+                                        xtype: 'panel',
+                                        items: {
+                                            xtype: 'button',
+                                            iconCls: 'fa fa-file',
+                                            tooltip: 'Limpar seleção',
+                                            handler: function(){
+        
+                                                var listaCheck = this.up('panel').up('window').items;
+
+
+                                                for (let i = 0; i < listaCheck.length; i++) {
+                                                    const element = listaCheck.items[i];
+
+                                                    element.setValue(false);
+                                                    me.showLegend[i] = false ;
+                                                    meChart.series[i].setVisible(false, false);
+                                                    meChart.yAxis[i].update({visible: false},false);
+                                                    
+                                                }
+
+                                                meChart.redraw();
+
+                                                this.up('panel').up('window').down('displayfield[name=contCheck]').setValue(0);
+                                            }
+                                        }
+                                        
+                                    }
+                                ],
                                 items: lista
                             }).show();
                         },
@@ -157,25 +236,11 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         onclick: function () {
                             var meChart = this;
 
-                            // var length = meChart.series.length;
-                            // for (let index = 0; index < length; index++) {
-                            //     // meChart.series[index].update({visible: false});
-                            //     // meChart.yAxis[index].update({visible: false});
-                            // }
-
                             $(meChart.series).each(function(){
                                 //this.hide();
                                 this.setVisible(false, false);
                             });
                             meChart.redraw();
-
-                            // $(meChart.series).each(function(i){
-                            //     var serie = meChart.series[i];
-                            //     // console.log(serie);
-                            //     if(serie.visible){
-                            //         serie.hide();
-                            //     }
-                            // });
 
                         },
                         text: 'Ocultar Indicadores'
