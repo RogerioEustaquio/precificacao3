@@ -72,7 +72,7 @@ Ext.define('App.view.fii.Toolbar',{
             data: data
         };
         var seriesOrig = Array();
-        var seriesLength = charts.chart.series.length;
+        var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
 
         for (let index = 0; index < seriesLength; index++) {
 
