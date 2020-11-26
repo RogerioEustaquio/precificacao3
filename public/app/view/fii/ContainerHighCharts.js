@@ -124,6 +124,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 element = {
                                     xtype: 'checkboxfield',
                                     margin: '2 2 2 2',
+                                    labelWidth: 120,
                                     fieldLabel: record.name,
                                     name: record.name,
                                     checked: recordSeries.options.showInLegend,
