@@ -20,20 +20,18 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     constructor: function(config) {
         var me = this;
         // var utilFormat = Ext.create('Ext.ux.util.Format');
-        me.showLegend = [];
 
         Ext.applyIf(me, {
             items: [
                 {
                     region: 'center',
                     xtype: 'container',
-								  
                     flex: 1,
                     listeners: {
                         afterLayout: function(el){
                             if(me.chart){
-                                // me.chart.setSize(el.getWidth(), el.getHeight())
-								me.chart.reflow();
+                                me.chart.setSize(el.getWidth(), el.getHeight());
+                                // me.chart.redraw();
                             }
                         },
                         afterrender: function(el){
@@ -116,14 +114,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
             },
             exporting: {
                 menuItemDefinitions: {
-                    fullscreen: {
-                        onclick: function() {
-                        //   Highcharts.FullScreen.prototype.open(this.renderTo);
-                            // this.fullscreen.prototype.open();
-                            this.fullscreen.toggle();
-                        },
-                        text: 'Full screen'
-                    },
                     indicadores: {
                         onclick: function () {
                             var meChart = this;
@@ -150,7 +140,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                                     const element = listaCheck.items[i];
 
                                                     cont = (element.checked) ? cont+1 : cont;
-                                                    
                                                 }
                                         }
 
@@ -169,7 +158,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                             recordSeries.update({showInLegend: index, visible: index},false);
                                             meChart.yAxis[recordSeries.index].update({visible: index},false);
                                         }
-                                        meChart.redraw();
                                         record.up('window').down('displayfield[name=contCheck]').setValue(cont);
                                     }
                                 };
@@ -222,8 +210,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                                     
                                                 }
 
-                                                meChart.redraw();
-
                                                 this.up('panel').up('window').down('displayfield[name=contCheck]').setValue(0);
                                             }
                                         }
@@ -243,7 +229,6 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 //this.hide();
                                 this.setVisible(false, false);
                             });
-                            meChart.redraw();
 
                         },
                         text: 'Ocultar Indicadores'

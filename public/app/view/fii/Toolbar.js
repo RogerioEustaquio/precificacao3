@@ -116,8 +116,6 @@ Ext.define('App.view.fii.Toolbar',{
                         cont++;
                     });
 
-                    charts.chart.redraw();
-
                 }else{
                     rsarray = [];
 
@@ -145,8 +143,6 @@ Ext.define('App.view.fii.Toolbar',{
                 }).show();
             }
         });
-
-        charts.chart.redraw();
 
         var meses = [null,
                     'Janeiro',
