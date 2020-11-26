@@ -229,6 +229,17 @@ class FiiController extends AbstractRestfulController
             $arrayQtde      = array();
             $arrayNf        = array();
             $arrayCc        = array();
+            $arrayTkmcc     = array();
+            $arrayTkmnf     = array();
+            $arrayLbcc      = array();
+            $arrayLbnf      = array();
+            $arrayRobdia    = array();
+            $arrayRoldia    = array();
+            $arrayCmvdia    = array();
+            $arrayLbdia     = array();
+            $arrayQtdedia   = array();
+            $arrayNfdia     = array();
+            $arrayCcdia     = array();
 
             foreach ($resultSet as $row) {
                 $data1 = $hydrator->extract($row);
@@ -250,6 +261,17 @@ class FiiController extends AbstractRestfulController
                 $arrayQtde[]        = 0;
                 $arrayNf[]          = 0;
                 $arrayCc[]          = 0;
+                $arrayTkmcc[]       = 0;
+                $arrayTkmnf[]       = 0;
+                $arrayLbcc[]        = 0;
+                $arrayLbnf[]        = 0;
+                $arrayRobdia[]      = 0;
+                $arrayRoldia[]      = 0;
+                $arrayCmvdia[]      = 0;
+                $arrayLbdia[]       = 0;
+                $arrayQtdedia[]     = 0;
+                $arrayNfdia[]       = 0;
+                $arrayCcdia[]       = 0;
 
             }
 
@@ -269,41 +291,56 @@ class FiiController extends AbstractRestfulController
                             b.mb,
                             b.qtde,
                             b.nf,
-                            b.cc
-                    from (select trunc(vi.data_emissao, 'MM') as data,
-                                  round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
-                                  round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
-                                  round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
-                                  round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
-                                  round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
-                                  round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
-                                  round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
-                                  round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
-                                  sum(vi.rob) as rob,
-                                  sum(vi.rol) as rol,
-                                  sum(vi.custo) as cmv,
-                                  sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                  round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                                  sum(vi.qtde) as qtde,
-                                  count(distinct vi.numero_nf) as nf,
-                                  count(distinct vi.id_pessoa) as cc
-                            from pricing.vm_ie_ve_venda_item vi,
-                                ms.empresa e,
-                                ms.tb_item_categoria ic,
-                                ms.tb_item i,
-                                ms.tb_categoria c,
-                                ms.tb_marca m,
-                                ms.pessoa p
-                           where vi.id_empresa = e.id_empresa
-                           and vi.id_item = ic.id_item
-                           and vi.id_categoria = ic.id_categoria
-                           and vi.id_item = i.id_item
-                           and vi.id_categoria = c.id_categoria
-                           and ic.id_marca = m.id_marca
-                           and vi.id_pessoa = p.id_pessoa(+)
-                           $andSql
-                           group by trunc(vi.data_emissao, 'MM')) b
-                    where 1 = 1
+                            b.cc,
+                            round((case when b.rol > 0 then b.rob/b.cc end),2) as tkm_cc,
+                            round((case when b.rol > 0 then b.rob/b.nf end),2) as tkm_nf,
+                            round((case when b.rol > 0 then b.lb/b.cc end),2) as lb_cc,
+                            round((case when b.rol > 0 then b.lb/b.nf end),2) as lb_nf,
+                            round((case when b.rob > 0 then b.rob/c.dias_uteis end),2) as rob_dia,
+                            round((case when b.rol > 0 then b.rol/c.dias_uteis end),2) as rol_dia,
+                            round((case when b.cmv > 0 then b.cmv/c.dias_uteis end),2) as cmv_dia,
+                            round((case when b.lb > 0 then b.lb/c.dias_uteis end),2) as lb_dia,
+                            round((case when b.qtde > 0 then b.qtde/c.dias_uteis end),2) as qtde_dia,
+                            round((case when b.nf > 0 then b.nf/c.dias_uteis end),2) as nf_dia,
+                            round((case when b.cc > 0 then b.cc/c.dias_uteis end),2) as cc_dia
+                        from (select trunc(vi.data_emissao, 'MM') as data,
+                                     round((case when sum(qtde) > 0 then sum(vi.desconto)/sum(qtde) end),2) as desconto_uni,
+                                     round((case when sum(qtde) > 0 then sum(vi.rob)/sum(qtde) end),2) as preco_uni,
+                                     round((case when sum(qtde) > 0 then (sum(vi.rob)-sum(vi.rol))/sum(qtde) end),2) as imposto_uni,
+                                     round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
+                                     round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                     round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
+                                     round((case when sum(qtde) > 0 then ((sum(vi.rob)-sum(vi.rol))/sum(rob))*100 end),2) as imposto_perc,
+                                     round((case when sum(qtde) > 0 then (sum(vi.desconto)/sum(rob))*100 end),2) as desconto_perc,
+                                     sum(vi.rob) as rob,
+                                     sum(vi.rol) as rol,
+                                     sum(vi.custo) as cmv,
+                                     sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                     round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                     sum(vi.qtde) as qtde,
+                                     count(distinct vi.numero_nf) as nf,
+                                     count(distinct vi.id_pessoa) as cc
+                                from pricing.vm_ie_ve_venda_item vi,
+                                     ms.empresa e,
+                                     ms.tb_item_categoria ic,
+                                     ms.tb_item i,
+                                     ms.tb_categoria c,
+                                     ms.tb_marca m,
+                                     ms.pessoa p
+                               where vi.id_empresa = e.id_empresa
+                               and vi.id_item = ic.id_item
+                               and vi.id_categoria = ic.id_categoria
+                               and vi.id_item = i.id_item
+                               and vi.id_categoria = c.id_categoria
+                               and ic.id_marca = m.id_marca
+                               and vi.id_pessoa = p.id_pessoa(+)
+                               $andSql
+                               group by trunc(vi.data_emissao, 'MM')) b,
+                             (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
+                                from PRICING.VW_DIAS_UTEIS
+                              where EMP = 'REDE'
+                              and mes >= add_months(trunc($sysdate,'MM'),-11) ) c
+                     where b.data = c.data(+)
             ";
 
             $stmt = $conn->prepare($sql);
@@ -327,6 +364,17 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('qtde', new ValueStrategy);
             $hydrator->addStrategy('nf', new ValueStrategy);
             $hydrator->addStrategy('cc', new ValueStrategy);
+            $hydrator->addStrategy('tkm_cc', new ValueStrategy);
+            $hydrator->addStrategy('tkm_nf', new ValueStrategy);
+            $hydrator->addStrategy('lb_cc', new ValueStrategy);
+            $hydrator->addStrategy('lb_nf', new ValueStrategy);
+            $hydrator->addStrategy('rob_dia', new ValueStrategy);
+            $hydrator->addStrategy('rol_dia', new ValueStrategy);
+            $hydrator->addStrategy('cmv_dia', new ValueStrategy);
+            $hydrator->addStrategy('lb_dia', new ValueStrategy);
+            $hydrator->addStrategy('qtde_dia', new ValueStrategy);
+            $hydrator->addStrategy('nf_dia', new ValueStrategy);
+            $hydrator->addStrategy('cc_dia', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
@@ -356,6 +404,17 @@ class FiiController extends AbstractRestfulController
                     $arrayQtde[$cont]        = (float)$elementos['qtde'];
                     $arrayNf[$cont]          = (float)$elementos['nf'];
                     $arrayCc[$cont]          = (float)$elementos['cc'];
+                    $arrayTkmcc[$cont]       = (float)$elementos['tkmCc'];
+                    $arrayTkmnf[$cont]       = (float)$elementos['tkmNf'];
+                    $arrayLbcc[$cont]        = (float)$elementos['lbCc'];
+                    $arrayLbnf[$cont]        = (float)$elementos['lbNf'];
+                    $arrayRobdia[$cont]      = (float)$elementos['robDia'];
+                    $arrayRoldia[$cont]      = (float)$elementos['rolDia'];
+                    $arrayCmvdia[$cont]      = (float)$elementos['cmvDia'];
+                    $arrayLbdia[$cont]       = (float)$elementos['lbDia'];
+                    $arrayQtdedia[$cont]     = (float)$elementos['qtdeDia'];
+                    $arrayNfdia[$cont]       = (float)$elementos['nfDia'];
+                    $arrayCcdia[$cont]       = (float)$elementos['ccDia'];
                 }
 
                 $cont++;
@@ -587,7 +646,7 @@ class FiiController extends AbstractRestfulController
                         'valorM0'=> $arrayQtde[11]
             ];
 
-            $data[] = ['indicador'=>'Nota Fiscal',
+            $data[] = ['indicador'=>'Nota',
                         'vDecimos'=> 0,
                         'valorM11'=> $arrayNf[0],
                         'valorM10'=> $arrayNf[1],
@@ -617,6 +676,182 @@ class FiiController extends AbstractRestfulController
                         'valorM2'=> $arrayCc[9],
                         'valorM1'=> $arrayCc[10],
                         'valorM0'=> $arrayCc[11]
+            ];
+
+            $data[] = ['indicador'=>'TKM Cliente',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayTkmcc[0],
+                        'valorM10'=> $arrayTkmcc[1],
+                        'valorM9'=> $arrayTkmcc[2],
+                        'valorM8'=> $arrayTkmcc[3],
+                        'valorM7'=> $arrayTkmcc[4],
+                        'valorM6'=> $arrayTkmcc[5],
+                        'valorM5'=> $arrayTkmcc[6],
+                        'valorM4'=> $arrayTkmcc[7],
+                        'valorM3'=> $arrayTkmcc[8],
+                        'valorM2'=> $arrayTkmcc[9],
+                        'valorM1'=> $arrayTkmcc[10],
+                        'valorM0'=> $arrayTkmcc[11]
+            ];
+
+            $data[] = ['indicador'=>'TKM Nota',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayTkmnf[0],
+                        'valorM10'=> $arrayTkmnf[1],
+                        'valorM9'=> $arrayTkmnf[2],
+                        'valorM8'=> $arrayTkmnf[3],
+                        'valorM7'=> $arrayTkmnf[4],
+                        'valorM6'=> $arrayTkmnf[5],
+                        'valorM5'=> $arrayTkmnf[6],
+                        'valorM4'=> $arrayTkmnf[7],
+                        'valorM3'=> $arrayTkmnf[8],
+                        'valorM2'=> $arrayTkmnf[9],
+                        'valorM1'=> $arrayTkmnf[10],
+                        'valorM0'=> $arrayTkmnf[11]
+            ];
+
+            $data[] = ['indicador'=>'LB Cliente',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayLbcc[0],
+                        'valorM10'=> $arrayLbcc[1],
+                        'valorM9'=> $arrayLbcc[2],
+                        'valorM8'=> $arrayLbcc[3],
+                        'valorM7'=> $arrayLbcc[4],
+                        'valorM6'=> $arrayLbcc[5],
+                        'valorM5'=> $arrayLbcc[6],
+                        'valorM4'=> $arrayLbcc[7],
+                        'valorM3'=> $arrayLbcc[8],
+                        'valorM2'=> $arrayLbcc[9],
+                        'valorM1'=> $arrayLbcc[10],
+                        'valorM0'=> $arrayLbcc[11]
+            ];
+
+            $data[] = ['indicador'=>'LB Nota',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayLbnf[0],
+                        'valorM10'=> $arrayLbnf[1],
+                        'valorM9'=> $arrayLbnf[2],
+                        'valorM8'=> $arrayLbnf[3],
+                        'valorM7'=> $arrayLbnf[4],
+                        'valorM6'=> $arrayLbnf[5],
+                        'valorM5'=> $arrayLbnf[6],
+                        'valorM4'=> $arrayLbnf[7],
+                        'valorM3'=> $arrayLbnf[8],
+                        'valorM2'=> $arrayLbnf[9],
+                        'valorM1'=> $arrayLbnf[10],
+                        'valorM0'=> $arrayLbnf[11]
+            ];
+            
+            $data[] = ['indicador'=>'ROB Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayRobdia[0],
+                        'valorM10'=> $arrayRobdia[1],
+                        'valorM9'=> $arrayRobdia[2],
+                        'valorM8'=> $arrayRobdia[3],
+                        'valorM7'=> $arrayRobdia[4],
+                        'valorM6'=> $arrayRobdia[5],
+                        'valorM5'=> $arrayRobdia[6],
+                        'valorM4'=> $arrayRobdia[7],
+                        'valorM3'=> $arrayRobdia[8],
+                        'valorM2'=> $arrayRobdia[9],
+                        'valorM1'=> $arrayRobdia[10],
+                        'valorM0'=> $arrayRobdia[11]
+            ];
+            
+            $data[] = ['indicador'=>'ROL Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayRoldia[0],
+                        'valorM10'=> $arrayRoldia[1],
+                        'valorM9'=> $arrayRoldia[2],
+                        'valorM8'=> $arrayRoldia[3],
+                        'valorM7'=> $arrayRoldia[4],
+                        'valorM6'=> $arrayRoldia[5],
+                        'valorM5'=> $arrayRoldia[6],
+                        'valorM4'=> $arrayRoldia[7],
+                        'valorM3'=> $arrayRoldia[8],
+                        'valorM2'=> $arrayRoldia[9],
+                        'valorM1'=> $arrayRoldia[10],
+                        'valorM0'=> $arrayRoldia[11]
+            ];
+            
+            $data[] = ['indicador'=>'CMV Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayCmvdia[0],
+                        'valorM10'=> $arrayCmvdia[1],
+                        'valorM9'=> $arrayCmvdia[2],
+                        'valorM8'=> $arrayCmvdia[3],
+                        'valorM7'=> $arrayCmvdia[4],
+                        'valorM6'=> $arrayCmvdia[5],
+                        'valorM5'=> $arrayCmvdia[6],
+                        'valorM4'=> $arrayCmvdia[7],
+                        'valorM3'=> $arrayCmvdia[8],
+                        'valorM2'=> $arrayCmvdia[9],
+                        'valorM1'=> $arrayCmvdia[10],
+                        'valorM0'=> $arrayCmvdia[11]
+            ];
+            
+            $data[] = ['indicador'=>'LB Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayLbdia[0],
+                        'valorM10'=> $arrayLbdia[1],
+                        'valorM9'=> $arrayLbdia[2],
+                        'valorM8'=> $arrayLbdia[3],
+                        'valorM7'=> $arrayLbdia[4],
+                        'valorM6'=> $arrayLbdia[5],
+                        'valorM5'=> $arrayLbdia[6],
+                        'valorM4'=> $arrayLbdia[7],
+                        'valorM3'=> $arrayLbdia[8],
+                        'valorM2'=> $arrayLbdia[9],
+                        'valorM1'=> $arrayLbdia[10],
+                        'valorM0'=> $arrayLbdia[11]
+            ];
+            
+            $data[] = ['indicador'=>'Qtde Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayQtdedia[0],
+                        'valorM10'=> $arrayQtdedia[1],
+                        'valorM9'=> $arrayQtdedia[2],
+                        'valorM8'=> $arrayQtdedia[3],
+                        'valorM7'=> $arrayQtdedia[4],
+                        'valorM6'=> $arrayQtdedia[5],
+                        'valorM5'=> $arrayQtdedia[6],
+                        'valorM4'=> $arrayQtdedia[7],
+                        'valorM3'=> $arrayQtdedia[8],
+                        'valorM2'=> $arrayQtdedia[9],
+                        'valorM1'=> $arrayQtdedia[10],
+                        'valorM0'=> $arrayQtdedia[11]
+            ];
+            
+            $data[] = ['indicador'=>'Nota Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayNfdia[0],
+                        'valorM10'=> $arrayNfdia[1],
+                        'valorM9'=> $arrayNfdia[2],
+                        'valorM8'=> $arrayNfdia[3],
+                        'valorM7'=> $arrayNfdia[4],
+                        'valorM6'=> $arrayNfdia[5],
+                        'valorM5'=> $arrayNfdia[6],
+                        'valorM4'=> $arrayNfdia[7],
+                        'valorM3'=> $arrayNfdia[8],
+                        'valorM2'=> $arrayNfdia[9],
+                        'valorM1'=> $arrayNfdia[10],
+                        'valorM0'=> $arrayNfdia[11]
+            ];
+            
+            $data[] = ['indicador'=>'Cliente Dia',
+                        'vDecimos'=> 0,
+                        'valorM11'=> $arrayCcdia[0],
+                        'valorM10'=> $arrayCcdia[1],
+                        'valorM9'=> $arrayCcdia[2],
+                        'valorM8'=> $arrayCcdia[3],
+                        'valorM7'=> $arrayCcdia[4],
+                        'valorM6'=> $arrayCcdia[5],
+                        'valorM5'=> $arrayCcdia[6],
+                        'valorM4'=> $arrayCcdia[7],
+                        'valorM3'=> $arrayCcdia[8],
+                        'valorM2'=> $arrayCcdia[9],
+                        'valorM1'=> $arrayCcdia[10],
+                        'valorM0'=> $arrayCcdia[11]
             ];
 
             $this->setCallbackData($data);
