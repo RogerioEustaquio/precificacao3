@@ -265,7 +265,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         }
                     },
                     opposite: true,
-                    visible: true
+                    visible: false
                 },
                 { // Primary yAxis
                     
@@ -291,7 +291,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         }
                     },
                     opposite: true,
-                    visible: true
+                    visible: false
                 },
                 { // Secondary yAxis
                     title: {
@@ -314,7 +314,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         }
                     },
                     opposite: true,
-                    visible: true
+                    visible: false
                 },
                 {
                     title: {
@@ -337,7 +337,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         }
                     },
                     opposite: true,
-                    visible: true
+                    visible: false
                  },
                  {
                      title: {
@@ -360,7 +360,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                          }
                      },
                      opposite: true,
-                     visible: true
+                     visible: false
                   },
                   {
                       title: {
@@ -383,7 +383,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                           }
                       },
                       opposite: true,
-                      visible: true
+                      visible: false
                    },
                    {
                         title: {
@@ -406,7 +406,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         opposite: true,
-                        visible: true
+                        visible: false
                     },
                     {
                         title: {
@@ -429,7 +429,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         opposite: true,
-                        visible: true
+                        visible: false
                     },
                     {
                         title: {
@@ -452,7 +452,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 }
                         },
                         opposite: true,
-                        visible: true
+                        visible: false
                     },
                     {
                         title: {
@@ -544,7 +544,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         opposite: true,
-                        visible: false
+                        visible: true
                     },
                     {
                         title: {
@@ -613,7 +613,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             }
                         },
                         opposite: true,
-                        visible: false
+                        visible: true
                     },
                     {
                         title: {
