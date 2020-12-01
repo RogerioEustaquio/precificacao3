@@ -252,7 +252,7 @@ Ext.define('App.view.fii.PanelFiltro',{
             displayField: 'usuario',
             valueField: 'idUsuario',
             emptyText: 'Usuário',
-            fieldLabel: 'OMV Usuários',
+            fieldLabel: 'Análise de Omv',
             // labelWidth: 60,
             margin: '1 1 1 1',
             // padding: 1,
