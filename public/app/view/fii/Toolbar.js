@@ -62,6 +62,7 @@ Ext.define('App.view.fii.Toolbar',{
         var idMarcas    = me.up('container').down('#panelwest').down('#elMarca').getValue();
         var tpPessoas   = me.up('container').down('#panelwest').down('#elPessoa').getValue();
         var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
+        var idCurvas    = me.up('container').down('#panelwest').down('#elCurva').getValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
         var params = {
@@ -69,7 +70,8 @@ Ext.define('App.view.fii.Toolbar',{
             idMarcas: Ext.encode(idMarcas),
             codProdutos: Ext.encode(codProdutos),
             tpPessoas: Ext.encode(tpPessoas),
-            data: data
+            data: data,
+            idCurvas: Ext.encode(idCurvas),
         };
         var seriesOrig = Array();
         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;

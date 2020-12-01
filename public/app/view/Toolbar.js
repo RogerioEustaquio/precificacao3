@@ -15,7 +15,16 @@ Ext.define('App.view.Toolbar', {
                         var objWindow = Ext.create('App.view.fii.Main');
                         objWindow.show();
                     }
-                }
+                },
+                // {
+                //     xtype: 'button',
+                //     text: 'RPE',
+                //     // href: BASEURL +'/#fii',
+                //     handler: function(){
+                //         var objWindow = Ext.create('App.view.rpe.Main');
+                //         objWindow.show();
+                //     }
+                // }
             ]
         });
 

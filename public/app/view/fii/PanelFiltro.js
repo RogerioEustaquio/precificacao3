@@ -93,7 +93,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                 '{codItem} {descricao} {marca}',
                 '</tpl>'), 
             valueField: 'codItem',
-            emptyText: 'Produto',
+            // emptyText: 'Produto',
             fieldLabel: 'Produtos',
             emptyText: 'Código do produto',
             // matchFieldWidth: false,
@@ -186,6 +186,46 @@ Ext.define('App.view.fii.PanelFiltro',{
             disabled: false
         });
 
+        var elTagCurva = Ext.create('Ext.form.field.Tag',{
+            name: 'elCurva',
+            itemId: 'elCurva',
+            multiSelect: true,
+            labelAlign: 'top',
+            width: 180,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'idCurvaAbc', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/fii/listarcurvas',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            queryParam: 'idCurvaAbc',
+            queryMode: 'local',
+            displayField: 'idCurvaAbc',
+            valueField: 'idCurvaAbc',
+            emptyText: 'Curva',
+            fieldLabel: 'Curvas',
+            // labelWidth: 60,
+            margin: '1 1 1 1',
+            // padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled: true
+        });
+        elTagCurva.store.load(
+            function(){
+                elTagCurva.setDisabled(false);
+            }
+        );
+
         Ext.applyIf(me, {
 
             items : [
@@ -275,6 +315,23 @@ Ext.define('App.view.fii.PanelFiltro',{
                     ]
                 },
                 {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elTagCurva,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
                     xtype: 'toolbar',
                     width: '100%',
                     border: false,
@@ -291,6 +348,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                                 form.up('toolbar').up('panel').down('tagfield[name=elMarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elPessoa]').setValue(null);
                                 form.up('toolbar').up('panel').down('datefield[name=data]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elCurva]').setValue(null);
                             }
                         }
                     ]

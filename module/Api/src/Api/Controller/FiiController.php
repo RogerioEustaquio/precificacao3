@@ -125,6 +125,7 @@ class FiiController extends AbstractRestfulController
             $codProdutos= $this->params()->fromQuery('codProdutos',null);
             $tpPessoas  = $this->params()->fromQuery('tpPessoas',null);
             $data       = $this->params()->fromQuery('data',null);
+            $idCurvas   = $this->params()->fromQuery('idCurvas',null);
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
@@ -137,6 +138,9 @@ class FiiController extends AbstractRestfulController
             }
             if($tpPessoas){
                 $tpPessoas = implode("','",json_decode($tpPessoas));
+            }
+            if($idCurvas){
+                $idCurvas = implode("','",json_decode($idCurvas));
             }
 
             $andSql = '';
@@ -168,7 +172,10 @@ class FiiController extends AbstractRestfulController
             }else{
                 $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
             }
-            
+            if($idCurvas){
+                $andSql .= " and t.id_curva_abc in ('$idCurvas')";
+            }
+
             $em = $this->getEntityManager();
             
             $meses = [null,
@@ -326,7 +333,8 @@ class FiiController extends AbstractRestfulController
                                      ms.tb_item i,
                                      ms.tb_categoria c,
                                      ms.tb_marca m,
-                                     ms.pessoa p
+                                     ms.pessoa p,
+                                     ms.tb_estoque t
                                where vi.id_empresa = e.id_empresa
                                and vi.id_item = ic.id_item
                                and vi.id_categoria = ic.id_categoria
@@ -334,6 +342,9 @@ class FiiController extends AbstractRestfulController
                                and vi.id_categoria = c.id_categoria
                                and ic.id_marca = m.id_marca
                                and vi.id_pessoa = p.id_pessoa(+)
+                               and vi.id_empresa = t.id_empresa
+                               and vi.id_item = t.id_item
+                               and vi.id_categoria = t.id_categoria
                                $andSql
                                group by trunc(vi.data_emissao, 'MM')) b,
                              (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
@@ -873,6 +884,7 @@ class FiiController extends AbstractRestfulController
             $codProdutos= $this->params()->fromPost('codProdutos',null);
             $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
             $data       = $this->params()->fromPost('data',null);
+            $idCurvas   = $this->params()->fromPost('idCurvas',null);
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
@@ -885,6 +897,9 @@ class FiiController extends AbstractRestfulController
             }
             if($tpPessoas){
                 $tpPessoas = implode("','",json_decode($tpPessoas));
+            }
+            if($idCurvas){
+                $idCurvas = implode("','",json_decode($idCurvas));
             }
 
             $andSql = '';
@@ -902,6 +917,10 @@ class FiiController extends AbstractRestfulController
 
             if($tpPessoas){
                 $andSql .= " and p.tipo_pessoa in ('$tpPessoas')";
+            }
+
+            if($idCurvas){
+                $andSql .= " and t.id_curva_abc in ('$idCurvas')";
             }
             
             if($data){
@@ -1073,7 +1092,8 @@ class FiiController extends AbstractRestfulController
                                      ms.tb_item i,
                                      ms.tb_categoria c,
                                      ms.tb_marca m,
-                                     ms.pessoa p
+                                     ms.pessoa p,
+                                     ms.tb_estoque t
                                where vi.id_empresa = e.id_empresa
                                and vi.id_item = ic.id_item
                                and vi.id_categoria = ic.id_categoria
@@ -1081,6 +1101,9 @@ class FiiController extends AbstractRestfulController
                                and vi.id_categoria = c.id_categoria
                                and ic.id_marca = m.id_marca
                                and vi.id_pessoa = p.id_pessoa(+)
+                               and vi.id_empresa = t.id_empresa
+                               and vi.id_item = t.id_item
+                               and vi.id_categoria = t.id_categoria
                                $andSql
                                group by trunc(vi.data_emissao, 'MM')) b,
                              (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
@@ -1686,6 +1709,47 @@ class FiiController extends AbstractRestfulController
             }
 
             $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+    
+    public function listarcurvasAction()
+    {
+        $data = array();
+        
+        try {
+            $session = $this->getSession();
+            $usuario = $session['info']['usuarioSistema'];
+
+            // $idEmpresa      = $this->params()->fromQuery('idEmpresa',null);
+
+            $em = $this->getEntityManager();
+            $conn = $em->getConnection();
+
+            $sql = "select id_curva_abc from MS.TB_CURVA_ABC";
+
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindParam(':idEmpresa', $idEmpresa);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('id_curva_abc', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            $this->setMessage("Solicitação enviada com sucesso.");
             
         } catch (\Exception $e) {
             $this->setCallbackError($e->getMessage());

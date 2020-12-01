@@ -15,7 +15,8 @@ Ext.define('App.controller.ApplicationController', {
     routes: {
         'home': { action: 'homeAction' },
         'dashboard-performance-venda-dia': { action: 'dashboardPerformanceVendaDiaAction' },
-        'fii': { action: 'fiiAction' }
+        'fii': { action: 'fiiAction' },
+        'rpe': { action: 'rpeAction' }
     },
 
     init: function() {
@@ -34,6 +35,11 @@ Ext.define('App.controller.ApplicationController', {
 
     fiiAction: function(){
         var objWindow = Ext.create('App.view.fii.Main');
+        objWindow.show();
+    },
+
+    rpeAction: function(){
+        var objWindow = Ext.create('App.view.rpe.Main');
         objWindow.show();
     },
 
