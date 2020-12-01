@@ -154,9 +154,9 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                                 }
                                         }
 
-                                        if(cont > 5){
+                                        if(cont > 6){
 
-                                            Ext.Msg.alert('Alerta','Permitido selecionar 5 indicadores.');
+                                            Ext.Msg.alert('Alerta','Permitido selecionar 6 indicadores.');
                                             record.setValue(false);
                                             me.showLegend[recordSeries.index] = false ;
                                             recordSeries.update({showInLegend: false, visible: false},false);
@@ -304,7 +304,10 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                 }
             },
             title: {
-                text: 'Ficha de Indicadores'
+                text: 'Ficha de Indicadores',
+                style: {
+                    fontSize: '14px'
+                }
             },
             xAxis: {
                 categories: meses,
