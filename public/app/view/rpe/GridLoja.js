@@ -40,8 +40,6 @@ Ext.define('App.view.rpe.GridLoja', {
                 gridStore.getProxy().setExtraParams(params);
                 gridStore.load();
 
-
-
             }
         }
     ],

@@ -226,6 +226,47 @@ Ext.define('App.view.fii.PanelFiltro',{
             }
         );
 
+        var elTagOmu = Ext.create('Ext.form.field.Tag',{
+            name: 'elOmuUser',
+            itemId: 'elOmuUser',
+            multiSelect: true,
+            labelAlign: 'top',
+            width: 180,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'idUsuario', type: 'string' },
+                    { name: 'usuario', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/fii/listaromuusuario',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            queryParam: 'usuario',
+            queryMode: 'local',
+            displayField: 'usuario',
+            valueField: 'idUsuario',
+            emptyText: 'Usuário',
+            fieldLabel: 'OMV Usuários',
+            // labelWidth: 60,
+            margin: '1 1 1 1',
+            // padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled: true
+        });
+        elTagOmu.store.load(
+            function(){
+                elTagOmu.setDisabled(false);
+            }
+        );
+
         Ext.applyIf(me, {
 
             items : [
@@ -332,6 +373,23 @@ Ext.define('App.view.fii.PanelFiltro',{
                     ]
                 },
                 {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elTagOmu,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
                     xtype: 'toolbar',
                     width: '100%',
                     border: false,
@@ -349,6 +407,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                                 form.up('toolbar').up('panel').down('tagfield[name=elPessoa]').setValue(null);
                                 form.up('toolbar').up('panel').down('datefield[name=data]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elCurva]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elOmuUser]').setValue(null);
                             }
                         }
                     ]

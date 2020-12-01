@@ -63,6 +63,7 @@ Ext.define('App.view.fii.Toolbar',{
         var tpPessoas   = me.up('container').down('#panelwest').down('#elPessoa').getValue();
         var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
         var idCurvas    = me.up('container').down('#panelwest').down('#elCurva').getValue();
+        var idOmuUser   = me.up('container').down('#panelwest').down('#elOmuUser').getValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
         var params = {
@@ -72,6 +73,7 @@ Ext.define('App.view.fii.Toolbar',{
             tpPessoas: Ext.encode(tpPessoas),
             data: data,
             idCurvas: Ext.encode(idCurvas),
+            idOmuUsers: Ext.encode(idOmuUser)
         };
         var seriesOrig = Array();
         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;

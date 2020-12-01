@@ -126,6 +126,7 @@ class FiiController extends AbstractRestfulController
             $tpPessoas  = $this->params()->fromQuery('tpPessoas',null);
             $data       = $this->params()->fromQuery('data',null);
             $idCurvas   = $this->params()->fromQuery('idCurvas',null);
+            $idOmuUsers = $this->params()->fromQuery('idOmuUsers',null);
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
@@ -141,6 +142,9 @@ class FiiController extends AbstractRestfulController
             }
             if($idCurvas){
                 $idCurvas = implode("','",json_decode($idCurvas));
+            }
+            if($idOmuUsers){
+                $idOmuUsers = implode("','",json_decode($idOmuUsers));
             }
 
             $andSql = '';
@@ -174,6 +178,15 @@ class FiiController extends AbstractRestfulController
             }
             if($idCurvas){
                 $andSql .= " and t.id_curva_abc in ('$idCurvas')";
+            }
+            if($idOmuUsers){
+                $andSql .= " and (vi.id_empresa, vi.id_item, vi.id_categoria) in (
+                    select id_empresa, id_item, id_categoria
+                      from js.omv_analise_log a 
+                     where a.data_aprovacao >= add_months(sysdate, -12) -- Filtro de data também
+                       and usuario_aprovacao in ('$idOmuUsers') -- Usuários selecioados
+                  )
+                  ";
             }
 
             $em = $this->getEntityManager();
@@ -885,6 +898,7 @@ class FiiController extends AbstractRestfulController
             $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
             $data       = $this->params()->fromPost('data',null);
             $idCurvas   = $this->params()->fromPost('idCurvas',null);
+            $idOmuUsers = $this->params()->fromPost('idOmuUsers',null);
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
@@ -900,6 +914,9 @@ class FiiController extends AbstractRestfulController
             }
             if($idCurvas){
                 $idCurvas = implode("','",json_decode($idCurvas));
+            }
+            if($idOmuUsers){
+                $idOmuUsers = implode("','",json_decode($idOmuUsers));
             }
 
             $andSql = '';
@@ -934,6 +951,16 @@ class FiiController extends AbstractRestfulController
                 $andSql .= " and trunc(vi.data_emissao, 'MM') <= add_months(trunc($sysdate,'MM'),0)";
             }else{
                 $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
+            }
+            
+            if($idOmuUsers){
+                $andSql .= " and (vi.id_empresa, vi.id_item, vi.id_categoria) in (
+                    select id_empresa, id_item, id_categoria
+                      from js.omv_analise_log a 
+                     where a.data_aprovacao >= add_months(sysdate, -12) -- Filtro de data também
+                       and usuario_aprovacao in ('$idOmuUsers') -- Usuários selecioados
+                  )
+                  ";
             }
             
             $em = $this->getEntityManager();
@@ -1757,5 +1784,53 @@ class FiiController extends AbstractRestfulController
         
         return $this->getCallbackModel();
     }
-    
+
+    public function listaromuusuarioAction()
+    {
+        $data = array();
+        
+        try {
+            $session = $this->getSession();
+            $usuario = $session['info']['usuarioSistema'];
+
+            // $idEmpresa      = $this->params()->fromQuery('idEmpresa',null);
+
+            $em = $this->getEntityManager();
+            $conn = $em->getConnection();
+
+            $sql = "select usuario_aprovacao as id_usuario,
+                            usuario_aprovacao || ' ' || '(' || count(*) || ')' as usuario,
+                            count(*) as total
+                    from js.omv_analise_log a 
+                    where a.data_aprovacao >= add_months(sysdate, -24) -- Padrão 24 meses
+                        and usuario_aprovacao not in ('JS')
+                    group by usuario_aprovacao
+                    order by total desc";
+
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindParam(':idEmpresa', $idEmpresa);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('id_usuario', new ValueStrategy);
+            $hydrator->addStrategy('usuario', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            $this->setMessage("Solicitação enviada com sucesso.");
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
 }

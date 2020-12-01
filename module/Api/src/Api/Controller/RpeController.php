@@ -68,7 +68,7 @@ class RpeController extends AbstractRestfulController
         
         try {
 
-            $pEmp    = $this->params()->fromQuery('emp',null);
+            $pData    = $this->params()->fromQuery('data',null);
 
             $em = $this->getEntityManager();
 

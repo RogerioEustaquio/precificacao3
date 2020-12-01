@@ -45,6 +45,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 method: 'POST',
                                 params: me.params,
                                 async: true,
+                                timeout: 240000,
                                 success: function (response) {
                                     
                                     me.setLoading(false);
