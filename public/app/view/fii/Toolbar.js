@@ -6,6 +6,7 @@ Ext.define('App.view.fii.Toolbar',{
     requires:[
         'App.view.fii.ContainerHighCharts'
     ],
+    // indicadoresAdd: null,
 
     initComponent: function() {
         var me = this;
@@ -26,11 +27,70 @@ Ext.define('App.view.fii.Toolbar',{
             handler: me.onBtnConsultar
         });
 
+        var optionWindow = {
+            title: 'Indicadores Adicionais',
+            scrollable: true,
+            height: 200,
+            width: 200,
+            items: [
+                {
+                    xtype: 'checkboxfield',
+                    margin: '2 2 2 2',
+                    labelWidth: 90,
+                    fieldLabel: 'Estoque Inical',
+                    name: 'estoqueinicial',
+                    idItem: 'estoqueinicial',
+                    checked: false
+                },
+                {
+                    xtype: 'checkboxfield',
+                    margin: '2 2 2 2',
+                    labelWidth: 90,
+                    fieldLabel: 'Estoque Final',
+                    name: 'estoquefinal',
+                    idItem: 'estoquefinal',
+                    checked: false
+                }
+            ],
+            bbar:[
+                '->',
+                {
+                    xtype:'button',
+                    text: 'Salvar',
+                    handler: function(){
+                        var meWindow = this.up('window');
+                        var array = new Array();
+
+                        array.push({
+                            name : 'Estoque Inicial',
+                            value: meWindow.down('checkboxfield[name=estoqueinicial]').getValue()
+                        });
+                        array.push({
+                            name : 'Estoque Final',
+                            value: meWindow.down('checkboxfield[name=estoquefinal]').getValue()
+                        });
+
+                        me.indicadoresAdd = array;
+                    }
+                }
+            ]
+        };
+
         Ext.applyIf(me, {
 
             items : [
                 btnFiltro,
-                btnConsultar
+                btnConsultar,
+                '->',
+                {
+                    xtype: 'button',
+                    text: 'Indicadores Adicionais',
+                    tooltip: 'Indicadores Adicionais',
+                    margin: '1 1 1 4',
+                    handler: function(){
+                        Ext.create('Ext.window.Window',optionWindow).show();
+                    }
+                }
             ]
         });
 
@@ -73,7 +133,8 @@ Ext.define('App.view.fii.Toolbar',{
             tpPessoas: Ext.encode(tpPessoas),
             data: data,
             idCurvas: Ext.encode(idCurvas),
-            idOmuUsers: Ext.encode(idOmuUser)
+            idOmuUsers: Ext.encode(idOmuUser),
+            indicadoresAdd: Ext.encode(me.indicadoresAdd)
         };
         var seriesOrig = Array();
         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
@@ -100,6 +161,7 @@ Ext.define('App.view.fii.Toolbar',{
             method: 'POST',
             params: params,
             async: true,
+            timeout: 240000,
             success: function (response) {
                 var result = Ext.decode(response.responseText);
 
@@ -169,6 +231,7 @@ Ext.define('App.view.fii.Toolbar',{
             method: 'POST',
             params: params,
             async: false,
+            timeout: 240000,
             success: function (response) {
                 var result = Ext.decode(response.responseText);
                 if(result.success){

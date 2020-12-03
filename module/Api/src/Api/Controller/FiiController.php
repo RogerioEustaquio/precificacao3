@@ -114,19 +114,97 @@ class FiiController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
+    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas)
+    {
+        $data1 = array();
+
+        $andSql = '';
+        if($idEmpresas){
+            $andSql = " and e.id_empresa in ($idEmpresas)";
+        }
+        if($idMarcas){
+            $andSql .= " and ic.id_marca in ($idMarcas)";
+        }
+        if($codProdutos){
+            $andSql .= " and e.cod_item in ('$codProdutos')";
+        }
+
+        if($data){
+            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-11)";
+            $andSql .= " and trunc(e.data, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
+        }else{
+            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
+        }
+        if($idCurvas){
+            $andSql .= " and e.curva_nbs in ('$idCurvas')";
+        }
+
+        try {
+            $em = $this->getEntityManager();
+            $conn = $em->getConnection();
+            
+            $sql = "select e.data,
+                            sum(e.esi_valor) as estoque_inicial,
+                            sum(e.esf_valor) as estoque_final
+                    from VM_GE_ESTOQUE_MASTER e,
+                        ms.tb_item_categoria ic
+                    where e.id_item = ic.id_item
+                    and e.id_categoria = ic.id_categoria
+                    $andSql
+                    group by data
+                    order by e.data asc
+            ";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('estoque_inicial', new ValueStrategy);
+            $hydrator->addStrategy('estoque_final', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $arrayEstoqueMes  = array();
+            $EstoqueMesInicial  = array();
+            $EstoqueMesFinal    = array();
+
+            foreach ($resultSet as $row) {
+
+                $data1 = $hydrator->extract($row);
+                $EstoqueMesInicial[]    = (float) $data1['estoqueInicial'];
+                $EstoqueMesFinal[]      = (float) $data1['estoqueFinal'];
+
+            }
+            // $this->setCallbackData($arrayEstoqueMes);
+            
+        } catch (\Exception $e) {
+            $EstoqueMesInicial = null;
+            $EstoqueMesFinal = null;
+        }
+
+        $arrayEstoqueMes[] = $EstoqueMesInicial;
+        $arrayEstoqueMes[] = $EstoqueMesFinal;
+
+        return $arrayEstoqueMes;
+    }
+
     public function listarfichaitemAction()
     {
         $data = array();
         
         try {
 
-            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
-            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
-            $codProdutos= $this->params()->fromQuery('codProdutos',null);
-            $tpPessoas  = $this->params()->fromQuery('tpPessoas',null);
-            $data       = $this->params()->fromQuery('data',null);
-            $idCurvas   = $this->params()->fromQuery('idCurvas',null);
-            $idOmuUsers = $this->params()->fromQuery('idOmuUsers',null);
+            $idEmpresas     = $this->params()->fromQuery('idEmpresas',null);
+            $idMarcas       = $this->params()->fromQuery('idMarcas',null);
+            $codProdutos    = $this->params()->fromQuery('codProdutos',null);
+            $tpPessoas      = $this->params()->fromQuery('tpPessoas',null);
+            $data           = $this->params()->fromQuery('data',null);
+            $idCurvas       = $this->params()->fromQuery('idCurvas',null);
+            $idOmuUsers     = $this->params()->fromQuery('idOmuUsers',null);
+            $indicadoresAdd = $this->params()->fromQuery('indicadoresAdd',null);
+
+            $indicadoresAdd = json_decode($indicadoresAdd);
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
@@ -259,7 +337,7 @@ class FiiController extends AbstractRestfulController
             $arrayLbdia     = array();
             $arrayQtdedia   = array();
             $arrayNfdia     = array();
-            $arrayCcdia     = array();
+            $arrayCcdia     = array();            
 
             foreach ($resultSet as $row) {
                 $data1 = $hydrator->extract($row);
@@ -293,6 +371,27 @@ class FiiController extends AbstractRestfulController
                 $arrayNfdia[]       = 0;
                 $arrayCcdia[]       = 0;
 
+            }
+
+            $consultaEstoque = false;
+            $EstoqueMesInicial  = array();
+            $EstoqueMesFinal    = array();
+
+            if($indicadoresAdd){
+
+                for ($i=0; $i < count($indicadoresAdd); $i++) { 
+            
+                    if($indicadoresAdd[$i]->value){
+                        $consultaEstoque = true;
+                    }
+                }
+            }
+
+            if($consultaEstoque){
+
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas);
+                $EstoqueMesInicial = $EstoqueMes[0];
+                $EstoqueMesFinal = $EstoqueMes[1];
             }
 
             $sql = " select b.data,
@@ -463,19 +562,19 @@ class FiiController extends AbstractRestfulController
             ];
             
             $data[] = ['indicador'=>'% Desconto',
-                        'vDecimos'=> 2,
-                        'valorM11'=> $arrayDescPc[0],
-                        'valorM10'=> $arrayDescPc[1],
-                        'valorM9'=> $arrayDescPc[2],
-                        'valorM8'=> $arrayDescPc[3],
-                        'valorM7'=> $arrayDescPc[4],
-                        'valorM6'=> $arrayDescPc[5],
-                        'valorM5'=> $arrayDescPc[6],
-                        'valorM4'=> $arrayDescPc[7],
-                        'valorM3'=> $arrayDescPc[8],
-                        'valorM2'=> $arrayDescPc[9],
-                        'valorM1'=> $arrayDescPc[10],
-                        'valorM0'=> $arrayDescPc[11]
+                       'vDecimos'=> 2,
+                       'valorM11'=> $arrayDescPc[0],
+                       'valorM10'=> $arrayDescPc[1],
+                       'valorM9'=> $arrayDescPc[2],
+                       'valorM8'=> $arrayDescPc[3],
+                       'valorM7'=> $arrayDescPc[4],
+                       'valorM6'=> $arrayDescPc[5],
+                       'valorM5'=> $arrayDescPc[6],
+                       'valorM4'=> $arrayDescPc[7],
+                       'valorM3'=> $arrayDescPc[8],
+                       'valorM2'=> $arrayDescPc[9],
+                       'valorM1'=> $arrayDescPc[10],
+                       'valorM0'=> $arrayDescPc[11]
             ];
 
             $data[] = [ 'indicador'=>'Preço Unitário',
@@ -878,6 +977,45 @@ class FiiController extends AbstractRestfulController
                         'valorM0'=> $arrayCcdia[11]
             ];
 
+            if($consultaEstoque){
+
+                $data[] = ['indicador'=>'Estoque Inicial',
+                            'vDecimos'=> 2,
+                            'valorM11'=> $EstoqueMesInicial[0],
+                            'valorM10'=> $EstoqueMesInicial[1],
+                            'valorM9'=> $EstoqueMesInicial[2],
+                            'valorM8'=> $EstoqueMesInicial[3],
+                            'valorM7'=> $EstoqueMesInicial[4],
+                            'valorM6'=> $EstoqueMesInicial[5],
+                            'valorM5'=> $EstoqueMesInicial[6],
+                            'valorM4'=> $EstoqueMesInicial[7],
+                            'valorM3'=> $EstoqueMesInicial[8],
+                            'valorM2'=> $EstoqueMesInicial[9],
+                            'valorM1'=> $EstoqueMesInicial[10],
+                            'valorM0'=> $EstoqueMesInicial[11]
+                ];
+            }
+
+            if($consultaEstoque){
+                $data[] = ['indicador'=>'Estoque Final',
+                            'vDecimos'=> 2,
+                            'valorM11'=> $EstoqueMesFinal[0],
+                            'valorM10'=> $EstoqueMesFinal[1],
+                            'valorM9'=> $EstoqueMesFinal[2],
+                            'valorM8'=> $EstoqueMesFinal[3],
+                            'valorM7'=> $EstoqueMesFinal[4],
+                            'valorM6'=> $EstoqueMesFinal[5],
+                            'valorM5'=> $EstoqueMesFinal[6],
+                            'valorM4'=> $EstoqueMesFinal[7],
+                            'valorM3'=> $EstoqueMesFinal[8],
+                            'valorM2'=> $EstoqueMesFinal[9],
+                            'valorM1'=> $EstoqueMesFinal[10],
+                            'valorM0'=> $EstoqueMesFinal[11]
+                ];
+
+
+            }
+
             $this->setCallbackData($data);
             
         }  catch (\Exception $e) {
@@ -892,14 +1030,16 @@ class FiiController extends AbstractRestfulController
         $data = array();
         
         try {
-            $idEmpresas = $this->params()->fromPost('idEmpresas',null);
-            $idMarcas   = $this->params()->fromPost('idMarcas',null);
-            $codProdutos= $this->params()->fromPost('codProdutos',null);
-            $tpPessoas  = $this->params()->fromPost('tpPessoas',null);
-            $data       = $this->params()->fromPost('data',null);
-            $idCurvas   = $this->params()->fromPost('idCurvas',null);
-            $idOmuUsers = $this->params()->fromPost('idOmuUsers',null);
+            $idEmpresas     = $this->params()->fromPost('idEmpresas',null);
+            $idMarcas       = $this->params()->fromPost('idMarcas',null);
+            $codProdutos    = $this->params()->fromPost('codProdutos',null);
+            $tpPessoas      = $this->params()->fromPost('tpPessoas',null);
+            $data           = $this->params()->fromPost('data',null);
+            $idCurvas       = $this->params()->fromPost('idCurvas',null);
+            $idOmuUsers     = $this->params()->fromPost('idOmuUsers',null);
+            $indicadoresAdd = $this->params()->fromPost('indicadoresAdd',null);
 
+            $indicadoresAdd = json_decode($indicadoresAdd);
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
             }
@@ -1033,6 +1173,7 @@ class FiiController extends AbstractRestfulController
             $arrayQtdedia   = array();
             $arrayNfdia     = array();
             $arrayCcdia     = array();
+            $arrayEtqMesIni = array();
 
             foreach ($resultSet as $row) {
                 $data1 = $hydrator->extract($row);
@@ -1065,7 +1206,29 @@ class FiiController extends AbstractRestfulController
                 $arrayQtdedia[]     = 0;
                 $arrayNfdia[]       = 0;
                 $arrayCcdia[]       = 0;
+                $arrayEtqMesIni[]   = 0;
 
+            }
+
+            $consultaEstoque = false;
+            $EstoqueMesInicial  = array();
+            $EstoqueMesFinal    = array();
+
+            if($indicadoresAdd){
+
+                for ($i=0; $i < count($indicadoresAdd); $i++) { 
+            
+                    if($indicadoresAdd[$i]->value){
+                        $consultaEstoque = true;
+                    }
+                }
+            }
+
+            if($consultaEstoque){
+
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas);
+                $EstoqueMesInicial = $EstoqueMes[0];
+                $EstoqueMesFinal = $EstoqueMes[1];
             }
 
             $sql = " select b.data,
@@ -1605,6 +1768,34 @@ class FiiController extends AbstractRestfulController
                                      'enabled' => true,
                                      'style' => array( 'fontSize' => '10')
                                     )
+                            ),
+                            array(
+                                'name' => 'Estoque Inicial',
+                                'yAxis'=> 27,
+                                'color'=> $colors[17],
+                                'data' => $EstoqueMesInicial,
+                                'vFormat' => '',
+                                'vDecimos' => '2',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Estoque Final',
+                                'yAxis'=> 28,
+                                'color'=> $colors[18],
+                                'data' => $EstoqueMesFinal,
+                                'vFormat' => '',
+                                'vDecimos' => '2',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
                             )
                         ),
                     )
@@ -1802,8 +1993,8 @@ class FiiController extends AbstractRestfulController
                             usuario_aprovacao || ' ' || '(' || count(*) || ')' as usuario,
                             count(*) as total
                     from js.omv_analise_log a 
-                    where a.data_aprovacao >= add_months(sysdate, -24) -- Padrão 24 meses
-                        and usuario_aprovacao not in ('JS')
+                    where a.data_aprovacao >= add_months(sysdate, -12) -- Padrão 24 meses
+                    and usuario_aprovacao not in ('JS')
                     group by usuario_aprovacao
                     order by total desc";
 

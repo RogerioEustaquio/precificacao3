@@ -133,6 +133,9 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             meChart.series.forEach(function(record){
 
                                 var recordSeries = record;
+
+                                var indicadoresAdd = me.up('panel').up('container').down('#fiitoolbar').indicadoresAdd;
+                                
                                 element = {
                                     xtype: 'checkboxfield',
                                     margin: '2 2 2 2',
@@ -175,7 +178,26 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     }
                                 };
                                 
-                                lista.push(element);
+                                if(indicadoresAdd){
+                                    for (let e = 0; e < indicadoresAdd.length; e++) {
+                                        if(indicadoresAdd[e].name == record.name){
+                                            element = (!indicadoresAdd[e].value) ? null: element;
+                                        }
+                                    }
+                                }else{
+                                    
+                                    var serieExtras = ['Estoque Inicial','Estoque Final'];
+
+                                    for (let e = 0; e < serieExtras.length; e++) {
+                                        if(serieExtras[e] == record.name){
+                                            element = null;
+                                        }
+                                    }
+                                }
+
+                                if(element)
+                                    lista.push(element);
+                                
                             });
 
                             Ext.create('Ext.window.Window', {
@@ -934,6 +956,52 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             padding: 0,
                             style: {
                                 color: colors[16],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Estoque Inicial',
+                            style: {
+                                color: colors[17],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[17],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Estoque Final',
+                            style: {
+                                color: colors[18],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[18],
                                 fontSize: '10px'
                             }
                         },
