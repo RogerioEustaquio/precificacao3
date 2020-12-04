@@ -162,41 +162,45 @@ class FiiController extends AbstractRestfulController
         try {
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
-            
-            $sql = " select a.data, a.estoque_inicial, a.estoque_final,
-       
+
+            $sql = " select a.data,
+                            a.estoque_inicial,
+                            a.estoque_final,
                             (case when b.cmv > 0 then round((a.estoque_final/b.cmv)*30,2) end) as estoque_dias, -- Dias de Estoque
                             (case when b.cmv > 0 then round(a.estoque_inicial/b.rol,2) end) as estoque_indice_rol, -- Índice Estoque/ROL
                             (case when b.cmv > 0 then round(a.estoque_inicial/b.lb,2) end) as estoque_indice_lb -- Índice Estoque/LB
-                            
-                    from (select e.data,
-                                    sum(e.esi_valor) as estoque_inicial, 
-                                    sum(e.esf_valor) as estoque_final
-                            from vm_ge_estoque_master e, ms.tb_item_categoria ic
-                            where e.id_item = ic.id_item
-                                and e.id_categoria = ic.id_categoria
-                                $andSql
-                            group by e.data) a,
-                            
-                            -- Venda mês anterior referência
-                            (select data, rol, lb, cmv
-                            from (select trunc(vi.data_emissao, 'MM') as data,
+                        from (select e.data,
+                                     sum(e.esi_valor) as estoque_inicial, 
+                                     sum(e.esf_valor) as estoque_final
+                                from vm_ge_estoque_master e,
+                                     ms.tb_item_categoria ic
+                              where e.id_item = ic.id_item
+                              and e.id_categoria = ic.id_categoria
+                              $andSql
+                              group by e.data) a,
+                             -- Venda mês anterior referência
+                             (select data,
+                                     rol,
+                                     lb,
+                                     cmv
+                                from (select trunc(vi.data_emissao, 'MM') as data,
                                             sum(vi.rol) as rol,
                                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
                                             sum(vi.custo) as cmv
-                                    from pricing.vm_ie_ve_venda_item vi, ms.tb_item_categoria ic,
-                                            ms.tb_item i, ms.tb_categoria c, ms.tb_estoque e
-                                    where vi.id_item = ic.id_item
-                                        and vi.id_categoria = ic.id_categoria
-                                        and vi.id_item = i.id_item
-                                        and vi.id_categoria = c.id_categoria
-                                        and vi.id_empresa = e.id_empresa
-                                        and vi.id_item = e.id_item
-                                        and vi.id_categoria = e.id_categoria
-                                        $andSql2 
-                                    
-                                    group by trunc(vi.data_emissao, 'MM'))) b
-                                    
+                                        from pricing.vm_ie_ve_venda_item vi,
+                                             ms.tb_item_categoria ic,
+                                             ms.tb_item i,
+                                             ms.tb_categoria c,
+                                             ms.tb_estoque e
+                                      where vi.id_item = ic.id_item
+                                      and vi.id_categoria = ic.id_categoria
+                                      and vi.id_item = i.id_item
+                                      and vi.id_categoria = c.id_categoria
+                                      and vi.id_empresa = e.id_empresa
+                                      and vi.id_item = e.id_item
+                                      and vi.id_categoria = e.id_categoria
+                                      $andSql2
+                                      group by trunc(vi.data_emissao, 'MM'))) b
                     where a.data = b.data(+)
                     order by a.data asc
                     ";
@@ -208,6 +212,8 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('estoque_inicial', new ValueStrategy);
             $hydrator->addStrategy('estoque_final', new ValueStrategy);
             $hydrator->addStrategy('estoque_dias', new ValueStrategy);
+            $hydrator->addStrategy('estoque_indice_rol', new ValueStrategy);
+            $hydrator->addStrategy('estoque_indice_lb', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
@@ -216,6 +222,8 @@ class FiiController extends AbstractRestfulController
             $EstoqueMesInicial  = array();
             $EstoqueMesFinal    = array();
             $EstoqueDias        = array();
+            $EstoqueInRol       = array();
+            $EstoqueInLb        = array();
 
             foreach ($resultSet as $row) {
 
@@ -223,6 +231,8 @@ class FiiController extends AbstractRestfulController
                 $EstoqueMesInicial[]    = (float) $data1['estoqueInicial'];
                 $EstoqueMesFinal[]      = (float) $data1['estoqueFinal'];
                 $EstoqueDias[]          = (float) $data1['estoqueDias'];
+                $EstoqueInRol[]         = (float) $data1['estoqueIndiceRol'];
+                $EstoqueInLb[]          = (float) $data1['estoqueIndiceLb'];
 
             }
             // $this->setCallbackData($arrayEstoqueMes);
@@ -231,11 +241,15 @@ class FiiController extends AbstractRestfulController
             $EstoqueMesInicial  = null;
             $EstoqueMesFinal    = null;
             $EstoqueDias        = null;
+            $EstoqueInRol        = null;
+            $EstoqueInLb        = null;
         }
 
         $arrayEstoqueMes[] = $EstoqueMesInicial;
         $arrayEstoqueMes[] = $EstoqueMesFinal;
         $arrayEstoqueMes[] = $EstoqueDias;
+        $arrayEstoqueMes[] = $EstoqueInRol;
+        $arrayEstoqueMes[] = $EstoqueInLb;
 
         return $arrayEstoqueMes;
     }
@@ -428,6 +442,8 @@ class FiiController extends AbstractRestfulController
             $EstoqueMesInicial  = array();
             $EstoqueMesFinal    = array();
             $EstoqueDias        = array();
+            $EstoqueInRol       = array();
+            $EstoqueInLb        = array();
 
             if($indicadoresAdd){
 
@@ -444,6 +460,8 @@ class FiiController extends AbstractRestfulController
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
+                $EstoqueInRol       = $EstoqueMes[3];
+                $EstoqueInLb        = $EstoqueMes[4];
             }
 
             $sql = " select b.data,
@@ -1078,6 +1096,38 @@ class FiiController extends AbstractRestfulController
                             'valorM1'=> $EstoqueDias[10],
                             'valorM0'=> $EstoqueDias[11]
                 ];
+                
+                $data[] = ['indicador'=>'Índice Estoque/ROL',
+                            'vDecimos'=> 2,
+                            'valorM11'=> $EstoqueInRol[0],
+                            'valorM10'=> $EstoqueInRol[1],
+                            'valorM9'=> $EstoqueInRol[2],
+                            'valorM8'=> $EstoqueInRol[3],
+                            'valorM7'=> $EstoqueInRol[4],
+                            'valorM6'=> $EstoqueInRol[5],
+                            'valorM5'=> $EstoqueInRol[6],
+                            'valorM4'=> $EstoqueInRol[7],
+                            'valorM3'=> $EstoqueInRol[8],
+                            'valorM2'=> $EstoqueInRol[9],
+                            'valorM1'=> $EstoqueInRol[10],
+                            'valorM0'=> $EstoqueInRol[11]
+                ];
+
+                $data[] = ['indicador'=>'Índice Estoque/LB',
+                            'vDecimos'=> 2,
+                            'valorM11'=> $EstoqueInLb[0],
+                            'valorM10'=> $EstoqueInLb[1],
+                            'valorM9'=> $EstoqueInLb[2],
+                            'valorM8'=> $EstoqueInLb[3],
+                            'valorM7'=> $EstoqueInLb[4],
+                            'valorM6'=> $EstoqueInLb[5],
+                            'valorM5'=> $EstoqueInLb[6],
+                            'valorM4'=> $EstoqueInLb[7],
+                            'valorM3'=> $EstoqueInLb[8],
+                            'valorM2'=> $EstoqueInLb[9],
+                            'valorM1'=> $EstoqueInLb[10],
+                            'valorM0'=> $EstoqueInLb[11]
+                ];
             }
 
             $this->setCallbackData($data);
@@ -1278,6 +1328,8 @@ class FiiController extends AbstractRestfulController
             $EstoqueMesInicial  = array();
             $EstoqueMesFinal    = array();
             $EstoqueDias        = array();
+            $EstoqueInRol       = array();
+            $EstoqueInLb        = array();
 
             if($indicadoresAdd){
 
@@ -1295,6 +1347,8 @@ class FiiController extends AbstractRestfulController
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
+                $EstoqueInRol       = $EstoqueMes[3];
+                $EstoqueInLb        = $EstoqueMes[4];
             }
 
             $sql = " select b.data,
@@ -1448,7 +1502,8 @@ class FiiController extends AbstractRestfulController
             }
 
             $colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"
-                      ,"#a4e43f","#d298e2","#6119d0","#d2737d","#c0a43c","#f2510e","#651be6","#79806e","#61da5e","#cd2f00"];
+                      ,"#a4e43f","#d298e2","#6119d0","#d2737d","#c0a43c","#f2510e","#651be6","#79806e","#61da5e","#cd2f00","#9348af"
+                      ,"#01ac53","#c5a4fb","#996635","#b11573","#2f3f94","#2f7b99","#da967d","#34891f","#b0d87b","#4bb473","#75d89e"];
 
             // $this->setCallbackData($data);
             return new JsonModel(
@@ -1868,6 +1923,34 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 29,
                                 'color'=> $colors[19],
                                 'data' => $EstoqueDias,
+                                'vFormat' => '',
+                                'vDecimos' => '2',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Índice Estoque/ROL',
+                                'yAxis'=> 30,
+                                'color'=> $colors[20],
+                                'data' => $EstoqueInRol,
+                                'vFormat' => '',
+                                'vDecimos' => '2',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Índice Estoque/LB',
+                                'yAxis'=> 31,
+                                'color'=> $colors[21],
+                                'data' => $EstoqueInLb,
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => false,

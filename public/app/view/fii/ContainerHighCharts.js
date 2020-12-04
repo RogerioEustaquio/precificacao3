@@ -101,7 +101,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
         colors = ["#63b598","#ce7d78","#ea9e70","#a48a9e","#c6e1e8","#648177","#0d5ac1","#f205e6","#1c0365","#14a9ad","#4ca2f9"
-                 ,"#a4e43f","#d298e2","#6119d0","#d2737d","#c0a43c","#f2510e","#651be6","#79806e","#61da5e","#cd2f00"];
+                 ,"#a4e43f","#d298e2","#6119d0","#d2737d","#c0a43c","#f2510e","#651be6","#79806e","#61da5e","#cd2f00","#9348af"
+                 ,"#01ac53","#c5a4fb","#996635","#b11573","#2f3f94","#2f7b99","#da967d","#34891f","#b0d87b","#4bb473","#75d89e"];
 
         me.chart =  Highcharts.chart(el.id, {
             loading: {
@@ -186,7 +187,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 //     }
                                 // }
 
-                                var serieExtras = ['Estoque Inicial','Estoque Final','Dias de Estoque'];
+                                var serieExtras = ['Estoque Inicial','Estoque Final','Dias de Estoque','Índice Estoque/ROL','Índice Estoque/LB'];
 
                                 for (let e = 0; e < serieExtras.length; e++) {
                                     if(serieExtras[e] == record.name){
@@ -1025,6 +1026,52 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             padding: 0,
                             style: {
                                 color: colors[19],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Índice Estoque/ROL',
+                            style: {
+                                color: colors[20],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[20],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Índice Estoque/LB',
+                            style: {
+                                color: colors[21],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[21],
                                 fontSize: '10px'
                             }
                         },
