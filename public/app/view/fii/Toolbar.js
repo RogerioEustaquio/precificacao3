@@ -37,18 +37,9 @@ Ext.define('App.view.fii.Toolbar',{
                     xtype: 'checkboxfield',
                     margin: '2 2 2 2',
                     labelWidth: 90,
-                    fieldLabel: 'Estoque Inical',
-                    name: 'estoqueinicial',
-                    idItem: 'estoqueinicial',
-                    // checked: false
-                },
-                {
-                    xtype: 'checkboxfield',
-                    margin: '2 2 2 2',
-                    labelWidth: 90,
-                    fieldLabel: 'Estoque Final',
-                    name: 'estoquefinal',
-                    idItem: 'estoquefinal',
+                    fieldLabel: 'Estoque',
+                    name: 'estoque',
+                    idItem: 'estoque',
                     // checked: false
                 }
             ],
@@ -62,12 +53,8 @@ Ext.define('App.view.fii.Toolbar',{
                         var array = new Array();
 
                         array.push({
-                            name : 'Estoque Inicial',
-                            value: meWindow.down('checkboxfield[name=estoqueinicial]').getValue()
-                        });
-                        array.push({
-                            name : 'Estoque Final',
-                            value: meWindow.down('checkboxfield[name=estoquefinal]').getValue()
+                            name : 'Estoque',
+                            value: meWindow.down('checkboxfield[name=estoque]').getValue()
                         });
 
                         me.indicadoresAdd = array;
@@ -81,13 +68,9 @@ Ext.define('App.view.fii.Toolbar',{
                             if(me.indicadoresAdd){
                                 for (let index = 0; index < me.indicadoresAdd.length; index++) {
 
-                                    if(me.indicadoresAdd[index].name == "Estoque Inicial"){
+                                    if(me.indicadoresAdd[index].name == "Estoque"){
                                         if(me.indicadoresAdd[index].value)
-                                            meWindow.down('checkboxfield[name=estoqueinicial]').setValue(true);
-                                    }
-                                    if(me.indicadoresAdd[index].name == "Estoque Final"){
-                                        if(me.indicadoresAdd[index].value)
-                                            meWindow.down('checkboxfield[name=estoquefinal]').setValue(true);
+                                            meWindow.down('checkboxfield[name=estoque]').setValue(true);
                                     }
                                 }
                             }

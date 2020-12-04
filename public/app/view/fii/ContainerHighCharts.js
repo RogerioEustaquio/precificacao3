@@ -158,7 +158,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                                 }
                                         }
 
-                                        if(cont > 6){
+                                        if(cont > 8){
 
                                             Ext.Msg.alert('Alerta','Permitido selecionar 6 indicadores.');
                                             record.setValue(false);

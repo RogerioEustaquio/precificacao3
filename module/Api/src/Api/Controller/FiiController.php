@@ -126,7 +126,7 @@ class FiiController extends AbstractRestfulController
         }
         if($idMarcas){
             $andSql .= " and ic.id_marca in ($idMarcas)";
-            $andSql2 .= $andSql;
+            $andSql2 .= " and ic.id_marca in ($idMarcas)";
         }
         if($codProdutos){
             $andSql .= " and e.cod_item in ('$codProdutos')";
@@ -144,18 +144,19 @@ class FiiController extends AbstractRestfulController
         }
         if($idCurvas){
             $andSql .= " and e.curva_nbs in ('$idCurvas')";
-            $andSql2 .= " and e.curva_abc in ('$idCurvas')";
+            $andSql2 .= " and e.id_curva_abc in ('$idCurvas')";
         }
         
         if($idOmvUsers){
-            $andSql .= " and (e.id_empresa, e.id_item, e.id_categoria) in (
+            $and = " and (e.id_empresa, e.id_item, e.id_categoria) in (
                 select id_empresa, id_item, id_categoria
                   from js.omv_analise_log a 
                  where a.data_aprovacao >= add_months(sysdate, -12) -- Filtro de data também
                    and usuario_aprovacao in ('$idOmvUsers') -- Usuários selecioados
               )
               ";
-            $andSql2 .= $andSql;
+            $andSql  .= $and;
+            $andSql2 .= $and;
         }
 
         try {
