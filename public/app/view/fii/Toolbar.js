@@ -40,7 +40,7 @@ Ext.define('App.view.fii.Toolbar',{
                     fieldLabel: 'Estoque Inical',
                     name: 'estoqueinicial',
                     idItem: 'estoqueinicial',
-                    value: false
+                    // checked: false
                 },
                 {
                     xtype: 'checkboxfield',
@@ -49,7 +49,7 @@ Ext.define('App.view.fii.Toolbar',{
                     fieldLabel: 'Estoque Final',
                     name: 'estoquefinal',
                     idItem: 'estoquefinal',
-                    value: false
+                    // checked: false
                 }
             ],
             bbar:[
