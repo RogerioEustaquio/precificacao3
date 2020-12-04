@@ -119,24 +119,32 @@ class FiiController extends AbstractRestfulController
         $data1 = array();
 
         $andSql = '';
+        $andSql2 = '';
         if($idEmpresas){
-            $andSql = " and e.id_empresa in ($idEmpresas)";
+            $andSql  = " and e.id_empresa in ($idEmpresas)";
+            $andSql2 = " and vi.id_empresa in ($idEmpresas)";
         }
         if($idMarcas){
             $andSql .= " and ic.id_marca in ($idMarcas)";
+            $andSql2 .= $andSql;
         }
         if($codProdutos){
             $andSql .= " and e.cod_item in ('$codProdutos')";
+            $andSql2 .= " and i.cod_item in ('$codProdutos')";
         }
 
         if($data){
             $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-11)";
             $andSql .= " and trunc(e.data, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
+            $andSql2 .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-12)";
+            $andSql2 .= " and trunc(vi.data_emissao, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
         }else{
             $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
+            $andSql2 .= " and vi.data_emissao >= add_months(trunc(sysdate, 'MM'),-12)";
         }
         if($idCurvas){
             $andSql .= " and e.curva_nbs in ('$idCurvas')";
+            $andSql2 .= " and e.curva_abc in ('$idCurvas')";
         }
         
         if($idOmvUsers){
@@ -147,23 +155,50 @@ class FiiController extends AbstractRestfulController
                    and usuario_aprovacao in ('$idOmvUsers') -- Usuários selecioados
               )
               ";
+            $andSql2 .= $andSql;
         }
 
         try {
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             
-            $sql = "select e.data,
-                            sum(e.esi_valor) as estoque_inicial,
-                            sum(e.esf_valor) as estoque_final
-                    from VM_GE_ESTOQUE_MASTER e,
-                        ms.tb_item_categoria ic
-                    where e.id_item = ic.id_item
-                    and e.id_categoria = ic.id_categoria
-                    $andSql
-                    group by data
-                    order by e.data asc
-            ";
+            $sql = " select a.data, a.estoque_inicial, a.estoque_final,
+       
+                            (case when b.cmv > 0 then round((a.estoque_final/b.cmv)*30,2) end) as estoque_dias, -- Dias de Estoque
+                            (case when b.cmv > 0 then round(a.estoque_inicial/b.rol,2) end) as estoque_indice_rol, -- Índice Estoque/ROL
+                            (case when b.cmv > 0 then round(a.estoque_inicial/b.lb,2) end) as estoque_indice_lb -- Índice Estoque/LB
+                            
+                    from (select e.data,
+                                    sum(e.esi_valor) as estoque_inicial, 
+                                    sum(e.esf_valor) as estoque_final
+                            from vm_ge_estoque_master e, ms.tb_item_categoria ic
+                            where e.id_item = ic.id_item
+                                and e.id_categoria = ic.id_categoria
+                                $andSql
+                            group by e.data) a,
+                            
+                            -- Venda mês anterior referência
+                            (select data, rol, lb, cmv
+                            from (select trunc(vi.data_emissao, 'MM') as data,
+                                            sum(vi.rol) as rol,
+                                            sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                            sum(vi.custo) as cmv
+                                    from pricing.vm_ie_ve_venda_item vi, ms.tb_item_categoria ic,
+                                            ms.tb_item i, ms.tb_categoria c, ms.tb_estoque e
+                                    where vi.id_item = ic.id_item
+                                        and vi.id_categoria = ic.id_categoria
+                                        and vi.id_item = i.id_item
+                                        and vi.id_categoria = c.id_categoria
+                                        and vi.id_empresa = e.id_empresa
+                                        and vi.id_item = e.id_item
+                                        and vi.id_categoria = e.id_categoria
+                                        $andSql2 
+                                    
+                                    group by trunc(vi.data_emissao, 'MM'))) b
+                                    
+                    where a.data = b.data(+)
+                    order by a.data asc
+                    ";
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -171,30 +206,35 @@ class FiiController extends AbstractRestfulController
             $hydrator = new ObjectProperty;
             $hydrator->addStrategy('estoque_inicial', new ValueStrategy);
             $hydrator->addStrategy('estoque_final', new ValueStrategy);
+            $hydrator->addStrategy('estoque_dias', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
 
-            $arrayEstoqueMes  = array();
+            $arrayEstoqueMes    = array();
             $EstoqueMesInicial  = array();
             $EstoqueMesFinal    = array();
+            $EstoqueDias        = array();
 
             foreach ($resultSet as $row) {
 
                 $data1 = $hydrator->extract($row);
                 $EstoqueMesInicial[]    = (float) $data1['estoqueInicial'];
                 $EstoqueMesFinal[]      = (float) $data1['estoqueFinal'];
+                $EstoqueDias[]          = (float) $data1['estoqueDias'];
 
             }
             // $this->setCallbackData($arrayEstoqueMes);
             
         } catch (\Exception $e) {
-            $EstoqueMesInicial = null;
-            $EstoqueMesFinal = null;
+            $EstoqueMesInicial  = null;
+            $EstoqueMesFinal    = null;
+            $EstoqueDias        = null;
         }
 
         $arrayEstoqueMes[] = $EstoqueMesInicial;
         $arrayEstoqueMes[] = $EstoqueMesFinal;
+        $arrayEstoqueMes[] = $EstoqueDias;
 
         return $arrayEstoqueMes;
     }
@@ -386,11 +426,11 @@ class FiiController extends AbstractRestfulController
             $consultaEstoque = false;
             $EstoqueMesInicial  = array();
             $EstoqueMesFinal    = array();
+            $EstoqueDias        = array();
 
             if($indicadoresAdd){
 
                 for ($i=0; $i < count($indicadoresAdd); $i++) { 
-            
                     if($indicadoresAdd[$i]->value){
                         $consultaEstoque = true;
                     }
@@ -400,8 +440,9 @@ class FiiController extends AbstractRestfulController
             if($consultaEstoque){
 
                 $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers);
-                $EstoqueMesInicial = $EstoqueMes[0];
-                $EstoqueMesFinal = $EstoqueMes[1];
+                $EstoqueMesInicial  = $EstoqueMes[0];
+                $EstoqueMesFinal    = $EstoqueMes[1];
+                $EstoqueDias        = $EstoqueMes[2];
             }
 
             $sql = " select b.data,
@@ -990,7 +1031,7 @@ class FiiController extends AbstractRestfulController
             if($consultaEstoque){
 
                 $data[] = ['indicador'=>'Estoque Inicial',
-                            'vDecimos'=> 2,
+                            'vDecimos'=> 0,
                             'valorM11'=> $EstoqueMesInicial[0],
                             'valorM10'=> $EstoqueMesInicial[1],
                             'valorM9'=> $EstoqueMesInicial[2],
@@ -1004,11 +1045,9 @@ class FiiController extends AbstractRestfulController
                             'valorM1'=> $EstoqueMesInicial[10],
                             'valorM0'=> $EstoqueMesInicial[11]
                 ];
-            }
 
-            if($consultaEstoque){
                 $data[] = ['indicador'=>'Estoque Final',
-                            'vDecimos'=> 2,
+                            'vDecimos'=> 0,
                             'valorM11'=> $EstoqueMesFinal[0],
                             'valorM10'=> $EstoqueMesFinal[1],
                             'valorM9'=> $EstoqueMesFinal[2],
@@ -1023,7 +1062,21 @@ class FiiController extends AbstractRestfulController
                             'valorM0'=> $EstoqueMesFinal[11]
                 ];
 
-
+                $data[] = ['indicador'=>'Dias de Estoque',
+                            'vDecimos'=> 2,
+                            'valorM11'=> $EstoqueDias[0],
+                            'valorM10'=> $EstoqueDias[1],
+                            'valorM9'=> $EstoqueDias[2],
+                            'valorM8'=> $EstoqueDias[3],
+                            'valorM7'=> $EstoqueDias[4],
+                            'valorM6'=> $EstoqueDias[5],
+                            'valorM5'=> $EstoqueDias[6],
+                            'valorM4'=> $EstoqueDias[7],
+                            'valorM3'=> $EstoqueDias[8],
+                            'valorM2'=> $EstoqueDias[9],
+                            'valorM1'=> $EstoqueDias[10],
+                            'valorM0'=> $EstoqueDias[11]
+                ];
             }
 
             $this->setCallbackData($data);
@@ -1223,6 +1276,7 @@ class FiiController extends AbstractRestfulController
             $consultaEstoque = false;
             $EstoqueMesInicial  = array();
             $EstoqueMesFinal    = array();
+            $EstoqueDias        = array();
 
             if($indicadoresAdd){
 
@@ -1237,8 +1291,9 @@ class FiiController extends AbstractRestfulController
             if($consultaEstoque){
 
                 $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers);
-                $EstoqueMesInicial = $EstoqueMes[0];
-                $EstoqueMesFinal = $EstoqueMes[1];
+                $EstoqueMesInicial  = $EstoqueMes[0];
+                $EstoqueMesFinal    = $EstoqueMes[1];
+                $EstoqueDias        = $EstoqueMes[2];
             }
 
             $sql = " select b.data,
@@ -1785,7 +1840,7 @@ class FiiController extends AbstractRestfulController
                                 'color'=> $colors[17],
                                 'data' => $EstoqueMesInicial,
                                 'vFormat' => '',
-                                'vDecimos' => '2',
+                                'vDecimos' => '0',
                                 'visible' => false,
                                 'showInLegend' => false,
                                 'dataLabels' => array(
@@ -1798,6 +1853,20 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 28,
                                 'color'=> $colors[18],
                                 'data' => $EstoqueMesFinal,
+                                'vFormat' => '',
+                                'vDecimos' => '0',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Dias de Estoque',
+                                'yAxis'=> 29,
+                                'color'=> $colors[19],
+                                'data' => $EstoqueDias,
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => false,

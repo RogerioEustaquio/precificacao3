@@ -186,7 +186,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 //     }
                                 // }
 
-                                var serieExtras = ['Estoque Inicial','Estoque Final'];
+                                var serieExtras = ['Estoque Inicial','Estoque Final','Dias de Estoque'];
 
                                 for (let e = 0; e < serieExtras.length; e++) {
                                     if(serieExtras[e] == record.name){
@@ -1002,6 +1002,29 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             padding: 0,
                             style: {
                                 color: colors[18],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Dias de Estoque',
+                            style: {
+                                color: colors[19],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[19],
                                 fontSize: '10px'
                             }
                         },
