@@ -134,7 +134,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
                                 var recordSeries = record;
 
-                                var indicadoresAdd = me.up('panel').up('container').down('#fiitoolbar').indicadoresAdd;
+                                // var indicadoresAdd = me.up('panel').up('container').down('#fiitoolbar').indicadoresAdd;
                                 
                                 element = {
                                     xtype: 'checkboxfield',
@@ -178,20 +178,20 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     }
                                 };
                                 
-                                if(indicadoresAdd){
-                                    for (let e = 0; e < indicadoresAdd.length; e++) {
-                                        if(indicadoresAdd[e].name == record.name){
-                                            element = (!indicadoresAdd[e].value) ? null: element;
-                                        }
-                                    }
-                                }else{
-                                    
-                                    var serieExtras = ['Estoque Inicial','Estoque Final'];
+                                // if(indicadoresAdd){
+                                //     for (let e = 0; e < indicadoresAdd.length; e++) {
+                                //         if(indicadoresAdd[e].name == record.name){
+                                //             element = (!indicadoresAdd[e].value) ? null: element;
+                                //         }
+                                //     }
+                                // }
 
-                                    for (let e = 0; e < serieExtras.length; e++) {
-                                        if(serieExtras[e] == record.name){
-                                            element = null;
-                                        }
+                                var serieExtras = ['Estoque Inicial','Estoque Final'];
+
+                                for (let e = 0; e < serieExtras.length; e++) {
+                                    if(serieExtras[e] == record.name){
+
+                                        element = (recordSeries.yData.length > 0) ? element : null;
                                     }
                                 }
 

@@ -114,7 +114,7 @@ class FiiController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas)
+    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers)
     {
         $data1 = array();
 
@@ -137,6 +137,16 @@ class FiiController extends AbstractRestfulController
         }
         if($idCurvas){
             $andSql .= " and e.curva_nbs in ('$idCurvas')";
+        }
+        
+        if($idOmvUsers){
+            $andSql .= " and (e.id_empresa, e.id_item, e.id_categoria) in (
+                select id_empresa, id_item, id_categoria
+                  from js.omv_analise_log a 
+                 where a.data_aprovacao >= add_months(sysdate, -12) -- Filtro de data também
+                   and usuario_aprovacao in ('$idOmvUsers') -- Usuários selecioados
+              )
+              ";
         }
 
         try {
@@ -201,7 +211,7 @@ class FiiController extends AbstractRestfulController
             $tpPessoas      = $this->params()->fromQuery('tpPessoas',null);
             $data           = $this->params()->fromQuery('data',null);
             $idCurvas       = $this->params()->fromQuery('idCurvas',null);
-            $idOmuUsers     = $this->params()->fromQuery('idOmuUsers',null);
+            $idOmvUsers     = $this->params()->fromQuery('idOmvUsers',null);
             $indicadoresAdd = $this->params()->fromQuery('indicadoresAdd',null);
 
             $indicadoresAdd = json_decode($indicadoresAdd);
@@ -221,8 +231,8 @@ class FiiController extends AbstractRestfulController
             if($idCurvas){
                 $idCurvas = implode("','",json_decode($idCurvas));
             }
-            if($idOmuUsers){
-                $idOmuUsers = implode("','",json_decode($idOmuUsers));
+            if($idOmvUsers){
+                $idOmvUsers = implode("','",json_decode($idOmvUsers));
             }
 
             $andSql = '';
@@ -257,12 +267,12 @@ class FiiController extends AbstractRestfulController
             if($idCurvas){
                 $andSql .= " and t.id_curva_abc in ('$idCurvas')";
             }
-            if($idOmuUsers){
+            if($idOmvUsers){
                 $andSql .= " and (vi.id_empresa, vi.id_item, vi.id_categoria) in (
                     select id_empresa, id_item, id_categoria
                       from js.omv_analise_log a 
                      where a.data_aprovacao >= add_months(sysdate, -12) -- Filtro de data também
-                       and usuario_aprovacao in ('$idOmuUsers') -- Usuários selecioados
+                       and usuario_aprovacao in ('$idOmvUsers') -- Usuários selecioados
                   )
                   ";
             }
@@ -389,7 +399,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers);
                 $EstoqueMesInicial = $EstoqueMes[0];
                 $EstoqueMesFinal = $EstoqueMes[1];
             }
@@ -1036,7 +1046,7 @@ class FiiController extends AbstractRestfulController
             $tpPessoas      = $this->params()->fromPost('tpPessoas',null);
             $data           = $this->params()->fromPost('data',null);
             $idCurvas       = $this->params()->fromPost('idCurvas',null);
-            $idOmuUsers     = $this->params()->fromPost('idOmuUsers',null);
+            $idOmvUsers     = $this->params()->fromPost('idOmvUsers',null);
             $indicadoresAdd = $this->params()->fromPost('indicadoresAdd',null);
 
             $indicadoresAdd = json_decode($indicadoresAdd);
@@ -1055,8 +1065,8 @@ class FiiController extends AbstractRestfulController
             if($idCurvas){
                 $idCurvas = implode("','",json_decode($idCurvas));
             }
-            if($idOmuUsers){
-                $idOmuUsers = implode("','",json_decode($idOmuUsers));
+            if($idOmvUsers){
+                $idOmvUsers = implode("','",json_decode($idOmvUsers));
             }
 
             $andSql = '';
@@ -1093,12 +1103,12 @@ class FiiController extends AbstractRestfulController
                 $andSql .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
             }
             
-            if($idOmuUsers){
+            if($idOmvUsers){
                 $andSql .= " and (vi.id_empresa, vi.id_item, vi.id_categoria) in (
                     select id_empresa, id_item, id_categoria
                       from js.omv_analise_log a 
                      where a.data_aprovacao >= add_months(sysdate, -12) -- Filtro de data também
-                       and usuario_aprovacao in ('$idOmuUsers') -- Usuários selecioados
+                       and usuario_aprovacao in ('$idOmvUsers') -- Usuários selecioados
                   )
                   ";
             }
@@ -1226,7 +1236,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers);
                 $EstoqueMesInicial = $EstoqueMes[0];
                 $EstoqueMesFinal = $EstoqueMes[1];
             }

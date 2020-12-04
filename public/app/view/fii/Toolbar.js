@@ -40,7 +40,7 @@ Ext.define('App.view.fii.Toolbar',{
                     fieldLabel: 'Estoque Inical',
                     name: 'estoqueinicial',
                     idItem: 'estoqueinicial',
-                    checked: false
+                    value: false
                 },
                 {
                     xtype: 'checkboxfield',
@@ -49,7 +49,7 @@ Ext.define('App.view.fii.Toolbar',{
                     fieldLabel: 'Estoque Final',
                     name: 'estoquefinal',
                     idItem: 'estoquefinal',
-                    checked: false
+                    value: false
                 }
             ],
             bbar:[
@@ -71,7 +71,30 @@ Ext.define('App.view.fii.Toolbar',{
                         });
 
                         me.indicadoresAdd = array;
+
+                        meWindow.close();
+                    },
+                    listeners: {
+                        afterrender: function(){
+                            var meWindow = this.up('window');
+
+                            if(me.indicadoresAdd){
+                                for (let index = 0; index < me.indicadoresAdd.length; index++) {
+
+                                    if(me.indicadoresAdd[index].name == "Estoque Inicial"){
+                                        if(me.indicadoresAdd[index].value)
+                                            meWindow.down('checkboxfield[name=estoqueinicial]').setValue(true);
+                                    }
+                                    if(me.indicadoresAdd[index].name == "Estoque Final"){
+                                        if(me.indicadoresAdd[index].value)
+                                            meWindow.down('checkboxfield[name=estoquefinal]').setValue(true);
+                                    }
+                                }
+                            }
+                            
+                        }
                     }
+
                 }
             ]
         };
@@ -123,7 +146,7 @@ Ext.define('App.view.fii.Toolbar',{
         var tpPessoas   = me.up('container').down('#panelwest').down('#elPessoa').getValue();
         var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
         var idCurvas    = me.up('container').down('#panelwest').down('#elCurva').getValue();
-        var idOmuUser   = me.up('container').down('#panelwest').down('#elOmuUser').getValue();
+        var idOmvUsers   = me.up('container').down('#panelwest').down('#elOmuUser').getValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
         var params = {
@@ -133,7 +156,7 @@ Ext.define('App.view.fii.Toolbar',{
             tpPessoas: Ext.encode(tpPessoas),
             data: data,
             idCurvas: Ext.encode(idCurvas),
-            idOmuUsers: Ext.encode(idOmuUser),
+            idOmvUsers: Ext.encode(idOmvUsers),
             indicadoresAdd: Ext.encode(me.indicadoresAdd)
         };
         var seriesOrig = Array();
