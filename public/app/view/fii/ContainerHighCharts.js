@@ -161,7 +161,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
 
                                         if(cont > 8){
 
-                                            Ext.Msg.alert('Alerta','Permitido selecionar 6 indicadores.');
+                                            Ext.Msg.alert('Alerta','Permitido selecionar 8 indicadores.');
                                             record.setValue(false);
                                             me.showLegend[recordSeries.index] = false ;
                                             recordSeries.update({showInLegend: false, visible: false},false);
@@ -173,7 +173,21 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                             me.showLegend[recordSeries.index] = index ;
                                             recordSeries.update({showInLegend: index, visible: index},false);
                                             meChart.yAxis[recordSeries.index].update({visible: index},false);
+
+                                            var iColor = 0
+                                            meChart.series.forEach(function(rowSerie){
+                                                if(rowSerie.visible){
+                                                    const color = Highcharts.getOptions().colors[iColor]
+
+                                                    rowSerie.update({color:color},false);
+                                                    meChart.yAxis[iColor].update({color: color},false);
+                                                    iColor++;
+                                                }
+                                            });
                                         }
+
+
+
                                         meChart.redraw();
                                         record.up('window').down('displayfield[name=contCheck]').setValue(cont);
                                     }
