@@ -175,14 +175,31 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                             meChart.yAxis[recordSeries.index].update({visible: index},false);
 
                                             var iColor = 0
+                                            var iCont = 0
                                             meChart.series.forEach(function(rowSerie){
                                                 if(rowSerie.visible){
                                                     const color = Highcharts.getOptions().colors[iColor]
 
                                                     rowSerie.update({color:color},false);
-                                                    meChart.yAxis[iColor].update({color: color},false);
+                                                    meChart.yAxis[iCont].update(
+                                                        {
+                                                            title:{
+                                                                style: {
+                                                                    color: color
+                                                                }
+                                                            },
+                                                            labels:{
+                                                                style: {
+                                                                    color: color
+                                                                }
+                                                            }
+                                                        }
+                                                        ,false);
+                                                        
                                                     iColor++;
                                                 }
+
+                                                iCont++;
                                             });
                                         }
 
