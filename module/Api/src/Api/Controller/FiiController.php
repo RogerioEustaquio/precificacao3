@@ -134,12 +134,12 @@ class FiiController extends AbstractRestfulController
         }
 
         if($data){
-            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-11)";
+            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-12)";
             $andSql .= " and trunc(e.data, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
             $andSql2 .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-12)";
             $andSql2 .= " and trunc(vi.data_emissao, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
         }else{
-            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
+            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(sysdate,'MM'),-12)";
             $andSql2 .= " and vi.data_emissao >= add_months(trunc(sysdate, 'MM'),-12)";
         }
         if($idCurvas){
@@ -210,6 +210,9 @@ class FiiController extends AbstractRestfulController
                      where a.data = b.data(+)
                      order by a.data asc
                     ";
+
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
