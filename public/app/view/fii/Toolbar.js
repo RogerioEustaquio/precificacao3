@@ -143,9 +143,12 @@ Ext.define('App.view.fii.Toolbar',{
             indicadoresAdd: Ext.encode(me.indicadoresAdd)
         };
         var seriesOrig = Array();
+        var seriesCores= Array();
         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
 
         for (let index = 0; index < seriesLength; index++) {
+
+            seriesCores.push(charts.chart.series[index].color);
 
             if(charts.chart.series[index].visible){
                 seriesOrig.push({visible: true});
@@ -183,6 +186,7 @@ Ext.define('App.view.fii.Toolbar',{
                     rsarray.series.forEach(function(record){
 
                         record.visible      = seriesOrig[cont].visible;
+                        record.color        = seriesCores[cont];
                         record.showInLegend = charts.showLegend[cont];
                         charts.chart.addSeries(record);
                         cont++;

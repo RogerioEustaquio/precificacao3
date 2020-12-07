@@ -178,7 +178,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                             var iCont = 0
                                             meChart.series.forEach(function(rowSerie){
                                                 if(rowSerie.visible){
-                                                    const color = Highcharts.getOptions().colors[iColor]
+                                                    const color = Highcharts.getOptions().colors[iColor];
 
                                                     rowSerie.update({color:color},false);
                                                     meChart.yAxis[iCont].update(
@@ -567,7 +567,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                                 formatter: function () {
-                                    return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                    var v =  utilFormat.ValueZero(this.value);
+                                    return v;
                                 },
                                 x: 0,
                                 y: 0,
@@ -590,7 +591,8 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                                 formatter: function () {
-                                    return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                    var v = utilFormat.ValueZero(this.value);
+                                    return v;
                                 },
                                 x: 0,
                                 y: 0,
@@ -613,7 +615,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -636,7 +638,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                         formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            return utilFormat.ValueZero(this.value);
                         },
                         x: 0,
                         y: 0,
@@ -682,7 +684,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -705,7 +707,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                            return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                            return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -728,7 +730,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -751,7 +753,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -774,7 +776,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -797,7 +799,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -820,7 +822,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -843,7 +845,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -866,7 +868,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -889,7 +891,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -912,7 +914,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -935,7 +937,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -958,7 +960,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -981,7 +983,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -1027,7 +1029,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                                returnutilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,

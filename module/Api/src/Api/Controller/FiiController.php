@@ -114,7 +114,7 @@ class FiiController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers)
+    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas)
     {
         $data1 = array();
 
@@ -130,7 +130,7 @@ class FiiController extends AbstractRestfulController
         }
         if($codProdutos){
             $andSql .= " and e.cod_item in ('$codProdutos')";
-            $andSql2 .= " and i.cod_item in ('$codProdutos')";
+            $andSql2 .= " and i.cod_item||c.descricao in ('$codProdutos')";
         }
 
         if($data){
@@ -157,6 +157,10 @@ class FiiController extends AbstractRestfulController
               ";
             $andSql  .= $and;
             $andSql2 .= $and;
+        }
+
+        if($tpPessoas){
+            $andSql2 .= " and p.tipo_pessoa in ('$tpPessoas')";
         }
 
         try {
@@ -191,7 +195,8 @@ class FiiController extends AbstractRestfulController
                                              ms.tb_item_categoria ic,
                                              ms.tb_item i,
                                              ms.tb_categoria c,
-                                             ms.tb_estoque e
+                                             ms.tb_estoque e,
+                                             ms.pessoa p
                                       where vi.id_item = ic.id_item
                                       and vi.id_categoria = ic.id_categoria
                                       and vi.id_item = i.id_item
@@ -199,10 +204,11 @@ class FiiController extends AbstractRestfulController
                                       and vi.id_empresa = e.id_empresa
                                       and vi.id_item = e.id_item
                                       and vi.id_categoria = e.id_categoria
+                                      and vi.id_pessoa = p.id_pessoa(+)
                                       $andSql2
                                       group by trunc(vi.data_emissao, 'MM'))) b
-                    where a.data = b.data(+)
-                    order by a.data asc
+                     where a.data = b.data(+)
+                     order by a.data asc
                     ";
 
             $stmt = $conn->prepare($sql);
@@ -456,7 +462,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas);
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
@@ -744,7 +750,7 @@ class FiiController extends AbstractRestfulController
             ];
 
             $data[] = ['indicador'=>'ROB',
-                        'vDecimos'=> 0,
+                        'vDecimos'=> '0',
                         'valorM11'=> $arrayRob[0],
                         'valorM10'=> $arrayRob[1],
                         'valorM9'=> $arrayRob[2],
@@ -1343,7 +1349,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas);
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
