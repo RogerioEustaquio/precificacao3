@@ -1006,7 +1006,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
