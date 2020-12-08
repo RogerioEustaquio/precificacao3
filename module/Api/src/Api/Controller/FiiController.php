@@ -134,12 +134,12 @@ class FiiController extends AbstractRestfulController
         }
 
         if($data){
-            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-12)";
+            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-11)";
             $andSql .= " and trunc(e.data, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
             $andSql2 .= " and trunc(vi.data_emissao, 'MM') >= add_months(trunc(to_date('01/".$data."'),'MM'),-12)";
             $andSql2 .= " and trunc(vi.data_emissao, 'MM') <= add_months(trunc(to_date('01/".$data."'),'MM'),0)";
         }else{
-            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(sysdate,'MM'),-12)";
+            $andSql .= " and trunc(e.data, 'MM') >= add_months(trunc(sysdate,'MM'),-11)";
             $andSql2 .= " and vi.data_emissao >= add_months(trunc(sysdate, 'MM'),-12)";
         }
         if($idCurvas){
@@ -163,9 +163,76 @@ class FiiController extends AbstractRestfulController
             $andSql2 .= " and p.tipo_pessoa in ('$tpPessoas')";
         }
 
+        if($data){
+            $sysdate = "to_date('01/".$data."')";
+        }else{
+            $sysdate = 'sysdate';
+        }
+
         try {
+
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
+
+            $mesesEstoque = [null,
+                            'Janeiro',
+                            'Fevereiro',
+                            'Março',
+                            'Abril',
+                            'Maio',
+                            'Junho',
+                            'Julho',
+                            'Agosto',
+                            'Setembro',
+                            'Outubro',
+                            'Novembro',
+                            'Dezembro'];
+
+            $sql = "select add_months(trunc($sysdate,'MM'),-11) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-10) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-9) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-8) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-7) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-6) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-5) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-4) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-3) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-2) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-1) as id from dual union all
+                    select add_months(trunc($sysdate,'MM'),-0) as id from dual            
+            ";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data1 = array();
+            $mesSelecao = array();
+
+            $arrayEstoqueMes    = array();
+            $EstoqueMesInicial  = array();
+            $EstoqueMesFinal    = array();
+            $EstoqueDias        = array();
+            $EstoqueInRol       = array();
+            $EstoqueInLb        = array();
+
+            foreach ($resultSet as $row) {
+                $data1 = $hydrator->extract($row);
+                
+                $mesSelecao[] = $mesesEstoque[(float) substr($data1['id'], 3, 2)];
+
+                $EstoqueMesInicial[]    = 0;
+                $EstoqueMesFinal[]      = 0;
+                $EstoqueDias[]          = 0;
+                $EstoqueInRol[]         = 0;
+                $EstoqueInLb[]          = 0;
+
+            }
 
             $sql = " select a.data,
                             a.estoque_inicial,
@@ -211,13 +278,11 @@ class FiiController extends AbstractRestfulController
                      order by a.data asc
                     ";
 
-            // print "$sql";
-            // exit;
-
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
             $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('data', new ValueStrategy);
             $hydrator->addStrategy('estoque_inicial', new ValueStrategy);
             $hydrator->addStrategy('estoque_final', new ValueStrategy);
             $hydrator->addStrategy('estoque_dias', new ValueStrategy);
@@ -227,21 +292,27 @@ class FiiController extends AbstractRestfulController
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
 
-            $arrayEstoqueMes    = array();
-            $EstoqueMesInicial  = array();
-            $EstoqueMesFinal    = array();
-            $EstoqueDias        = array();
-            $EstoqueInRol       = array();
-            $EstoqueInLb        = array();
+            $data2 = array();
+            $contMes = 0;
 
             foreach ($resultSet as $row) {
 
-                $data1 = $hydrator->extract($row);
-                $EstoqueMesInicial[]    = (float) $data1['estoqueInicial'];
-                $EstoqueMesFinal[]      = (float) $data1['estoqueFinal'];
-                $EstoqueDias[]          = (float) $data1['estoqueDias'];
-                $EstoqueInRol[]         = (float) $data1['estoqueIndiceRol'];
-                $EstoqueInLb[]          = (float) $data1['estoqueIndiceLb'];
+                $elementos = $hydrator->extract($row);
+
+                if($mesSelecao[$contMes] != $mesesEstoque[(float)substr($elementos['data'], 3, 2)] && $contMes<12){
+                    $contMes++;
+                }
+
+                if($mesSelecao[$contMes] == $mesesEstoque[(float)substr($elementos['data'], 3, 2)]){
+
+                    $EstoqueMesInicial[$contMes]    = (float) $elementos['estoqueInicial'];
+                    $EstoqueMesFinal[$contMes]      = (float) $elementos['estoqueFinal'];
+                    $EstoqueDias[$contMes]          = (float) $elementos['estoqueDias'];
+                    $EstoqueInRol[$contMes]         = (float) $elementos['estoqueIndiceRol'];
+                    $EstoqueInLb[$contMes]          = (float) $elementos['estoqueIndiceLb'];
+                }
+
+                $contMes++;
 
             }
             // $this->setCallbackData($arrayEstoqueMes);
@@ -250,7 +321,7 @@ class FiiController extends AbstractRestfulController
             $EstoqueMesInicial  = null;
             $EstoqueMesFinal    = null;
             $EstoqueDias        = null;
-            $EstoqueInRol        = null;
+            $EstoqueInRol       = null;
             $EstoqueInLb        = null;
         }
 
@@ -587,6 +658,10 @@ class FiiController extends AbstractRestfulController
             foreach ($resultSet as $row) {
 
                 $elementos = $hydrator->extract($row);
+
+                while($categories[$cont] != $meses[(float)substr($elementos['data'], 3, 2)] && $cont<12){
+                    $cont++;
+                }
 
                 if($categories[$cont] == $meses[(float)substr($elementos['data'], 3, 2)]){
 
@@ -1474,6 +1549,10 @@ class FiiController extends AbstractRestfulController
             foreach ($resultSet as $row) {
 
                 $elementos = $hydrator->extract($row);
+                
+                while($categories[$cont] != $meses[(float)substr($elementos['data'], 3, 2)] && $cont<12){
+                    $cont++;
+                }
 
                 if($categories[$cont] == $meses[(float)substr($elementos['data'], 3, 2)]){
 

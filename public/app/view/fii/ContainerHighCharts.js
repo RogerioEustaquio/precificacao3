@@ -707,7 +707,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                            return utilFormat.ValueZero(this.value);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
@@ -1029,7 +1029,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                         },
                         labels: {
                             formatter: function () {
-                                returnutilFormat.ValueZero(this.value);
+                                return utilFormat.ValueZero(this.value);
                             },
                             x: 0,
                             y: 0,
