@@ -2060,7 +2060,6 @@ class FiiController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    
     public function listarprodutosAction()
     {
         $data = array();
@@ -2268,6 +2267,27 @@ class FiiController extends AbstractRestfulController
 
             $this->setCallbackData($data);
             $this->setMessage("Solicitação enviada com sucesso.");
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function listarregionalAction()
+    {
+        $data = array();
+        
+        try {
+
+            $pEmp    = $this->params()->fromQuery('emp',null);
+
+            $data[] = ['id'=> 'R1','regional'=> 'Renan'];
+            $data[] = ['id'=> 'R2','regional'=> 'Roberlanio'];
+            $data[] = ['id'=> 'R3','regional'=> 'Gilberto'];
+
+            $this->setCallbackData($data);
             
         } catch (\Exception $e) {
             $this->setCallbackError($e->getMessage());

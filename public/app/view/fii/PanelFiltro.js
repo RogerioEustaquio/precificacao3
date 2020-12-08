@@ -69,6 +69,46 @@ Ext.define('App.view.fii.PanelFiltro',{
             }
         );
 
+        var elTagRegional = Ext.create('Ext.form.field.Tag',{
+            name: 'elRegional',
+            itemId: 'elRegional',
+            labelAlign: 'top',
+            multiSelect: true,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'id', type: 'string' },
+                    { name: 'regional', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/fii/listarregional',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            width: 180,
+            queryParam: 'regional',
+            queryMode: 'local',
+            displayField: 'regional',
+            valueField: 'id',
+            emptyText: 'Regional',
+            fieldLabel: 'Regional',
+            labelWidth: 60,
+            margin: '1 1 1 1',
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled:true
+        });
+        elTagRegional.store.load(
+            function(){
+                elTagRegional.setDisabled(false);
+            }
+        );
+
         var elTagProduto = Ext.create('Ext.form.field.Tag',{
             name: 'elProduto',
             itemId: 'elProduto',
@@ -304,6 +344,23 @@ Ext.define('App.view.fii.PanelFiltro',{
                         }
                     ]
                 },
+                // {
+                //     xtype: 'panel',
+                //     layout: 'hbox',
+                //     border: false,
+                //     items:[
+                //         elTagRegional,
+                //         {
+                //             xtype: 'button',
+                //             iconCls: 'fa fa-file',
+                //             tooltip: 'Limpar',
+                //             margin: '26 1 1 1',
+                //             handler: function(form) {
+                //                 form.up('panel').down('tagfield').setValue(null);
+                //             }
+                //         }
+                //     ]
+                // },
                 {
                     xtype: 'panel',
                     layout: 'hbox',

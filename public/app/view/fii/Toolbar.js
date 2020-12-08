@@ -129,7 +129,8 @@ Ext.define('App.view.fii.Toolbar',{
         var tpPessoas   = me.up('container').down('#panelwest').down('#elPessoa').getValue();
         var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
         var idCurvas    = me.up('container').down('#panelwest').down('#elCurva').getValue();
-        var idOmvUsers   = me.up('container').down('#panelwest').down('#elOmuUser').getValue();
+        var idOmvUsers  = me.up('container').down('#panelwest').down('#elOmuUser').getValue();
+        var idRegionais = me.up('container').down('#panelwest').down('#elRegional').getValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
         var params = {
@@ -140,7 +141,9 @@ Ext.define('App.view.fii.Toolbar',{
             data: data,
             idCurvas: Ext.encode(idCurvas),
             idOmvUsers: Ext.encode(idOmvUsers),
-            indicadoresAdd: Ext.encode(me.indicadoresAdd)
+            indicadoresAdd: Ext.encode(me.indicadoresAdd),
+            idRegionais: Ext.encode(idRegionais)
+            
         };
         var seriesOrig = Array();
         var seriesCores= Array();
