@@ -32,7 +32,7 @@ class FiiController extends AbstractRestfulController
 
             $sql = "select e.apelido emp, e.id_empresa
                         from ms.empresa e
-                    where e.id_empresa not in (26, 11, 28, 27, 20)
+                    where e.id_empresa not in (26, 27, 28, 11, 20, 102, 101)
                     order by e.apelido";
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
