@@ -344,23 +344,23 @@ Ext.define('App.view.fii.PanelFiltro',{
                         }
                     ]
                 },
-                // {
-                //     xtype: 'panel',
-                //     layout: 'hbox',
-                //     border: false,
-                //     items:[
-                //         elTagRegional,
-                //         {
-                //             xtype: 'button',
-                //             iconCls: 'fa fa-file',
-                //             tooltip: 'Limpar',
-                //             margin: '26 1 1 1',
-                //             handler: function(form) {
-                //                 form.up('panel').down('tagfield').setValue(null);
-                //             }
-                //         }
-                //     ]
-                // },
+                {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elTagRegional,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
                 {
                     xtype: 'panel',
                     layout: 'hbox',
@@ -465,6 +465,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                                 form.up('toolbar').up('panel').down('datefield[name=data]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elCurva]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elOmuUser]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elRegional]').setValue(null);
                             }
                         }
                     ]

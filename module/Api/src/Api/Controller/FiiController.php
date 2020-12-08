@@ -62,6 +62,25 @@ class FiiController extends AbstractRestfulController
         return $objReturn;
     }
 
+    public function funcregionais($id){
+        // return array idEmpresas
+
+        $regionais = array();
+
+        $regionais[] = ['id'=> 'R1','idEmpresas'=> [9,2,29,23,25,24,13,19]];
+        $regionais[] = ['id'=> 'R2','idEmpresas'=> [12,10,15,16,21,3,22,8]];
+        $regionais[] = ['id'=> 'R3','idEmpresas'=> [6,4,5,17,18,14,7]];
+
+        foreach($regionais as $row){
+
+            if($row['id'] == $id){
+                return $row['idEmpresas'];
+            }
+        }
+
+        return null;
+    }
+
     public function listarfichaitemheaderAction()
     {
         $data = array();
@@ -114,7 +133,7 @@ class FiiController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas)
+    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais)
     {
         $data1 = array();
 
@@ -124,6 +143,11 @@ class FiiController extends AbstractRestfulController
             $andSql  = " and e.id_empresa in ($idEmpresas)";
             $andSql2 = " and vi.id_empresa in ($idEmpresas)";
         }
+        if($idRegionais){
+            $andSql  .= " and e.id_empresa in ($idRegionais)";
+            $andSql2 .= " and vi.id_empresa in ($idRegionais)";
+        }
+
         if($idMarcas){
             $andSql .= " and ic.id_marca in ($idMarcas)";
             $andSql2 .= " and ic.id_marca in ($idMarcas)";
@@ -348,6 +372,7 @@ class FiiController extends AbstractRestfulController
             $idCurvas       = $this->params()->fromQuery('idCurvas',null);
             $idOmvUsers     = $this->params()->fromQuery('idOmvUsers',null);
             $indicadoresAdd = $this->params()->fromQuery('indicadoresAdd',null);
+            $idRegionais    = $this->params()->fromQuery('idRegionais',null);
 
             $indicadoresAdd = json_decode($indicadoresAdd);
 
@@ -370,9 +395,24 @@ class FiiController extends AbstractRestfulController
                 $idOmvUsers = implode("','",json_decode($idOmvUsers));
             }
 
+            if($idRegionais){
+
+                $arrayIdEmps = json_decode($idRegionais);
+                $idRegionais = '';
+                foreach($arrayIdEmps as $idRow){
+                    
+                    $arrayLinha = $this->funcregionais($idRow);
+                    $idRegionais .= implode(",",$arrayLinha);
+                }
+            }
+
             $andSql = '';
             if($idEmpresas){
                 $andSql = " and vi.id_empresa in ($idEmpresas)";
+            }
+
+            if($idRegionais){
+                $andSql = " and vi.id_empresa in ($idRegionais)";
             }
 
             if($idMarcas){
@@ -536,7 +576,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais);
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
@@ -1236,6 +1276,7 @@ class FiiController extends AbstractRestfulController
             $idCurvas       = $this->params()->fromPost('idCurvas',null);
             $idOmvUsers     = $this->params()->fromPost('idOmvUsers',null);
             $indicadoresAdd = $this->params()->fromPost('indicadoresAdd',null);
+            $idRegionais    = $this->params()->fromPost('idRegionais',null);
 
             $indicadoresAdd = json_decode($indicadoresAdd);
             if($idEmpresas){
@@ -1257,9 +1298,24 @@ class FiiController extends AbstractRestfulController
                 $idOmvUsers = implode("','",json_decode($idOmvUsers));
             }
 
+            if($idRegionais){
+
+                $arrayIdEmps = json_decode($idRegionais);
+                $idRegionais = '';
+                foreach($arrayIdEmps as $idRow){
+                    
+                    $arrayLinha = $this->funcregionais($idRow);
+                    $idRegionais .= implode(",",$arrayLinha);
+                }
+            }
+
             $andSql = '';
             if($idEmpresas){
                 $andSql = " and vi.id_empresa in ($idEmpresas)";
+            }
+
+            if($idRegionais){
+                $andSql .= " and vi.id_empresa in ($idRegionais)";
             }
 
             if($idMarcas){
@@ -1427,7 +1483,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais);
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
@@ -2283,9 +2339,9 @@ class FiiController extends AbstractRestfulController
 
             $pEmp    = $this->params()->fromQuery('emp',null);
 
-            $data[] = ['id'=> 'R1','regional'=> 'Renan'];
-            $data[] = ['id'=> 'R2','regional'=> 'Roberlanio'];
-            $data[] = ['id'=> 'R3','regional'=> 'Gilberto'];
+            $data[] = ['id'=> 'R1','regional'=> 'R1 Renan'];
+            $data[] = ['id'=> 'R2','regional'=> 'R2 Roberlanio'];
+            $data[] = ['id'=> 'R3','regional'=> 'R3 Gilberto'];
 
             $this->setCallbackData($data);
             

@@ -130,7 +130,7 @@ Ext.define('App.view.fii.Toolbar',{
         var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
         var idCurvas    = me.up('container').down('#panelwest').down('#elCurva').getValue();
         var idOmvUsers  = me.up('container').down('#panelwest').down('#elOmuUser').getValue();
-        // var idRegionais = me.up('container').down('#panelwest').down('#elRegional').getValue();
+        var idRegionais = me.up('container').down('#panelwest').down('#elRegional').getValue();
         
         var grid = me.up('container').down('#panelcenter').down('grid');
         var params = {
@@ -142,7 +142,7 @@ Ext.define('App.view.fii.Toolbar',{
             idCurvas: Ext.encode(idCurvas),
             idOmvUsers: Ext.encode(idOmvUsers),
             indicadoresAdd: Ext.encode(me.indicadoresAdd),
-            // idRegionais: Ext.encode(idRegionais)
+            idRegionais: Ext.encode(idRegionais)
             
         };
         var seriesOrig = Array();
