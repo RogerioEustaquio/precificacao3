@@ -4,7 +4,7 @@ Ext.define('App.view.rpe.TabMarca', {
     itemId: 'tabmarca',
     closable: true,
     requires: [
-        // 'App.view.rpe.TabLoja',
+        'App.view.rpe.GridMarca'
     ],
     title: 'Marca',
     layout: 'card',
@@ -26,8 +26,7 @@ Ext.define('App.view.rpe.TabMarca', {
     ],
     items:[
         {
-            xtype: 'panel',
-            title: 'Panel Grid 1'
+            xtype: 'gridmarca'
         },
         {
             xtype: 'panel',

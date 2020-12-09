@@ -9,22 +9,22 @@ Ext.define('App.view.Toolbar', {
             items: [
                 {
                     xtype: 'button',
-                    text: 'Fii',
+                    text: 'Ficha de Indicadores',
                     // href: BASEURL +'/#fii',
                     handler: function(){
                         var objWindow = Ext.create('App.view.fii.Main');
                         objWindow.show();
                     }
                 },
-                // {
-                //     xtype: 'button',
-                //     text: 'RPE',
-                //     // href: BASEURL +'/#fii',
-                //     handler: function(){
-                //         var objWindow = Ext.create('App.view.rpe.Main');
-                //         objWindow.show();
-                //     }
-                // }
+                {
+                    xtype: 'button',
+                    text: 'Rastreador de Performance',
+                    // href: BASEURL +'/#fii',
+                    handler: function(){
+                        var objWindow = Ext.create('App.view.rpe.Main');
+                        objWindow.show();
+                    }
+                }
             ]
         });
 
