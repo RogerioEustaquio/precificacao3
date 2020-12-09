@@ -211,7 +211,7 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: 'Atual X 1M',
                                         dataIndex: 'rolDiaM0X_1m',
-                                        width: 100,
+                                        width: 110,
                                         align: 'right',
                                         renderer: function (v, metaData, record) {
 
@@ -228,7 +228,7 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: 'Atual X 3M',
                                         dataIndex: 'rolDiaM0X_3m',
-                                        width: 100,
+                                        width: 110,
                                         align: 'right',
                                         renderer: function (v, metaData, record) {
 
@@ -245,7 +245,7 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: 'Atual X 6M',
                                         dataIndex: 'rolDiaM0X_6m',
-                                        width: 100,
+                                        width: 110,
                                         align: 'right',
                                         renderer: function (v, metaData, record) {
 
@@ -281,7 +281,7 @@ Ext.define('App.view.rpe.GridMarca', {
                             {
                                 text: 'Estoque Valor',
                                 dataIndex: 'estoqueValor',
-                                width: 120,
+                                width: 130,
                                 align: 'right',
                                 renderer: function (v) {
                                     return utilFormat.ValueZero(v);
