@@ -216,11 +216,12 @@ Ext.define('App.view.rpe.GridMarca', {
                                         renderer: function (v, metaData, record) {
 
                                             if (v > 0)
-                                                metaData.style = 'color: #73b51e;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
+                                                // metaData.style = 'color: #73b51e;';
+                                                metaData.tdCls = 'x-grid-cell-green-border';
             
                                             if (v < 0)
-                                                metaData.style = 'color: #cf4c35;';
+                                                // metaData.style = 'color: #cf4c35;';
+                                                metaData.tdCls = 'x-grid-cell-red-border';
 
                                             return utilFormat.Value(v);
                                         }
@@ -233,11 +234,12 @@ Ext.define('App.view.rpe.GridMarca', {
                                         renderer: function (v, metaData, record) {
 
                                             if (v > 0)
-                                                metaData.style = 'color: #73b51e;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
+                                                // metaData.style = 'color: #73b51e;';
+                                                metaData.tdCls = 'x-grid-cell-green-border';
             
                                             if (v < 0)
-                                                metaData.style = 'color: #cf4c35;';
+                                                // metaData.style = 'color: #cf4c35;';
+                                                metaData.tdCls = 'x-grid-cell-red-border';
 
                                             return utilFormat.Value(v);
                                         }
@@ -250,11 +252,12 @@ Ext.define('App.view.rpe.GridMarca', {
                                         renderer: function (v, metaData, record) {
 
                                             if (v > 0)
-                                                metaData.style = 'color: #73b51e;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
+                                                // metaData.style = 'color: #73b51e;';
+                                                metaData.tdCls = 'x-grid-cell-green-border';
             
                                             if (v < 0)
-                                                metaData.style = 'color: #cf4c35;';
+                                                // metaData.style = 'color: #cf4c35;';
+                                                metaData.tdCls = 'x-grid-cell-red-border';
 
                                             return utilFormat.Value(v);
                                         }
@@ -267,11 +270,12 @@ Ext.define('App.view.rpe.GridMarca', {
                                         renderer: function (v, metaData, record) {
 
                                             if (v > 0)
-                                                metaData.style = 'color: #73b51e;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
+                                                // metaData.style = 'color: green';
+                                                metaData.tdCls = 'x-grid-cell-green-border';
             
                                             if (v < 0)
-                                                metaData.style = 'color: #cf4c35;';
+                                                // metaData.style = 'color: #cf4c35;';
+                                                metaData.tdCls = 'x-grid-cell-red-border';
 
                                             return utilFormat.Value(v);
                                         }
