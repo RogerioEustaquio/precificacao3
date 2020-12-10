@@ -116,6 +116,12 @@ class RpeController extends AbstractRestfulController
 
             $em = $this->getEntityManager();
 
+            if($data){
+                $sysdate = "to_date('".$data."')";
+            }else{
+                $sysdate = 'sysdate';
+            }
+
             
             $sql = "select marca,
        
@@ -136,6 +142,10 @@ class RpeController extends AbstractRestfulController
             round(100*(rol_dia_m0/rol_dia_6m-1),2) as rol_dia_m0_x_6m, -- ROL Dia Atual x 6 Meses,
             round(100*(rol_dia_m0/rol_dia_12m-1),2) as rol_dia_m0_x_12m, -- ROL Dia Atual x 12 Meses,
             
+            round(mb_m0,2) as mb_m0, -- MB Atual
+            round(mb_m1,2) as mb_m1, -- MB Mês Anterior
+            round(100*(mb_m0/mb_m1-1),2) as mb_m0_x_1m, -- ROL Dia Atual x Mês Anterior,     
+
             estoque_valor -- Valor de Estoque  
        from (select a.marca,
             
@@ -144,6 +154,10 @@ class RpeController extends AbstractRestfulController
                     (case when rol_3m > 0 then rol_3m/dias_uteis_3m end) as rol_dia_3m, 
                     (case when rol_6m > 0 then rol_6m/dias_uteis_6m end) as rol_dia_6m,
                     (case when rol_12m > 0 then rol_12m/dias_uteis_12m end) as rol_dia_12m,
+
+                    100*(case when rol_m0 > 0 then lb_m0/rol_m0 end) as mb_m0,
+                    100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,     
+
                     dias_uteis_m0,
                     dias_uteis_m1,
                     dias_uteis_3m,
@@ -157,17 +171,20 @@ class RpeController extends AbstractRestfulController
                         and ic.id_marca = m.id_marca
                       group by ic.id_marca, m.descricao) a,
                      (select xv.id_marca,
-                             sum(case when xv.data = trunc(sysdate,'MM') then xv.rol end) as rol_m0,
-                             sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.rol end) as rol_m1,
-                             sum(case when xv.data > add_months(trunc(sysdate,'MM'),-3) and xv.data < trunc(sysdate,'MM') then xv.rol end) as rol_3m,
-                             sum(case when xv.data > add_months(trunc(sysdate,'MM'),-6) and xv.data < trunc(sysdate,'MM') then xv.rol end) as rol_6m,
-                             sum(case when xv.data > add_months(trunc(sysdate,'MM'),-12) and xv.data < trunc(sysdate,'MM') then xv.rol end) as rol_12m,
+                             sum(case when xv.data = trunc($sysdate,'MM') then xv.rol end) as rol_m0,
+                             sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.rol end) as rol_m1,
+                             sum(case when xv.data > add_months(trunc($sysdate,'MM'),-3) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_3m,
+                             sum(case when xv.data > add_months(trunc($sysdate,'MM'),-6) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_6m,
+                             sum(case when xv.data > add_months(trunc($sysdate,'MM'),-12) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_12m,
                              
-                             sum(case when xd.data = trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
-                             sum(case when xd.data = add_months(trunc(sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1,
-                             sum(case when xd.data > add_months(trunc(sysdate,'MM'),-3) and xd.data < trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_3m,
-                             sum(case when xd.data > add_months(trunc(sysdate,'MM'),-6) and xd.data < trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_6m,
-                             sum(case when xd.data > add_months(trunc(sysdate,'MM'),-12) and xd.data < trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_12m
+                             sum(case when xv.data = trunc($sysdate,'MM') then xv.lb end) as lb_m0,
+                             sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,     
+
+                             sum(case when xd.data = trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
+                             sum(case when xd.data = add_months(trunc($sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1,
+                             sum(case when xd.data > add_months(trunc($sysdate,'MM'),-3) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_3m,
+                             sum(case when xd.data > add_months(trunc($sysdate,'MM'),-6) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_6m,
+                             sum(case when xd.data > add_months(trunc($sysdate,'MM'),-12) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_12m
                       from (select trunc(vi.data_emissao, 'MM') as data,
                                    ic.id_marca as id_marca,
                                    sum(vi.rob) as rob,
@@ -182,14 +199,14 @@ class RpeController extends AbstractRestfulController
                              where vi.id_item = ic.id_item
                                and vi.id_categoria = ic.id_categoria
                                
-                               and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'), -13)
+                               and trunc(vi.data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'), -13)
      
                              group by trunc(vi.data_emissao, 'MM'), ic.id_marca) xv,
                              
                            (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
                               from PRICING.VW_DIAS_UTEIS
                              where EMP = 'REDE'
-                               and mes >= add_months(trunc(sysdate,'MM'), -13) ) xd
+                               and mes >= add_months(trunc($sysdate,'MM'), -13) ) xd
                      where xv.data = xd.data(+)
                      group by xv.id_marca) b
              where a.id_marca = b.id_marca(+))
@@ -218,6 +235,9 @@ class RpeController extends AbstractRestfulController
             $hydrator->addStrategy('rol_dia_m0_x_3m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_6m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_12m', new ValueStrategy);
+            $hydrator->addStrategy('mb_m0', new ValueStrategy);
+            $hydrator->addStrategy('mb_m1', new ValueStrategy);
+            $hydrator->addStrategy('mb_m0_x_1m', new ValueStrategy);
             $hydrator->addStrategy('estoque_valor', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
