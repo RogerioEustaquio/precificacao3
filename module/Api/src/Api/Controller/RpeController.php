@@ -116,8 +116,8 @@ class RpeController extends AbstractRestfulController
 
             $em = $this->getEntityManager();
 
-            if($data){
-                $sysdate = "to_date('".$data."')";
+            if($pData){
+                $sysdate = "to_date('".$pData."')";
             }else{
                 $sysdate = 'sysdate';
             }

@@ -238,15 +238,12 @@ Ext.define('App.view.rpe.GridMarca', {
 
                                             var valor = utilFormat.Value(v);
                                             if (v > 0){
-                                                valor = pathMaior +' '+ valor;
+                                                valor = pathMaior +' '+ valor +'%';
                                                 metaData.style = 'color: #26C953;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
                                             }
                                             if (v < 0){
-                                                valor = pathMenor +' '+valor;
-
+                                                valor = pathMenor +' '+valor +'%';
                                                 metaData.style = 'color: #FF5B5B;';
-                                                // metaData.tdCls = 'x-grid-cell-red-border';
                                             }
 
                                             return valor;
@@ -261,15 +258,12 @@ Ext.define('App.view.rpe.GridMarca', {
 
                                             var valor = utilFormat.Value(v);
                                             if (v > 0){
-                                                valor = pathMaior +' '+ valor;
+                                                valor = pathMaior +' '+ valor +'%';
                                                 metaData.style = 'color: #26C953;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
                                             }
                                             if (v < 0){
-                                                valor = pathMenor +' '+valor;
-
+                                                valor = pathMenor +' '+valor +'%';
                                                 metaData.style = 'color: #FF5B5B;';
-                                                // metaData.tdCls = 'x-grid-cell-red-border';
                                             }
 
                                             return valor;
@@ -284,15 +278,12 @@ Ext.define('App.view.rpe.GridMarca', {
 
                                             var valor = utilFormat.Value(v);
                                             if (v > 0){
-                                                valor = pathMaior +' '+ valor;
+                                                valor = pathMaior +' '+ valor +'%';
                                                 metaData.style = 'color: #26C953;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
                                             }
                                             if (v < 0){
-                                                valor = pathMenor +' '+valor;
-
+                                                valor = pathMenor +' '+valor +'%';
                                                 metaData.style = 'color: #FF5B5B;';
-                                                // metaData.tdCls = 'x-grid-cell-red-border';
                                             }
 
                                             return valor;
@@ -307,15 +298,12 @@ Ext.define('App.view.rpe.GridMarca', {
 
                                             var valor = utilFormat.Value(v);
                                             if (v > 0){
-                                                valor = pathMaior +' '+ valor;
+                                                valor = pathMaior +' '+ valor +'%';
                                                 metaData.style = 'color: #26C953;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
                                             }
                                             if (v < 0){
-                                                valor = pathMenor +' '+valor;
-
+                                                valor = pathMenor +' '+valor +'%';
                                                 metaData.style = 'color: #FF5B5B;';
-                                                // metaData.tdCls = 'x-grid-cell-red-border';
                                             }
 
                                             return valor;
@@ -356,12 +344,10 @@ Ext.define('App.view.rpe.GridMarca', {
                                             if (v > 0){
                                                 valor = pathMaior +' '+ valor +'%';
                                                 metaData.style = 'color: #26C953;';
-                                                // metaData.tdCls = 'x-grid-cell-green-border';
                                             }
                                             if (v < 0){
                                                 valor = pathMenor +' '+ valor +'%';
                                                 metaData.style = 'color: #FF5B5B;';
-                                                // metaData.tdCls = 'x-grid-cell-red-border';
                                             }
 
                                             return valor;
