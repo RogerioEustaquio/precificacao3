@@ -11,7 +11,7 @@ Ext.define('App.view.dolar.CotacaoDolarComercialPanel', {
         var me = this;
         
         Ext.applyIf(me, {
-            title: 'Dolar',
+            title: 'Cotação Dolar Comercial',
             layout: 'fit',
             items: [
                 {
