@@ -1,18 +1,18 @@
 Ext.define('App.view.dolar.CotacaoDolarComercialPanel', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.panel.Panel',
     xtype: 'cotacaodolarpomercialpanel',
     itemId: 'cotacaodolarpomercialpanel',
     name: 'cotacaodolarpomercialpanel',
     requires: [
         'App.view.dolar.ContainerHighCharts'
     ],
+    title: 'Cotação Dolar Comercial',
+    layout: 'fit',
     
     initComponent: function() {
         var me = this;
         
         Ext.applyIf(me, {
-            title: 'Cotação Dolar Comercial',
-            layout: 'fit',
             items: [
                 {
                     xtype: 'dolarchart'

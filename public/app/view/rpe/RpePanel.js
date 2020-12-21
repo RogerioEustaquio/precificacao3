@@ -53,7 +53,7 @@ Ext.define('App.view.rpe.RpePanel', {
                     fullscreen: true,
                     items:[
                         {
-                            xtype: 'tabloja'
+                            xtype: 'tabmarca'
                         }
                     ]
                    
