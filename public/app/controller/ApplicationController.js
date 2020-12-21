@@ -3,9 +3,11 @@ Ext.define('App.controller.ApplicationController', {
 
     requires: [
         'App.view.Toolbar',
-        'App.view.home.Main',
-        'App.view.dsh-pvd.Main',
-        'App.view.fii.Main'
+        'App.view.home.HomePanel',
+        'App.view.dolar.CotacaoDolarComercialPanel',
+        'App.view.fii.FiiPanel',
+        'App.view.rpe.RpePanel',
+        'App.view.dsh-pvd.DashboardPerformanceVendaDiaPanel',
     ],
 
     control: {
@@ -14,33 +16,60 @@ Ext.define('App.controller.ApplicationController', {
 
     routes: {
         'home': { action: 'homeAction' },
-        'dashboard-performance-venda-dia': { action: 'dashboardPerformanceVendaDiaAction' },
+        'cotacaodolarpomercial': { action: 'cotacaodolarpomercialAction' },
         'fii': { action: 'fiiAction' },
-        'rpe': { action: 'rpeAction' }
+        'rpe': { action: 'rpeAction' },
+        'dashboardperformancevendadia': { action: 'dashboardperformancevendadiaAction' },
+    },
+
+    controllerEvent: function(){
+        var me = this;
+
+        return {
+            'apptoolbar #home': {
+                click: function(btn) {
+                    me.redirectTo('home')
+                }
+            },
+
+            // 'apptoolbar button[action=recarregar]': {
+            'apptoolbar #cotacaodolarpomercial': {
+                click: function(btn) {
+                    me.redirectTo('cotacaodolarpomercial')
+                }
+            }
+        }
     },
 
     init: function() {
         var me = this;
 
+        me.control(me.controllerEvent());
         me.configViewport();
     },
 
-    homeAction: function(){
-        this.addMasterTab('homemain', true);
+    goActionMasterTab: function(route, closable){
+        this.addMasterTab(route, route + 'panel', closable);
     },
 
-    dashboardPerformanceVendaDiaAction: function(){
-        this.addMasterTab('dshpvdmain', true);
+    homeAction: function(){
+        this.goActionMasterTab('home', true)
+    },
+
+    cotacaodolarpomercialAction: function(){
+        this.goActionMasterTab('cotacaodolarpomercial', true)
     },
 
     fiiAction: function(){
-        var objWindow = Ext.create('App.view.fii.Main');
-        objWindow.show();
+        this.goActionMasterTab('fii', true)
     },
 
     rpeAction: function(){
-        var objWindow = Ext.create('App.view.rpe.Main');
-        objWindow.show();
+        this.goActionMasterTab('rpe', true)
+    },
+
+    dashboardperformancevendadiaAction: function(){
+        this.goActionMasterTab('dashboardperformancevendadia', true)
     },
 
     configViewport: function(){
@@ -57,7 +86,7 @@ Ext.define('App.controller.ApplicationController', {
         }
     },
     
-    addMasterTab: function(xtype, closable){
+    addMasterTab: function(route, xtype, closable){
         var me = this,
             viewport = me.getViewport(),
             viewportTabs = viewport.down('#applicationtabs'),
@@ -66,7 +95,17 @@ Ext.define('App.controller.ApplicationController', {
         if(!tab){
             tab = viewportTabs.add({
                 closable: closable,
-                xtype: xtype
+                xtype: xtype,
+                route: route, 
+                listeners: {
+                    show: function(aTab){
+                        me.redirectTo(aTab.route)
+                    },
+                    destroy: function(aTab){
+                        if(aTab.xtype === 'homepanel')
+                        me.redirectTo('#')
+                    }
+                }
             });
         };
         
@@ -75,6 +114,10 @@ Ext.define('App.controller.ApplicationController', {
 
     getViewport: function(){
         return App.getApplication().getMainView();
+    },
+
+    getCurrentRoute: function(){
+        return App.getApplication().getRouter().getRoute(this.getCurrentRouteName());
     }
     
 });

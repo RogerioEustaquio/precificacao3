@@ -1,7 +1,7 @@
-Ext.define('App.view.home.Main', {
+Ext.define('App.view.home.HomePanel', {
     extend: 'Ext.container.Container',
-    xtype: 'homemain',
-    itemId: 'homemain',
+    xtype: 'homepanel',
+    itemId: 'homepanel',
     requires: [
         'App.view.home.PanelIndicadores'
     ],

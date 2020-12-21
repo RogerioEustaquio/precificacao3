@@ -1,20 +1,21 @@
-Ext.define('App.view.home.Main', {
+Ext.define('App.view.dolar.CotacaoDolarComercialPanel', {
     extend: 'Ext.container.Container',
-    xtype: 'homemain',
-    itemId: 'homemain',
+    xtype: 'cotacaodolarpomercialpanel',
+    itemId: 'cotacaodolarpomercialpanel',
+    name: 'cotacaodolarpomercialpanel',
     requires: [
-        'App.view.home.PanelIndicadores'
+        'App.view.dolar.ContainerHighCharts'
     ],
     
     initComponent: function() {
         var me = this;
         
         Ext.applyIf(me, {
-            title: 'Home',
+            title: 'Dolar',
             layout: 'fit',
             items: [
                 {
-                    xtype: 'panelindicadores'
+                    xtype: 'dolarchart'
                 }
             ]
         });
