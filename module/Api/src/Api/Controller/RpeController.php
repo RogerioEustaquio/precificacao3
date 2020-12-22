@@ -121,7 +121,6 @@ class RpeController extends AbstractRestfulController
             }else{
                 $sysdate = 'sysdate';
             }
-
             
             $sql = "select marca,
                         dias_uteis_m0, -- Dias úteis atual
@@ -148,7 +147,10 @@ class RpeController extends AbstractRestfulController
                         
                         round(mb_m0,2) as mb_m0, -- MB Atual
                         round(mb_m1,2) as mb_m1, -- MB Mês Anterior
-                        round(100*(mb_m0/mb_m1-1),2) as mb_m0_x_1m, -- ROL Dia Atual x Mês Anterior,     
+                        round(mb_ac_ano_ant,2) as mb_ac_ano_ant, -- MB Mês Anterior
+                 
+                        round(100*(mb_m0/mb_m1-1),2) as mb_m0_x_1m, -- ROL Dia Atual x Mês Anterior, 
+                        round(100*(mb_m0/mb_ac_ano_ant-1),2) as mb_m0_x_ac_ano_ant, -- MARGEM BRUTA Atual x Ac. Ano Anterior,                     
 
                         estoque_valor -- Valor de Estoque  
                 from (select a.marca,
@@ -163,7 +165,8 @@ class RpeController extends AbstractRestfulController
                                 (case when rol_ac_ano_ant > 0 then rol_ac_ano_ant/dias_uteis_ac_ano_ant end) as rol_dia_ac_ano_ant,
 
                                 100*(case when rol_m0 > 0 then lb_m0/rol_m0 end) as mb_m0,
-                                100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,     
+                                100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,
+                                100*(case when rol_ac_ano_ant > 0 then lb_ac_ano_ant/rol_ac_ano_ant end) as mb_ac_ano_ant,                      
 
                                 dias_uteis_m0,
                                 dias_uteis_m1,
@@ -190,7 +193,8 @@ class RpeController extends AbstractRestfulController
                                         sum(case when xv.data >= add_months(trunc($sysdate,'RRRR'),-12) and xv.data <= trunc(add_months($sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,
 
                                         sum(case when xv.data = trunc($sysdate,'MM') then xv.lb end) as lb_m0,
-                                        sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,     
+                                        sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,
+                                        sum(case when xv.data >= add_months(trunc(sysdate,'RRRR'),-12) and xv.data <= trunc(add_months(sysdate,-12),'MM') then xv.lb end) as lb_ac_ano_ant,                
 
                                         sum(case when xd.data = trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
                                         sum(case when xd.data = add_months(trunc($sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1,
@@ -258,7 +262,9 @@ class RpeController extends AbstractRestfulController
             $hydrator->addStrategy('rol_dia_m0_x_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('mb_m0', new ValueStrategy);
             $hydrator->addStrategy('mb_m1', new ValueStrategy);
+            $hydrator->addStrategy('mb_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('mb_m0_x_1m', new ValueStrategy);
+            $hydrator->addStrategy('mb_m0_x_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('estoque_valor', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
