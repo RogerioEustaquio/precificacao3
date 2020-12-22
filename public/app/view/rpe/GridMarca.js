@@ -81,6 +81,7 @@ Ext.define('App.view.rpe.GridMarca', {
                     {name:'rolDia_6m', type: 'number'},
                     {name:'rolDia_12m', type: 'number'},
                     {name:'rolDia_24m', type: 'number'},
+                    {name:'rolDiaAcAnoAnt', type: 'number'},
                     {name:'rolDiaM0X_1m', type: 'number'},
                     {name:'rolDiaM0X_3m', type: 'number'},
                     {name:'rolDiaM0X_6m', type: 'number'},
@@ -246,6 +247,16 @@ Ext.define('App.view.rpe.GridMarca', {
                                         text: '24M',
                                         dataIndex: 'rolDia_24m',
                                         width: 90,
+                                        align: 'right',
+                                        hidden: true,
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'Ac. Ano Ant.',
+                                        dataIndex: 'rolDiaAcAnoAnt',
+                                        width: 110,
                                         align: 'right',
                                         hidden: true,
                                         renderer: function (v) {

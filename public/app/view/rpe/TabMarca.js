@@ -16,13 +16,13 @@ Ext.define('App.view.rpe.TabMarca', {
                 this.up('panel').setActiveItem(0);
             }
         },
-        {
-            xtype: 'button',
-            text: 'Performance',
-            handler: function(){
-                this.up('panel').setActiveItem(1);
-            }
-        }
+        // {
+        //     xtype: 'button',
+        //     text: 'Performance',
+        //     handler: function(){
+        //         this.up('panel').setActiveItem(1);
+        //     }
+        // }
     ],
     items:[
         {

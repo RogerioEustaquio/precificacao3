@@ -136,14 +136,15 @@ class RpeController extends AbstractRestfulController
                         rol_dia_3m, -- ROL Dia 3 meses
                         rol_dia_6m, -- ROL Dia 6 meses
                         rol_dia_12m, -- ROL Dia 12 meses
-                        rol_dia_24m, -- ROL Dia 24 meses     
+                        rol_dia_24m, -- ROL Dia 24 meses   
+                        rol_dia_ac_ano_ant, -- ROL Dia Ac. Ano Anterior  
 
                         round(100*(rol_dia_m0/rol_dia_m1-1),2) as rol_dia_m0_x_1m, -- ROL Dia Atual x Mês Anterior,
                         round(100*(rol_dia_m0/rol_dia_3m-1),2) as rol_dia_m0_x_3m, -- ROL Dia Atual x 3 Meses,
                         round(100*(rol_dia_m0/rol_dia_6m-1),2) as rol_dia_m0_x_6m, -- ROL Dia Atual x 6 Meses,
                         round(100*(rol_dia_m0/rol_dia_12m-1),2) as rol_dia_m0_x_12m, -- ROL Dia Atual x 12 Meses,
                         round(100*(rol_dia_m0/rol_dia_24m-1),2) as rol_dia_m0_x_24m, -- ROL Dia Atual x 24 Meses,
-                        round(100*(rol_dia_m0/rol_dia_ac_ano_ant-1),2) as rol_dia_m0_x_ac_ano_ant, -- ROL Dia Atual x Ac. Ano Anterior,     
+                        round(100*(rol_dia_m0/rol_dia_ac_ano_ant-1),2) as rol_dia_m0_x_ac_ano_ant, -- ROL Dia Atual x Ac. Ano Anterior    
                         
                         round(mb_m0,2) as mb_m0, -- MB Atual
                         round(mb_m1,2) as mb_m1, -- MB Mês Anterior
@@ -186,7 +187,7 @@ class RpeController extends AbstractRestfulController
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-12) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_12m,
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-24) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_24m,
                                         
-                                        sum(case when xv.data > add_months(trunc($sysdate,'RRRR'),-12) and xv.data < trunc(add_months($sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,
+                                        sum(case when xv.data >= add_months(trunc($sysdate,'RRRR'),-12) and xv.data <= trunc(add_months($sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,
 
                                         sum(case when xv.data = trunc($sysdate,'MM') then xv.lb end) as lb_m0,
                                         sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,     
@@ -248,6 +249,7 @@ class RpeController extends AbstractRestfulController
             $hydrator->addStrategy('rol_dia_6m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_12m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_24m', new ValueStrategy);
+            $hydrator->addStrategy('rol_dia_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_1m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_3m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_6m', new ValueStrategy);

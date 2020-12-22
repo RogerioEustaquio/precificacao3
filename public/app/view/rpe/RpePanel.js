@@ -4,8 +4,6 @@ Ext.define('App.view.rpe.RpePanel', {
     itemId: 'rpepanel',
     height: Ext.getBody().getHeight() * 0.9,
     width: Ext.getBody().getWidth() * 0.9,
-    margin: '10 1 1 1',
-    maximizable: true,
     requires: [
         'App.view.rpe.TabLoja',
         'App.view.rpe.TabMarca',
@@ -50,7 +48,6 @@ Ext.define('App.view.rpe.RpePanel', {
                 {
                     xtype:'tabpanel',
                     region: 'center',
-                    fullscreen: true,
                     items:[
                         {
                             xtype: 'tabmarca'

@@ -2,7 +2,7 @@ Ext.define('App.view.fii.ContainerGrid', {
     extend: 'Ext.container.Container',
     xtype: 'containergrid',
     itemId: 'containergrid',
-    margin: '10 2 2 2',
+    // margin: '10 2 2 2',
     layout:'fit',
     // params: [],
     requires: [

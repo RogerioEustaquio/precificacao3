@@ -4,7 +4,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     itemId: 'fiichart',
     width: '100%',
     height: '60%',
-    margin: '10 2 2 2',
+    // margin: '10 2 2 2',
     style: {
         background: '#ffffff'
     },
