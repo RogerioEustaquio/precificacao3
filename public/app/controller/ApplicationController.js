@@ -53,7 +53,8 @@ Ext.define('App.controller.ApplicationController', {
     },
 
     homeAction: function(){
-        this.goActionMasterTab('home', true)
+        // this.goActionMasterTab('home', true)
+        this.goActionMasterTab('rpe', true)
     },
 
     cotacaodolarpomercialAction: function(){

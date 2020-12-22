@@ -21,20 +21,20 @@ Ext.define('App.view.Toolbar', {
                         window.document.location= BASEURL +'/#rpe';
                     }
                 },
-                {
-                    xtype: 'button',
-                    text: 'Performance Venda Dia',
-                    handler: function(){
-                        window.document.location= BASEURL +'/#dashboardperformancevendadia';
-                    }
-                },
-                {
-                    xtype: 'button',
-                    text: 'Cotação Dolar Comercial',
-                    handler: function(){
-                        window.document.location= BASEURL +'/#cotacaodolarpomercial';
-                    }
-                }
+                // {
+                //     xtype: 'button',
+                //     text: 'Performance Venda Dia',
+                //     handler: function(){
+                //         window.document.location= BASEURL +'/#dashboardperformancevendadia';
+                //     }
+                // },
+                // {
+                //     xtype: 'button',
+                //     text: 'Cotação Dolar Comercial',
+                //     handler: function(){
+                //         window.document.location= BASEURL +'/#cotacaodolarpomercial';
+                //     }
+                // }
             ]
         });
 

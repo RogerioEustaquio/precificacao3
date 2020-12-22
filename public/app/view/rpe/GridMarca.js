@@ -74,15 +74,19 @@ Ext.define('App.view.rpe.GridMarca', {
                     {name:'diasUteis_3m', type: 'number'},
                     {name:'diasUteis_6m', type: 'number'},
                     {name:'diasUteis_12m', type: 'number'},
+                    {name:'diasUteis_24m', type: 'number'},
                     {name:'rolDiaM0', type: 'number'},
                     {name:'rolDiaM01', type: 'number'},
                     {name:'rolDia_3m', type: 'number'},
                     {name:'rolDia_6m', type: 'number'},
                     {name:'rolDia_12m', type: 'number'},
+                    {name:'rolDia_24m', type: 'number'},
                     {name:'rolDiaM0X_1m', type: 'number'},
                     {name:'rolDiaM0X_3m', type: 'number'},
                     {name:'rolDiaM0X_6m', type: 'number'},
                     {name:'rolDiaM0X_12m', type: 'number'},
+                    {name:'rolDiaM0X_24m', type: 'number'},
+                    {name:'rolDiaM0XAcAnoAnt', type: 'number'},
                     {name: 'mbM0', type: 'number'},
                     {name: 'mbM1', type: 'number'},
                     {name: 'mbM0X_1m', type: 'number'},
@@ -174,6 +178,15 @@ Ext.define('App.view.rpe.GridMarca', {
                                         renderer: function (v) {
                                             return utilFormat.ValueZero(v);
                                         },
+                                    },
+                                    {
+                                        text: '24M',
+                                        dataIndex: 'diasUteis_24m',
+                                        width: 80,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
                                     }
                                 ]
                             },
@@ -222,6 +235,16 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: '12M',
                                         dataIndex: 'rolDia_12m',
+                                        width: 90,
+                                        align: 'right',
+                                        hidden: true,
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: '24M',
+                                        dataIndex: 'rolDia_24m',
                                         width: 90,
                                         align: 'right',
                                         hidden: true,
@@ -293,6 +316,46 @@ Ext.define('App.view.rpe.GridMarca', {
                                         text: 'Atual X 12M',
                                         dataIndex: 'rolDiaM0X_12m',
                                         width: 110,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'Atual X 24M',
+                                        dataIndex: 'rolDiaM0X_24m',
+                                        width: 110,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'Atual X Ac. Ano Ant.',
+                                        dataIndex: 'rolDiaM0XAcAnoAnt',
+                                        width: 140,
                                         align: 'left',
                                         renderer: function (v, metaData, record) {
 
