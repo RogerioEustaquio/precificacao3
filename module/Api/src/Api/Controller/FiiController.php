@@ -133,7 +133,7 @@ class FiiController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    public function estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais)
+    public function estoquemes($idEmpresas,$idMarcas,$idMarcasG,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais)
     {
         $data1 = array();
 
@@ -151,6 +151,11 @@ class FiiController extends AbstractRestfulController
         if($idMarcas){
             $andSql .= " and ic.id_marca in ($idMarcas)";
             $andSql2 .= " and ic.id_marca in ($idMarcas)";
+        }
+
+        if($idMarcasG){
+            $andSql .= " and ic.id_marca in ($idMarcasG)";
+            $andSql2 .= " and ic.id_marca in ($idMarcasG)";
         }
         if($codProdutos){
             $andSql .= " and e.cod_item in ('$codProdutos')";
@@ -366,6 +371,7 @@ class FiiController extends AbstractRestfulController
 
             $idEmpresas     = $this->params()->fromQuery('idEmpresas',null);
             $idMarcas       = $this->params()->fromQuery('idMarcas',null);
+            $idMarcasG      = $this->params()->fromQuery('idMarcasG',null);
             $codProdutos    = $this->params()->fromQuery('codProdutos',null);
             $tpPessoas      = $this->params()->fromQuery('tpPessoas',null);
             $data           = $this->params()->fromQuery('data',null);
@@ -381,6 +387,9 @@ class FiiController extends AbstractRestfulController
             }
             if($idMarcas){
                 $idMarcas = implode(",",json_decode($idMarcas));
+            }
+            if($idMarcasG){
+                $idMarcasG = implode(",",json_decode($idMarcasG));
             }
             if($codProdutos){
                 $codProdutos =  implode("','",json_decode($codProdutos));
@@ -417,6 +426,10 @@ class FiiController extends AbstractRestfulController
 
             if($idMarcas){
                 $andSql .= " and m.id_marca in ($idMarcas)";
+            }
+
+            if($idMarcasG){
+                $andSql .= " and m.id_marca in ($idMarcasG)";
             }
 
             if($codProdutos){
@@ -576,7 +589,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$idMarcasG,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais);
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
@@ -1270,6 +1283,7 @@ class FiiController extends AbstractRestfulController
         try {
             $idEmpresas     = $this->params()->fromPost('idEmpresas',null);
             $idMarcas       = $this->params()->fromPost('idMarcas',null);
+            $idMarcasG      = $this->params()->fromPost('idMarcasG',null);
             $codProdutos    = $this->params()->fromPost('codProdutos',null);
             $tpPessoas      = $this->params()->fromPost('tpPessoas',null);
             $data           = $this->params()->fromPost('data',null);
@@ -1284,6 +1298,9 @@ class FiiController extends AbstractRestfulController
             }
             if($idMarcas){
                 $idMarcas = implode(",",json_decode($idMarcas));
+            }
+            if($idMarcasG){
+                $idMarcasG = implode(",",json_decode($idMarcasG));
             }
             if($codProdutos){
                 $codProdutos =  implode("','",json_decode($codProdutos));
@@ -1320,6 +1337,9 @@ class FiiController extends AbstractRestfulController
 
             if($idMarcas){
                 $andSql .= " and m.id_marca in ($idMarcas)";
+            }
+            if($idMarcasG){
+                $andSql .= " and m.id_marca in ($idMarcasG)";
             }
 
             if($codProdutos){
@@ -1483,7 +1503,7 @@ class FiiController extends AbstractRestfulController
 
             if($consultaEstoque){
 
-                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais);
+                $EstoqueMes = $this->estoquemes($idEmpresas,$idMarcas,$idMarcasG,$codProdutos,$data,$idCurvas,$idOmvUsers,$tpPessoas,$idRegionais);
                 $EstoqueMesInicial  = $EstoqueMes[0];
                 $EstoqueMesFinal    = $EstoqueMes[1];
                 $EstoqueDias        = $EstoqueMes[2];
@@ -2349,6 +2369,34 @@ class FiiController extends AbstractRestfulController
             $this->setCallbackError($e->getMessage());
         }
         
+        return $this->getCallbackModel();
+    }
+
+    public function listargrupomarcaAction(){
+        // return array idEmpresas
+
+        $marcas = array();
+
+        $marcas[] = ['id'=> 'G1 EVERTONOPE','idMarcas'=> [10376,
+        580,598,10426,181,583,10307,602,10103,10020,172,334,77,175,64,10407,10406,10160,106,10016,117,522,270,8,7,
+        10102,10223,10123,10410,1017,10158,10129,10011,195,73,10137,582,100,354,10394,10325,99,88,10202,82,10146,
+        300,10351,10418,214,542,10023,10321,349,584,293,341,1013,10017,3,555,556,10148,10157,566,10388,122,538,330,
+        1020,342,10176,567,23593,81,200,60,616,319,264,289,10396,70,148,10341,47,304,10186,134,10353,105,610,10100,
+        10141,10026,10029,10436,10237,288,1001,10201,51,10200,154
+        ]];
+        $marcas[] = ['id'=> 'G2 MAYKONRS','idMarcas'=> [10159,10104,163,10412,10421,10101,10314,10126,10154,59,10305,
+        205,10281,10316,10302,92,199,61,1012,10133,10405,10244,10444,10300,197,10013,10136,10413,10411,10422,10415,10373,
+        302,617,10027,10198,9,10,10372,11,12,10403,322,97,10395,10419,23,539,10014,10140,10414,113,104,10423,10139,261,
+        280,519,10107,10404,10425,10193,346,10153,10375,10440,140,10345,244,335,356,10191,10184,255,10112,121,83,10409,
+        279,10179,10420,150
+        ]];
+        $marcas[] = ['id'=> 'G3 WELISONOPE','idMarcas'=> [161,10328,10192,13,131,612,10301,10174,290,10293,10131,169,604,
+        211,115,143,10342,10343,10432,10143,553,10021,10274,10279,10386,10235,620,267,10295,10135,38,10441,10187,10352,89,
+        75,76,10400,10319,206,594,10416,10234,613,22,10196,10206,10433,146,282,10389,314,74,560,1015,9999,72,10114,351,
+        10165,328,19,10355,10178,10183,614
+        ]];
+
+        $this->setCallbackData($marcas);
         return $this->getCallbackModel();
     }
 }

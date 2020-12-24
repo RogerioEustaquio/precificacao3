@@ -198,6 +198,41 @@ Ext.define('App.view.fii.PanelFiltro',{
             }
         );
 
+        var elTagGrupoMarca = Ext.create('Ext.form.field.Tag',{
+            name: 'elgrupomarca',
+            itemId: 'elgrupomarca',
+            labelAlign: 'top',
+            multiSelect: true,
+            store: Ext.data.Store({
+                autoLoad: true,
+                fields: [
+                    { name: 'id', type: 'string' },
+                    { name: 'idMarcas', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/fii/listargrupomarca',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            width: 180,
+            queryParam: 'idMarcas',
+            queryMode: 'local',
+            displayField: 'id',
+            valueField: 'idMarcas',
+            emptyText: 'Grupo',
+            fieldLabel: 'Grupo Marca',
+            // margin: '1 1 1 1',
+            // plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled:false
+        });
+
         var elTagPessoa = Ext.create('Ext.form.field.Tag',{
             name: 'elPessoa',
             itemId: 'elPessoa',
@@ -394,6 +429,22 @@ Ext.define('App.view.fii.PanelFiltro',{
                             }
                         }
                     ]
+                },{
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elTagGrupoMarca,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
                 },
                 {
                     xtype: 'panel',
@@ -461,6 +512,7 @@ Ext.define('App.view.fii.PanelFiltro',{
                                 form.up('toolbar').up('panel').down('tagfield[name=elEmp]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elProduto]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elMarca]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elgrupomarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elPessoa]').setValue(null);
                                 form.up('toolbar').up('panel').down('datefield[name=data]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elCurva]').setValue(null);

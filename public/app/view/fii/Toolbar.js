@@ -126,6 +126,7 @@ Ext.define('App.view.fii.Toolbar',{
         var idEmpresas  = me.up('container').down('#panelwest').down('#elEmp').getValue();
         var codProdutos = me.up('container').down('#panelwest').down('#elProduto').getValue();
         var idMarcas    = me.up('container').down('#panelwest').down('#elMarca').getValue();
+        var idMarcasG   = me.up('container').down('#panelwest').down('#elgrupomarca').getValue();
         var tpPessoas   = me.up('container').down('#panelwest').down('#elPessoa').getValue();
         var data        = me.up('container').down('#panelwest').down('#data').getRawValue();
         var idCurvas    = me.up('container').down('#panelwest').down('#elCurva').getValue();
@@ -136,6 +137,7 @@ Ext.define('App.view.fii.Toolbar',{
         var params = {
             idEmpresas: Ext.encode(idEmpresas),
             idMarcas: Ext.encode(idMarcas),
+            idMarcasG: Ext.encode(idMarcasG),
             codProdutos: Ext.encode(codProdutos),
             tpPessoas: Ext.encode(tpPessoas),
             data: data,
