@@ -24,15 +24,52 @@ Ext.define('App.view.rpe.GridMarca', {
             emptyText: '__/__/____'
         },
         {
+            xtype: 'tagfield',
+            name: 'elgrupo',
+            itemId: 'elgrupo',
+            labelAlign: 'top',
+            multiSelect: true,
+            store: Ext.data.Store({
+                autoLoad: true,
+                fields: [
+                    { name: 'id', type: 'string' },
+                    { name: 'idMarcas', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/rpe/listargrupo',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            width: 580,
+            // height: 26,
+            queryParam: 'idMarcas',
+            queryMode: 'local',
+            displayField: 'id',
+            valueField: 'idMarcas',
+            emptyText: 'Grupo',
+            // margin: '1 1 1 1',
+            // plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled:false
+        },
+        {
             xtype: 'button',
             iconCls: 'fa fa-search',
             margin: '0 0 0 2',
             tooltip: 'Consultar',
             handler: function(form) {
                 var data = this.up('toolbar').down('#data').getRawValue();
-
+                var marcas = this.up('toolbar').down('#elgrupo').getValue();
+                
                 var params = {
-                    data : data
+                    data : data,
+                    idMarcas: Ext.encode(marcas)
                 };
 
                 var gridStore = this.up('panel').down('grid').getStore();
