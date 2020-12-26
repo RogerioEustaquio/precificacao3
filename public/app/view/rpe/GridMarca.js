@@ -10,6 +10,41 @@ Ext.define('App.view.rpe.GridMarca', {
 
     tbar:[
         {
+            xtype: 'tagfield',
+            name: 'elEmpresa',
+            itemId: 'elEmpresa',
+            labelAlign: 'top',
+            multiSelect: true,
+            store: Ext.data.Store({
+                autoLoad: true,
+                fields: [
+                    { name: 'emp', type: 'string' },
+                    { name: 'idEmpresa', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/rpe/listarEmpresas',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            width: 200,
+            // height: 26,
+            queryParam: 'idEmpresa',
+            queryMode: 'local',
+            displayField: 'emp',
+            valueField: 'idEmpresa',
+            emptyText: 'Empresa',
+            // margin: '1 1 1 1',
+            // plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled:false
+        },
+        {
             xtype: 'datefield',
             name: 'data',
             itemId: 'data',
@@ -64,10 +99,12 @@ Ext.define('App.view.rpe.GridMarca', {
             margin: '0 0 0 2',
             tooltip: 'Consultar',
             handler: function(form) {
+                var empresas = this.up('toolbar').down('#elEmpresa').getValue();
                 var data = this.up('toolbar').down('#data').getRawValue();
                 var marcas = this.up('toolbar').down('#elgrupo').getValue();
                 
                 var params = {
+                    idEmpresas: Ext.encode(empresas),
                     data : data,
                     idMarcas: Ext.encode(marcas)
                 };
@@ -112,12 +149,15 @@ Ext.define('App.view.rpe.GridMarca', {
                     {name:'diasUteis_6m', type: 'number'},
                     {name:'diasUteis_12m', type: 'number'},
                     {name:'diasUteis_24m', type: 'number'},
+                    {name:'diasUteisAcAtual', type: 'number'},
+                    {name:'diasUteisAcAnoAnt', type: 'number'},
                     {name:'rolDiaM0', type: 'number'},
                     {name:'rolDiaM01', type: 'number'},
                     {name:'rolDia_3m', type: 'number'},
                     {name:'rolDia_6m', type: 'number'},
                     {name:'rolDia_12m', type: 'number'},
                     {name:'rolDia_24m', type: 'number'},
+                    {name:'rolDiaAcAtual', type: 'number'},
                     {name:'rolDiaAcAnoAnt', type: 'number'},
                     {name:'rolDiaM0X_1m', type: 'number'},
                     {name:'rolDiaM0X_3m', type: 'number'},
@@ -125,6 +165,7 @@ Ext.define('App.view.rpe.GridMarca', {
                     {name:'rolDiaM0X_12m', type: 'number'},
                     {name:'rolDiaM0X_24m', type: 'number'},
                     {name:'rolDiaM0XAcAnoAnt', type: 'number'},
+                    {name:'rolDiaAcAtualXAcAnoAnt', type: 'number'},
                     {name: 'mbM0', type: 'number'},
                     {name: 'mbM1', type: 'number'},
                     {name: 'mbAcAnoAnt', type: 'number'},
@@ -227,6 +268,24 @@ Ext.define('App.view.rpe.GridMarca', {
                                         renderer: function (v) {
                                             return utilFormat.ValueZero(v);
                                         },
+                                    },
+                                    {
+                                        text: 'Ac. Atual',
+                                        dataIndex: 'diasUteisAcAtual',
+                                        width: 100,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'Ac. Ano Atual',
+                                        dataIndex: 'diasUteisAcAnoAnt',
+                                        width: 120,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
                                     }
                                 ]
                             },
@@ -285,6 +344,16 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: '24M',
                                         dataIndex: 'rolDia_24m',
+                                        width: 90,
+                                        align: 'right',
+                                        hidden: true,
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'Ac. Atual',
+                                        dataIndex: 'rolDiaAcAtual',
                                         width: 90,
                                         align: 'right',
                                         hidden: true,
@@ -406,6 +475,26 @@ Ext.define('App.view.rpe.GridMarca', {
                                         text: 'Atual X Ac. Ano Ant.',
                                         dataIndex: 'rolDiaM0XAcAnoAnt',
                                         width: 140,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'Ac. Atual X Ac. Ano Ant.',
+                                        dataIndex: 'rolDiaAcAtualXAcAnoAnt',
+                                        width: 160,
                                         align: 'left',
                                         renderer: function (v, metaData, record) {
 

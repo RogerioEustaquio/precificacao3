@@ -111,10 +111,26 @@ class RpeController extends AbstractRestfulController
         
         try {
 
-            $pData    = $this->params()->fromQuery('data',null);
-            $idMarcas = $this->params()->fromQuery('idMarcas',null);
+            $idEmpresas = $this->params()->fromQuery('idEmpresas',null);
+            $pData      = $this->params()->fromQuery('data',null);
+            $idMarcas   = $this->params()->fromQuery('idMarcas',null);
 
             $em = $this->getEntityManager();
+
+            if($idEmpresas){
+                $idEmpresas =  implode(",",json_decode($idEmpresas));
+            }
+            
+            $andEmpEstoque = '';
+            $andEmpVi      = '';
+            $andEmpUteis   = '';
+            if($idEmpresas){
+                $andEmpEstoque = "and e.id_empresa in ($idEmpresas)";
+                $andEmpVi      = "and vi.id_empresa in ($idEmpresas)";
+                $andEmpUteis   = "and id_empresa in ($idEmpresas)";
+            }else{
+                $andEmpUteis = "and id_empresa = 0";
+            }
 
             if($pData){
                 $sysdate = "to_date('".$pData."')";
@@ -137,21 +153,25 @@ class RpeController extends AbstractRestfulController
                         dias_uteis_6m, -- Dias úteis 6 meses
                         dias_uteis_12m, -- Dias úteis 12 meses
                         dias_uteis_24m, -- Dias úteis 24 meses
+                        dias_uteis_ac_atual,
+                        dias_uteis_ac_ano_ant,
                 
                         rol_dia_m0, -- ROL Dia Atual
                         rol_dia_m1, -- ROL Dia mês anterior
                         rol_dia_3m, -- ROL Dia 3 meses
                         rol_dia_6m, -- ROL Dia 6 meses
                         rol_dia_12m, -- ROL Dia 12 meses
-                        rol_dia_24m, -- ROL Dia 24 meses   
-                        rol_dia_ac_ano_ant, -- ROL Dia Ac. Ano Anterior  
+                        rol_dia_24m, -- ROL Dia 24 meses
+                        rol_dia_ac_atual, -- ROL Dia Ac. Atual
+                        rol_dia_ac_ano_ant, -- ROL Dia Ac. Ano Anterior
 
                         round(100*(rol_dia_m0/rol_dia_m1-1),2) as rol_dia_m0_x_1m, -- ROL Dia Atual x Mês Anterior,
                         round(100*(rol_dia_m0/rol_dia_3m-1),2) as rol_dia_m0_x_3m, -- ROL Dia Atual x 3 Meses,
                         round(100*(rol_dia_m0/rol_dia_6m-1),2) as rol_dia_m0_x_6m, -- ROL Dia Atual x 6 Meses,
                         round(100*(rol_dia_m0/rol_dia_12m-1),2) as rol_dia_m0_x_12m, -- ROL Dia Atual x 12 Meses,
                         round(100*(rol_dia_m0/rol_dia_24m-1),2) as rol_dia_m0_x_24m, -- ROL Dia Atual x 24 Meses,
-                        round(100*(rol_dia_m0/rol_dia_ac_ano_ant-1),2) as rol_dia_m0_x_ac_ano_ant, -- ROL Dia Atual x Ac. Ano Anterior    
+                        round(100*(rol_dia_m0/rol_dia_ac_ano_ant-1),2) as rol_dia_m0_x_ac_ano_ant, -- ROL Dia Ac. Atual x Ac. Ano Anterior,
+                        round(100*(rol_dia_ac_atual/rol_dia_ac_ano_ant-1),2) as rol_dia_ac_atual_x_ac_ano_ant, -- ROL Dia Atual x Ac. Ano Anterior,                  
                         
                         round(mb_m0,2) as mb_m0, -- MB Atual
                         round(mb_m1,2) as mb_m1, -- MB Mês Anterior
@@ -169,8 +189,8 @@ class RpeController extends AbstractRestfulController
                                 (case when rol_6m > 0 then rol_6m/dias_uteis_6m end) as rol_dia_6m,
                                 (case when rol_12m > 0 then rol_12m/dias_uteis_12m end) as rol_dia_12m,
                                 (case when rol_24m > 0 then rol_24m/dias_uteis_24m end) as rol_dia_24m,     
-
-                                (case when rol_ac_ano_ant > 0 then rol_ac_ano_ant/dias_uteis_ac_ano_ant end) as rol_dia_ac_ano_ant,
+                                (case when rol_ac_atual > 0 then rol_ac_atual/dias_uteis_ac_atual end) as rol_dia_ac_atual,
+                                (case when rol_ac_ano_ant > 0 then rol_ac_ano_ant/dias_uteis_ac_ano_ant end) as rol_dia_ac_ano_ant,                 
 
                                 100*(case when rol_m0 > 0 then lb_m0/rol_m0 end) as mb_m0,
                                 100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,
@@ -182,14 +202,17 @@ class RpeController extends AbstractRestfulController
                                 dias_uteis_6m,
                                 dias_uteis_12m,
                                 dias_uteis_24m,
+                                dias_uteis_ac_atual,
+                                dias_uteis_ac_ano_ant,                 
                 
                                 a.estoque_valor -- Valor de Estoque  
                         from (select ic.id_marca, m.descricao as marca, sum(e.estoque*e.custo_contabil) as estoque_valor
                                 from ms.tb_estoque e, ms.tb_item_categoria ic, ms.tb_marca m
                                 where e.id_item = ic.id_item
-                                    and e.id_categoria = ic.id_categoria
-                                    and ic.id_marca = m.id_marca
-                                    $andMarca
+                                and e.id_categoria = ic.id_categoria
+                                and ic.id_marca = m.id_marca
+                                $andEmpEstoque
+                                $andMarca
                                 group by ic.id_marca, m.descricao) a,
                                 (select xv.id_marca,
                                         sum(case when xv.data = trunc($sysdate,'MM') then xv.rol end) as rol_m0,
@@ -197,13 +220,12 @@ class RpeController extends AbstractRestfulController
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-3) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_3m,
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-6) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_6m,
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-12) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_12m,
-                                        sum(case when xv.data > add_months(trunc($sysdate,'MM'),-24) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_24m,
-                                        
-                                        sum(case when xv.data >= add_months(trunc($sysdate,'RRRR'),-12) and xv.data <= trunc(add_months($sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,
+                                        sum(case when xv.data > add_months(trunc($sysdate,'MM'),-24) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_24m,sum(case when xv.data >= trunc(sysdate,'RRRR') and trunc(xv.data,'MM') <= trunc(sysdate,'MM') then xv.rol end) as rol_ac_atual,
+                                        sum(case when xv.data >= add_months(trunc(sysdate,'RRRR'),-12) and trunc(xv.data,'MM') <= trunc(add_months(sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,                
 
                                         sum(case when xv.data = trunc($sysdate,'MM') then xv.lb end) as lb_m0,
                                         sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,
-                                        sum(case when xv.data >= add_months(trunc(sysdate,'RRRR'),-12) and xv.data <= trunc(add_months(sysdate,-12),'MM') then xv.lb end) as lb_ac_ano_ant,                
+                                        sum(case when xv.data >= add_months(trunc(sysdate,'RRRR'),-12) and trunc(xv.data,'MM') <= trunc(add_months(sysdate,-12),'MM') then xv.lb end) as lb_ac_ano_ant,                               
 
                                         sum(case when xd.data = trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
                                         sum(case when xd.data = add_months(trunc($sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1,
@@ -211,8 +233,8 @@ class RpeController extends AbstractRestfulController
                                         sum(case when xd.data > add_months(trunc($sysdate,'MM'),-6) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_6m,
                                         sum(case when xd.data > add_months(trunc($sysdate,'MM'),-12) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_12m,
                                         sum(case when xd.data > add_months(trunc($sysdate,'MM'),-24) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_24m,
-
-                                        sum(case when xd.data >= add_months(trunc($sysdate,'RRRR'),-12) and xd.data <= trunc(add_months($sysdate,-12),'MM') then xd.dias_uteis end) as dias_uteis_ac_ano_ant
+                                        sum(case when xd.data >= trunc(sysdate,'RRRR') and trunc(xd.data,'MM') <= trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_ac_atual,
+                                        sum(case when xd.data >= add_months(trunc(sysdate,'RRRR'),-12) and trunc(xd.data,'MM') <= trunc(add_months(sysdate,-12),'MM') then xd.dias_uteis end) as dias_uteis_ac_ano_ant
                 
                                 from (select trunc(vi.data_emissao, 'MM') as data,
                                             ic.id_marca as id_marca,
@@ -227,15 +249,16 @@ class RpeController extends AbstractRestfulController
                                         from pricing.vm_ie_ve_venda_item vi, ms.tb_item_categoria ic 
                                         where vi.id_item = ic.id_item
                                         and vi.id_categoria = ic.id_categoria
-                                        
+                                        $andEmpVi
                                         and trunc(vi.data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'), -13)
                 
                                         group by trunc(vi.data_emissao, 'MM'), ic.id_marca) xv,
                                         
-                                    (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
-                                        from PRICING.VW_DIAS_UTEIS
-                                        where EMP = 'REDE'
-                                        and mes >= add_months(trunc($sysdate,'MM'), -24) ) xd
+                                        (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
+                                            from PRICING.VW_DIAS_UTEIS
+                                            where 1 = 1
+                                            $andEmpUteis
+                                            and mes >= add_months(trunc($sysdate,'MM'), -24) ) xd
                                 where xv.data = xd.data(+)
                                 group by xv.id_marca) b
                         where a.id_marca = b.id_marca(+))
@@ -256,12 +279,15 @@ class RpeController extends AbstractRestfulController
             $hydrator->addStrategy('dias_uteis_6m', new ValueStrategy);
             $hydrator->addStrategy('dias_uteis_12m', new ValueStrategy);
             $hydrator->addStrategy('dias_uteis_24m', new ValueStrategy);
+            $hydrator->addStrategy('dias_uteis_ac_atual', new ValueStrategy);
+            $hydrator->addStrategy('dias_uteis_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m1', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_3m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_6m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_12m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_24m', new ValueStrategy);
+            $hydrator->addStrategy('rol_dia_ac_atual', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_1m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_3m', new ValueStrategy);
@@ -269,6 +295,7 @@ class RpeController extends AbstractRestfulController
             $hydrator->addStrategy('rol_dia_m0_x_12m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_24m', new ValueStrategy);
             $hydrator->addStrategy('rol_dia_m0_x_ac_ano_ant', new ValueStrategy);
+            $hydrator->addStrategy('rol_dia_ac_atual_x_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('mb_m0', new ValueStrategy);
             $hydrator->addStrategy('mb_m1', new ValueStrategy);
             $hydrator->addStrategy('mb_ac_ano_ant', new ValueStrategy);
