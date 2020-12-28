@@ -168,8 +168,10 @@ Ext.define('App.view.rpe.GridMarca', {
                     {name:'rolDiaAcAtualXAcAnoAnt', type: 'number'},
                     {name: 'mbM0', type: 'number'},
                     {name: 'mbM1', type: 'number'},
+                    {name: 'mbAcAtual', type: 'number'},
                     {name: 'mbAcAnoAnt', type: 'number'},
                     {name: 'mbM0X_1m', type: 'number'},
+                    {name: 'mbAcAtualXAcAnoAnt', type: 'number'},
                     {name: 'mbM0XAcAnoAnt', type: 'number'},
                     {name: 'estoqueValor', type: 'number'}
                     ]
@@ -536,6 +538,16 @@ Ext.define('App.view.rpe.GridMarca', {
                                         }
                                     },
                                     {
+                                        text: 'Ac. Atual',
+                                        dataIndex: 'mbAcAtual',
+                                        width: 90,
+                                        align: 'right',
+                                        hidden: true,
+                                        renderer: function (v) {
+                                            return utilFormat.Value(v);
+                                        }
+                                    },
+                                    {
                                         text: 'Ac. Ano Ant.',
                                         dataIndex: 'mbAcAnoAnt',
                                         width: 110,
@@ -569,6 +581,26 @@ Ext.define('App.view.rpe.GridMarca', {
                                         text: 'Atual X Ac. Ano Ant.',
                                         dataIndex: 'mbM0XAcAnoAnt',
                                         width: 140,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+ valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'Ac. Atual X Ac. Ano Ant.',
+                                        dataIndex: 'mbAcAtualXAcAnoAnt',
+                                        width: 160,
                                         align: 'left',
                                         renderer: function (v, metaData, record) {
 

@@ -171,10 +171,12 @@ class RpeController extends AbstractRestfulController
                         round(100*(rol_dia_m0/rol_dia_12m-1),2) as rol_dia_m0_x_12m, -- ROL Dia Atual x 12 Meses,
                         round(100*(rol_dia_m0/rol_dia_24m-1),2) as rol_dia_m0_x_24m, -- ROL Dia Atual x 24 Meses,
                         round(100*(rol_dia_m0/rol_dia_ac_ano_ant-1),2) as rol_dia_m0_x_ac_ano_ant, -- ROL Dia Ac. Atual x Ac. Ano Anterior,
+                        round(100*(mb_ac_atual/mb_ac_ano_ant-1),2) as mb_ac_atual_x_ac_ano_ant, 
                         round(100*(rol_dia_ac_atual/rol_dia_ac_ano_ant-1),2) as rol_dia_ac_atual_x_ac_ano_ant, -- ROL Dia Atual x Ac. Ano Anterior,                  
                         
                         round(mb_m0,2) as mb_m0, -- MB Atual
                         round(mb_m1,2) as mb_m1, -- MB Mês Anterior
+                        round(mb_ac_atual,2) as mb_ac_atual,
                         round(mb_ac_ano_ant,2) as mb_ac_ano_ant, -- MB Mês Anterior
                  
                         round(100*(mb_m0/mb_m1-1),2) as mb_m0_x_1m, -- ROL Dia Atual x Mês Anterior, 
@@ -194,6 +196,7 @@ class RpeController extends AbstractRestfulController
 
                                 100*(case when rol_m0 > 0 then lb_m0/rol_m0 end) as mb_m0,
                                 100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,
+                                100*(case when rol_ac_atual > 0 then lb_ac_atual/rol_ac_atual end) as mb_ac_atual,
                                 100*(case when rol_ac_ano_ant > 0 then lb_ac_ano_ant/rol_ac_ano_ant end) as mb_ac_ano_ant,                      
 
                                 dias_uteis_m0,
@@ -220,12 +223,14 @@ class RpeController extends AbstractRestfulController
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-3) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_3m,
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-6) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_6m,
                                         sum(case when xv.data > add_months(trunc($sysdate,'MM'),-12) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_12m,
-                                        sum(case when xv.data > add_months(trunc($sysdate,'MM'),-24) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_24m,sum(case when xv.data >= trunc(sysdate,'RRRR') and trunc(xv.data,'MM') <= trunc(sysdate,'MM') then xv.rol end) as rol_ac_atual,
-                                        sum(case when xv.data >= add_months(trunc(sysdate,'RRRR'),-12) and trunc(xv.data,'MM') <= trunc(add_months(sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,                
+                                        sum(case when xv.data > add_months(trunc($sysdate,'MM'),-24) and xv.data < trunc($sysdate,'MM') then xv.rol end) as rol_24m,
+                                        sum(case when xv.data >= trunc($sysdate,'RRRR') and trunc(xv.data,'MM') <= trunc($sysdate,'MM') then xv.rol end) as rol_ac_atual,
+                                        sum(case when xv.data >= add_months(trunc($sysdate,'RRRR'),-12) and trunc(xv.data,'MM') <= trunc(add_months($sysdate,-12),'MM') then xv.rol end) as rol_ac_ano_ant,                
 
                                         sum(case when xv.data = trunc($sysdate,'MM') then xv.lb end) as lb_m0,
                                         sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,
-                                        sum(case when xv.data >= add_months(trunc(sysdate,'RRRR'),-12) and trunc(xv.data,'MM') <= trunc(add_months(sysdate,-12),'MM') then xv.lb end) as lb_ac_ano_ant,                               
+                                        sum(case when xv.data >= trunc($sysdate,'RRRR') and trunc(xv.data,'MM') <= trunc($sysdate,'MM') then xv.lb end) as lb_ac_atual,
+                                        sum(case when xv.data >= add_months(trunc($sysdate,'RRRR'),-12) and trunc(xv.data,'MM') <= trunc(add_months($sysdate,-12),'MM') then xv.lb end) as lb_ac_ano_ant,                               
 
                                         sum(case when xd.data = trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
                                         sum(case when xd.data = add_months(trunc($sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1,
@@ -233,8 +238,8 @@ class RpeController extends AbstractRestfulController
                                         sum(case when xd.data > add_months(trunc($sysdate,'MM'),-6) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_6m,
                                         sum(case when xd.data > add_months(trunc($sysdate,'MM'),-12) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_12m,
                                         sum(case when xd.data > add_months(trunc($sysdate,'MM'),-24) and xd.data < trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_24m,
-                                        sum(case when xd.data >= trunc(sysdate,'RRRR') and trunc(xd.data,'MM') <= trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_ac_atual,
-                                        sum(case when xd.data >= add_months(trunc(sysdate,'RRRR'),-12) and trunc(xd.data,'MM') <= trunc(add_months(sysdate,-12),'MM') then xd.dias_uteis end) as dias_uteis_ac_ano_ant
+                                        sum(case when xd.data >= trunc($sysdate,'RRRR') and trunc(xd.data,'MM') <= trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_ac_atual,
+                                        sum(case when xd.data >= add_months(trunc($sysdate,'RRRR'),-12) and trunc(xd.data,'MM') <= trunc(add_months($sysdate,-12),'MM') then xd.dias_uteis end) as dias_uteis_ac_ano_ant
                 
                                 from (select trunc(vi.data_emissao, 'MM') as data,
                                             ic.id_marca as id_marca,
@@ -298,8 +303,10 @@ class RpeController extends AbstractRestfulController
             $hydrator->addStrategy('rol_dia_ac_atual_x_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('mb_m0', new ValueStrategy);
             $hydrator->addStrategy('mb_m1', new ValueStrategy);
+            $hydrator->addStrategy('mb_ac_atual', new ValueStrategy);
             $hydrator->addStrategy('mb_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('mb_m0_x_1m', new ValueStrategy);
+            $hydrator->addStrategy('mb_ac_atual_x_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('mb_m0_x_ac_ano_ant', new ValueStrategy);
             $hydrator->addStrategy('estoque_valor', new ValueStrategy);
             $stdClass = new StdClass;
