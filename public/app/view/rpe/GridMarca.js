@@ -187,7 +187,7 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: 'Atual',
                                         dataIndex: 'rolDiaM0',
-                                        width: 90,
+                                        width: 84,
                                         align: 'right',
                                         renderer: function (v) {
                                             return utilFormat.ValueZero(v);
@@ -411,7 +411,7 @@ Ext.define('App.view.rpe.GridMarca', {
                                     {
                                         text: 'Atual',
                                         dataIndex: 'mbM0',
-                                        width: 90,
+                                        width: 68,
                                         align: 'right',
                                         renderer: function (v) {
                                             return utilFormat.Value(v);
