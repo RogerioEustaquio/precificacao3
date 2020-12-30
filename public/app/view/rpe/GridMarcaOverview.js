@@ -1,13 +1,13 @@
-Ext.define('App.view.rpe.GridMarca', {
+Ext.define('App.view.rpe.GridMarcaOverview', {
     extend: 'Ext.panel.Panel',
-    xtype: 'gridmarca',
-    itemId: 'gridmarca',
+    xtype: 'gridmarcaoverview',
+    itemId: 'gridmarcaoverview',
     // margin: '10 2 2 2',
     layout:'fit',
     // params: [],
     requires: [
     ],
-
+    
     constructor: function() {
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
@@ -78,7 +78,7 @@ Ext.define('App.view.rpe.GridMarca', {
                             proxy: {
                                 type: 'ajax',
                                 method:'POST',
-                                url : BASEURL + '/api/rpe/listaritensmarcas',
+                                url : BASEURL + '/api/marcaoverview/marcaoverview',
                                 encode: true,
                                 timeout: 240000,
                                 format: 'json',
