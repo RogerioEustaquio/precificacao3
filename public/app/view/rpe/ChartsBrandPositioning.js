@@ -225,8 +225,8 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                 useHTML: true,
                 headerFormat: '<table>',
                 pointFormat: '<tr><th colspan="2"><h3>{point.descricao}</h3></th></tr>' +
-                             '<tr><th>ROL:</th><td>{point.y}</td></tr>' +
-                             '<tr><th>MB:</th><td>{point.x}</td></tr>' +
+                             '<tr><th>ROL:</th><td>{point.x}</td></tr>' +
+                             '<tr><th>MB:</th><td>{point.y}</td></tr>' +
                              '<tr><th>CC:</th><td>{point.z}</td></tr>',
                 footerFormat: '</table>',
                 followPointer: true
