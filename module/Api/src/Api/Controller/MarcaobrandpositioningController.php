@@ -137,8 +137,8 @@ class MarcabrandpositioningController extends AbstractRestfulController
                 $andData = "and trunc(vi.data_emissao) >= to_date('".$pDataInicio."')";
                 $sysdateInicio = "to_date('".$pDataInicio."')";
             }else{
-                $sysdateInicio = 'sysdate';
-                $andData = "and trunc(vi.data_emissao) >= sysdate";
+                $sysdateInicio = 'add_months(trunc(sysdate,\'MM\'),-0)';
+                $andData = "and trunc(vi.data_emissao) >= to_char($sysdateInicio,'dd/mm/yyyy')";
             }
             if($pDataFim){
                 $andData .= " and trunc(vi.data_emissao) <= to_date('".$pDataFim."')";
@@ -237,7 +237,6 @@ class MarcabrandpositioningController extends AbstractRestfulController
                     $andmed_accumulated -- med_accumulated <= 80
                     order by med_accumulated asc
                     ";
-
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $pEmp);
             
