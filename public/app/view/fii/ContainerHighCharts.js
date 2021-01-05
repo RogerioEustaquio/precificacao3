@@ -20,7 +20,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
     constructor: function(config) {
         var me = this;
         // var utilFormat = Ext.create('Ext.ux.util.Format');
-        me.showLegend = [];
+        me.showLegend = Array();
 
         Ext.applyIf(me, {
             items: [
@@ -53,9 +53,15 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                     if(result.success){
 
                                         rsarray = result.data;
-                                        rsarray.series.forEach(function(record){
-                                            me.showLegend.push(record.showInLegend);
-                                        })
+
+                                        if(rsarray.series){
+
+                                            rsarray.series.forEach(function(record){
+                                                if(me.showLegend){
+                                                    me.showLegend.push(record.showInLegend);
+                                                }
+                                            })
+                                        }
 
                                     }else{
                                         rsarray = [];
