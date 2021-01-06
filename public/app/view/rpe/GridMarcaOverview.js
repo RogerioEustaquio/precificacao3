@@ -35,35 +35,28 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
             fields:[{name:'marca', type: 'string'},
                     {name:'diasUteisM0', type: 'number'},
                     {name:'diasUteisM1', type: 'number'},
-                    {name:'diasUteis_3m', type: 'number'},
-                    {name:'diasUteis_6m', type: 'number'},
-                    {name:'diasUteis_12m', type: 'number'},
-                    {name:'diasUteis_24m', type: 'number'},
-                    {name:'diasUteisAcAtual', type: 'number'},
-                    {name:'diasUteisAcAnoAnt', type: 'number'},
+                    {name:'rolM0', type: 'number'},
                     {name:'rolDiaM0', type: 'number'},
                     {name:'rolDiaM01', type: 'number'},
-                    {name:'rolDia_3m', type: 'number'},
-                    {name:'rolDia_6m', type: 'number'},
-                    {name:'rolDia_12m', type: 'number'},
-                    {name:'rolDia_24m', type: 'number'},
-                    {name:'rolDiaAcAtual', type: 'number'},
-                    {name:'rolDiaAcAnoAnt', type: 'number'},
                     {name:'rolDiaM0X_1m', type: 'number'},
-                    {name:'rolDiaM0X_3m', type: 'number'},
-                    {name:'rolDiaM0X_6m', type: 'number'},
-                    {name:'rolDiaM0X_12m', type: 'number'},
-                    {name:'rolDiaM0X_24m', type: 'number'},
-                    {name:'rolDiaM0XAcAnoAnt', type: 'number'},
-                    {name:'rolDiaAcAtualXAcAnoAnt', type: 'number'},
-                    {name: 'mbM0', type: 'number'},
-                    {name: 'mbM1', type: 'number'},
-                    {name: 'mbAcAtual', type: 'number'},
-                    {name: 'mbAcAnoAnt', type: 'number'},
-                    {name: 'mbM0X_1m', type: 'number'},
-                    {name: 'mbAcAtualXAcAnoAnt', type: 'number'},
-                    {name: 'mbM0XAcAnoAnt', type: 'number'},
-                    {name: 'estoqueValor', type: 'number'}
+                    {name:'lbM0', type: 'number'},
+                    {name:'lbDiaM0', type: 'number'},
+                    {name:'lbDiaM0X_1m', type: 'number'},
+                    {name:'mbM0', type: 'number'},
+                    {name:'mbM0X_1m', type: 'number'},
+                    {name:'qtdeM0', type: 'number'},
+                    {name:'qtdeDiaM0', type: 'number'},
+                    {name:'qtdeDiaM0X_1m', type: 'number'},
+                    {name:'ccM0', type: 'number'},
+                    {name:'ccDiaM0', type: 'number'},
+                    {name:'ccDiaM0X_1m', type: 'number'},
+                    {name:'nfM0', type: 'number'},
+                    {name:'nfDiaM0', type: 'number'},
+                    {name:'nfDiaM0X_1m', type: 'number'},
+                    {name:'skuM0', type: 'number'},
+
+                    {name:'estoqueValor', type: 'number'},
+                    {name:'estoqueSkuDisp', type: 'number'}
                     ]
         });
 
@@ -124,248 +117,84 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                         renderer: function (v) {
                                             return utilFormat.ValueZero(v);
                                         }
-                                    },
-                                    {
-                                        text: '3M',
-                                        dataIndex: 'diasUteis_3m',
-                                        width: 80,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: '6M',
-                                        dataIndex: 'diasUteis_6m',
-                                        width: 80,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        }
-                                    },
-                                    {
-                                        text: '12M',
-                                        dataIndex: 'diasUteis_12m',
-                                        width: 80,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: '24M',
-                                        dataIndex: 'diasUteis_24m',
-                                        width: 80,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: 'Ac. Atual',
-                                        dataIndex: 'diasUteisAcAtual',
-                                        width: 100,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: 'Ac. Ano Atual',
-                                        dataIndex: 'diasUteisAcAnoAnt',
-                                        width: 120,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
                                     }
                                 ]
                             },
                             {
-                                text: 'ROL DIA',
+                                text: 'VENDA',
                                 columns: [
                                     {
-                                        text: 'Atual',
-                                        dataIndex: 'rolDiaM0',
-                                        width: 84,
+                                        text: 'ROL',
+                                        columns:[
+                                            {
+                                                text: 'Atual',
+                                                dataIndex: 'rolM0',
+                                                width: 130,
+                                                align: 'right',
+                                                renderer: function (v) {
+                                                    return utilFormat.ValueZero(v);
+                                                },
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        text: 'ROL DIA',
+                                        columns:[
+                                            ,
+                                            {
+                                                text: 'Atual',
+                                                dataIndex: 'rolDiaM0',
+                                                width: 130,
+                                                align: 'right',
+                                                hidden: false,
+                                                renderer: function (v) {
+                                                    return utilFormat.ValueZero(v);
+                                                },
+                                            },
+                                            {
+                                                text: 'Atual X 1M',
+                                                dataIndex: 'rolDiaM0X_1m',
+                                                width: 140,
+                                                align: 'left',
+                                                renderer: function (v, metaData, record) {
+        
+                                                    var valor = utilFormat.Value(v);
+                                                    if (v > 0){
+                                                        valor = pathMaior +' '+ valor +'%';
+                                                        metaData.style = 'color: #26C953;';
+                                                    }
+                                                    if (v < 0){
+                                                        valor = pathMenor +' '+valor +'%';
+                                                        metaData.style = 'color: #FF5B5B;';
+                                                    }
+        
+                                                    return valor;
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        text: 'LB Atual',
+                                        dataIndex: 'lbM0',
+                                        width: 130,
                                         align: 'right',
                                         renderer: function (v) {
                                             return utilFormat.ValueZero(v);
                                         },
                                     },
                                     {
-                                        text: '1M',
-                                        dataIndex: 'rolDiaM1',
-                                        width: 90,
+                                        text: 'LB Dia Atual',
+                                        dataIndex: 'lbDiaM0',
+                                        width: 130,
                                         align: 'right',
-                                        hidden: true,
+                                        hidden: false,
                                         renderer: function (v) {
                                             return utilFormat.ValueZero(v);
                                         },
                                     },
                                     {
-                                        text: '3M',
-                                        dataIndex: 'rolDia_3m',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: '6M',
-                                        dataIndex: 'rolDia_6m',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: '12M',
-                                        dataIndex: 'rolDia_12m',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: '24M',
-                                        dataIndex: 'rolDia_24m',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: 'Ac. Atual',
-                                        dataIndex: 'rolDiaAcAtual',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: 'Ac. Ano Ant.',
-                                        dataIndex: 'rolDiaAcAnoAnt',
-                                        width: 110,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.ValueZero(v);
-                                        },
-                                    },
-                                    {
-                                        text: 'Atual X 1M',
-                                        dataIndex: 'rolDiaM0X_1m',
-                                        width: 110,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
-                                        }
-                                    },
-                                    {
-                                        text: 'Atual X 3M',
-                                        dataIndex: 'rolDiaM0X_3m',
-                                        width: 110,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
-                                        }
-                                    },
-                                    {
-                                        text: 'Atual X 6M',
-                                        dataIndex: 'rolDiaM0X_6m',
-                                        width: 110,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
-                                        }
-                                    },
-                                    {
-                                        text: 'Atual X 12M',
-                                        dataIndex: 'rolDiaM0X_12m',
-                                        width: 110,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
-                                        }
-                                    },
-                                    {
-                                        text: 'Atual X 24M',
-                                        dataIndex: 'rolDiaM0X_24m',
-                                        width: 110,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
-                                        }
-                                    },
-                                    {
-                                        text: 'Atual X Ac. Ano Ant.',
-                                        dataIndex: 'rolDiaM0XAcAnoAnt',
+                                        text: 'LB Dia Atual X 1M',
+                                        dataIndex: 'lbDiaM0X_1m',
                                         width: 140,
                                         align: 'left',
                                         renderer: function (v, metaData, record) {
@@ -384,9 +213,18 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                         }
                                     },
                                     {
-                                        text: 'Ac. Atual X Ac. Ano Ant.',
-                                        dataIndex: 'rolDiaAcAtualXAcAnoAnt',
-                                        width: 160,
+                                        text: 'MB Atual',
+                                        dataIndex: 'lbM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'MB Atual X 1M',
+                                        dataIndex: 'mbM0X_1m',
+                                        width: 140,
                                         align: 'left',
                                         renderer: function (v, metaData, record) {
 
@@ -402,121 +240,154 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
 
                                             return valor;
                                         }
+                                    },
+                                    {
+                                        text: 'QTD Atual',
+                                        dataIndex: 'qtdeM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'QTD Atual',
+                                        dataIndex: 'qtdeDiaM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'QTD Atual X 1M',
+                                        dataIndex: 'qtdeDiaM0X_1m',
+                                        width: 140,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'CC Atual',
+                                        dataIndex: 'ccM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'CC Atual',
+                                        dataIndex: 'ccDiaM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'CC Atual X 1M',
+                                        dataIndex: 'ccDiaM0X_1m',
+                                        width: 140,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'NF Atual',
+                                        dataIndex: 'nfM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'NF Atual',
+                                        dataIndex: 'nfDiaM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
+                                    },
+                                    {
+                                        text: 'NF Atual X 1M',
+                                        dataIndex: 'nfDiaM0X_1m',
+                                        width: 140,
+                                        align: 'left',
+                                        renderer: function (v, metaData, record) {
+
+                                            var valor = utilFormat.Value(v);
+                                            if (v > 0){
+                                                valor = pathMaior +' '+ valor +'%';
+                                                metaData.style = 'color: #26C953;';
+                                            }
+                                            if (v < 0){
+                                                valor = pathMenor +' '+valor +'%';
+                                                metaData.style = 'color: #FF5B5B;';
+                                            }
+
+                                            return valor;
+                                        }
+                                    },
+                                    {
+                                        text: 'SKU Atual',
+                                        dataIndex: 'skuM0',
+                                        width: 130,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
+                                        },
                                     }
                                 ]
                             },
                             {
-                                text: 'MARGEM BRUTA',
+                                text: 'Estoque',
                                 columns:[
                                     {
-                                        text: 'Atual',
-                                        dataIndex: 'mbM0',
-                                        width: 68,
-                                        align: 'right',
-                                        renderer: function (v) {
-                                            return utilFormat.Value(v);
-                                        }
-                                    },
-                                    {
-                                        text: '1M',
-                                        dataIndex: 'mbM1',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.Value(v);
-                                        }
-                                    },
-                                    {
-                                        text: 'Ac. Atual',
-                                        dataIndex: 'mbAcAtual',
-                                        width: 90,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.Value(v);
-                                        }
-                                    },
-                                    {
-                                        text: 'Ac. Ano Ant.',
-                                        dataIndex: 'mbAcAnoAnt',
-                                        width: 110,
-                                        align: 'right',
-                                        hidden: true,
-                                        renderer: function (v) {
-                                            return utilFormat.Value(v);
-                                        }
-                                    },
-                                    {
-                                        text: 'Atual X 1M',
-                                        dataIndex: 'mbM0X_1m',
+                                        text: 'Valor',
+                                        dataIndex: 'estoqueValor',
                                         width: 100,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+ valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
                                         }
                                     },
                                     {
-                                        text: 'Atual X Ac. Ano Ant.',
-                                        dataIndex: 'mbM0XAcAnoAnt',
-                                        width: 140,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+ valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
-                                        }
-                                    },
-                                    {
-                                        text: 'Ac. Atual X Ac. Ano Ant.',
-                                        dataIndex: 'mbAcAtualXAcAnoAnt',
-                                        width: 160,
-                                        align: 'left',
-                                        renderer: function (v, metaData, record) {
-
-                                            var valor = utilFormat.Value(v);
-                                            if (v > 0){
-                                                valor = pathMaior +' '+ valor +'%';
-                                                metaData.style = 'color: #26C953;';
-                                            }
-                                            if (v < 0){
-                                                valor = pathMenor +' '+ valor +'%';
-                                                metaData.style = 'color: #FF5B5B;';
-                                            }
-
-                                            return valor;
+                                        text: 'SKU Disp',
+                                        dataIndex: 'estoqueSkuDisp',
+                                        width: 100,
+                                        align: 'right',
+                                        renderer: function (v) {
+                                            return utilFormat.ValueZero(v);
                                         }
                                     }
                                 ]
-                            },
-                            {
-                                text: 'Estoque Valor',
-                                dataIndex: 'estoqueValor',
-                                width: 130,
-                                align: 'right',
-                                renderer: function (v) {
-                                    return utilFormat.ValueZero(v);
-                                }
                             }
                         ]
                     })
