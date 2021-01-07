@@ -12,115 +12,119 @@ Ext.define('App.view.rpe.TabMarca', {
     ],
     title: 'Marca',
     layout: 'card',
-    tbar: [
-        {
-            xtype: 'button',
-            text: 'Overview',
-            handler: function(){
-                this.up('panel').setActiveItem(0);
-            }
-        },
-        {
-            xtype: 'button',
-            text: 'Performance',
-            handler: function(){
-                this.up('panel').setActiveItem(1);
-            }
-        },
-        {
-            xtype: 'button',
-            text: 'Brand Positioning',
-            handler: function(){
-            
-                var bolha = Ext.create('App.view.rpe.ChartsBrandPositioning');
-
-                var panelBolha =  this.up('panel').down('#containerbolha').down('#panelbolha');
-
-                if(panelBolha.items.length == 0){
-                    panelBolha.add(bolha);
+    border: false,
+    tbar: {
+        border: false,
+        items:[
+            {
+                xtype: 'button',
+                text: 'Overview',
+                handler: function(){
+                    this.up('panel').setActiveItem(0);
                 }
-                // else{
-
-                //     var charts = panelBolha.down('#chartsbrandpositioning');
-
-                //     var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
-
-                //     for(var i = seriesLength - 1; i > -1; i--)
-                //     {
-                //         charts.chart.series[i].remove();
-                //     }
-                //     charts.setLoading(true);
-                //     charts.chart.update(false,false);
-
-                //     Ext.Ajax.request({
-                //         url: BASEURL +'/api/marcabrandpositioning/marcabrandpositioning',
-                //         method: 'POST',
-                //         // params: params,
-                //         async: true,
-                //         timeout: 240000,
-                //         success: function (response) {
-                //             var result = Ext.decode(response.responseText);
-
-                //             charts.setLoading(false);
-                //             // charts.chart.hideLoading();
-                //             if(result.success){
-
-                //                 rsarray = result.data;
-                //                 var cont = 0;
+            },
+            {
+                xtype: 'button',
+                text: 'Performance',
+                handler: function(){
+                    this.up('panel').setActiveItem(1);
+                }
+            },
+            {
+                xtype: 'button',
+                text: 'Brand Positioning',
+                handler: function(){
+                
+                    var bolha = Ext.create('App.view.rpe.ChartsBrandPositioning');
+    
+                    var panelBolha =  this.up('panel').down('#containerbolha').down('#panelbolha');
+    
+                    if(panelBolha.items.length == 0){
+                        panelBolha.add(bolha);
+                    }
+                    // else{
+    
+                    //     var charts = panelBolha.down('#chartsbrandpositioning');
+    
+                    //     var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
+    
+                    //     for(var i = seriesLength - 1; i > -1; i--)
+                    //     {
+                    //         charts.chart.series[i].remove();
+                    //     }
+                    //     charts.setLoading(true);
+                    //     charts.chart.update(false,false);
+    
+                    //     Ext.Ajax.request({
+                    //         url: BASEURL +'/api/marcabrandpositioning/marcabrandpositioning',
+                    //         method: 'POST',
+                    //         // params: params,
+                    //         async: true,
+                    //         timeout: 240000,
+                    //         success: function (response) {
+                    //             var result = Ext.decode(response.responseText);
+    
+                    //             charts.setLoading(false);
+                    //             // charts.chart.hideLoading();
+                    //             if(result.success){
+    
+                    //                 rsarray = result.data;
+                    //                 var cont = 0;
+                                    
+                    //                 // charts.chart.xAxis[0].setCategories(rsarray.categories);
+    
+                    //                 var vSerie = Object();
+                    //                 var vData = Array();
+    
+                    //                 rsarray.forEach(function(record){
+    
+                    //                     vData.push({
+                    //                             x: parseFloat(record.x),
+                    //                             y:  parseFloat(record.y),
+                    //                             z: parseFloat(record.z),
+                    //                             desc: record.desc,
+                    //                             descricao: record.descricao
+                    //                     });
+    
+                    //                     cont++;
+                    //                 });
+    
+                    //                 vSerie = {data: vData};
+                    //                 charts.chart.addSeries(vSerie);
+    
+                    //             }else{
+                    //                 rsarray = [];
+    
+                    //                 new Noty({
+                    //                     theme: 'relax',
+                    //                     layout: 'bottomRight',
+                    //                     type: 'error',
+                    //                     closeWith: [],
+                    //                     text: 'Erro sistema: '+ result.message.substr(0,20)
+                    //                 }).show();
+                    //             }
                                 
-                //                 // charts.chart.xAxis[0].setCategories(rsarray.categories);
-
-                //                 var vSerie = Object();
-                //                 var vData = Array();
-
-                //                 rsarray.forEach(function(record){
-
-                //                     vData.push({
-                //                             x: parseFloat(record.x),
-                //                             y:  parseFloat(record.y),
-                //                             z: parseFloat(record.z),
-                //                             desc: record.desc,
-                //                             descricao: record.descricao
-                //                     });
-
-                //                     cont++;
-                //                 });
-
-                //                 vSerie = {data: vData};
-                //                 charts.chart.addSeries(vSerie);
-
-                //             }else{
-                //                 rsarray = [];
-
-                //                 new Noty({
-                //                     theme: 'relax',
-                //                     layout: 'bottomRight',
-                //                     type: 'error',
-                //                     closeWith: [],
-                //                     text: 'Erro sistema: '+ result.message.substr(0,20)
-                //                 }).show();
-                //             }
-                            
-                //         },
-                //         error: function() {
-                //             rsarray = [];
-                //             charts.setLoading(false);
-                //             // charts.chart.hideLoading();
-
-                //             new Noty({
-                //                 theme: 'relax',
-                //                 layout: 'bottomRight',
-                //                 type: 'error',
-                //                 closeWith: [],
-                //                 text: 'Erro sistema: '+ result.message.substr(0,20)
-                //             }).show();
-                //         }
-                //     });
-                // }
-                this.up('panel').setActiveItem(2);
+                    //         },
+                    //         error: function() {
+                    //             rsarray = [];
+                    //             charts.setLoading(false);
+                    //             // charts.chart.hideLoading();
+    
+                    //             new Noty({
+                    //                 theme: 'relax',
+                    //                 layout: 'bottomRight',
+                    //                 type: 'error',
+                    //                 closeWith: [],
+                    //                 text: 'Erro sistema: '+ result.message.substr(0,20)
+                    //             }).show();
+                    //         }
+                    //     });
+                    // }
+                    this.up('panel').setActiveItem(2);
+                }
             }
-        }
-    ],
+        ]
+    },
     items:[
         {
             xtype: 'container',

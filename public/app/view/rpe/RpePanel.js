@@ -11,6 +11,7 @@ Ext.define('App.view.rpe.RpePanel', {
     ],
     
     title: 'Rastreador de Performance',
+    border: false,
     layout: 'border',
     // tbar:[
     //     {

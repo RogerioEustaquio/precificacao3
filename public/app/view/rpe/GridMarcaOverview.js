@@ -4,6 +4,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
     itemId: 'gridmarcaoverview',
     // margin: '10 2 2 2',
     layout:'fit',
+    border: false,
     // params: [],
     requires: [
     ],
@@ -88,6 +89,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                         
                         listeners: {
                         },
+                        border: false,
 
                         columns: [
                             {

@@ -5,6 +5,7 @@ Ext.define('App.view.rpe.GridMarcaPerformance', {
     // margin: '10 2 2 2',
     layout:'fit',
     // params: [],
+    border: false,
     requires: [
     ],
 
@@ -95,6 +96,7 @@ Ext.define('App.view.rpe.GridMarcaPerformance', {
                         
                         listeners: {
                         },
+                        border: false,
 
                         columns: [
                             {
