@@ -147,141 +147,141 @@ class MarcaoverviewController extends AbstractRestfulController
             }
             
             $sql = "select marca,
-            dias_uteis_m0, -- Dias úteis atual
-            dias_uteis_m1, -- Dias úteis mês anterior
-            
-            rol_m0, -- ROL Atual
-            lb_m0, -- LB Atual
-            qtde_m0, -- QTD Atual
-            cc_m0, -- CC Atual
-            nf_m0, -- NF Atual
-            sku_m0, -- SKU Atual
-            
-            rol_dia_m0, -- ROL Dia Atual
-            rol_dia_m1, -- ROL Dia mês anterior
-           
-            lb_dia_m0, -- LB Dia Atual
-            lb_dia_m1, -- LB Dia mês anterior
-     
-            round(mb_m0,2) as mb_m0, -- MB Atual
-            round(mb_m1,2) as mb_m1, -- MB Mês Anterior
-     
-            qtde_dia_m0, -- QTD Dia Atual
-            qtde_dia_m1, -- QTD Dia mês anterior
-            
-            cc_dia_m0, -- CC Dia Atual
-            cc_dia_m1, -- CC Dia mês anterior
-            
-            nf_dia_m0, -- NF Dia Atual
-            nf_dia_m1, -- NF Dia mês anterior
-            
-            round(100*(rol_m0/rol_m1-1),2) as rol_m0_x_1m,
-            round(100*(rol_dia_m0/rol_dia_m1-1),2) as rol_dia_m0_x_1m, 
-            round(100*(lb_dia_m0/lb_dia_m1-1),2) as lb_dia_m0_x_1m,              
-            round(100*(mb_m0/mb_m1-1),2) as mb_m0_x_1m,
-            round(100*(qtde_dia_m0/qtde_dia_m1-1),2) as qtde_dia_m0_x_1m,
-            round(100*(cc_dia_m0/cc_dia_m1-1),2) as cc_dia_m0_x_1m,
-            round(100*(nf_dia_m0/nf_dia_m1-1),2) as nf_dia_m0_x_1m,                
-                               
-            estoque_qtde, -- Estoque Qtd
-            estoque_valor, -- Estoque Valor
-            estoque_sku_disp -- Estoque Sku Disp.
-            
-    from (select a.marca,
-    
-                    rol_m0,
-                    rol_m1,
-                    lb_m0,
-                    qtde_m0,
-                    cc_m0,
-                    nf_m0,
-                    sku_m0,
-                    
-                    (case when rol_m0 > 0 then rol_m0/dias_uteis_m0 end) as rol_dia_m0,
-                    (case when rol_m1 > 0 then rol_m1/dias_uteis_m1 end) as rol_dia_m1,
-                    
-                    (case when lb_m0 > 0 then lb_m0/dias_uteis_m0 end) as lb_dia_m0,
-                    (case when lb_m1 > 0 then lb_m1/dias_uteis_m1 end) as lb_dia_m1,                  
-  
-                    100*(case when rol_m0 > 0 then lb_m0/rol_m0 end) as mb_m0,
-                    100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,           
-                    
-                    (case when qtde_m0 > 0 then qtde_m0/dias_uteis_m0 end) as qtde_dia_m0,
-                    (case when qtde_m1 > 0 then qtde_m1/dias_uteis_m1 end) as qtde_dia_m1,
-                    
-                    (case when cc_m0 > 0 then cc_m0/dias_uteis_m0 end) as cc_dia_m0,
-                    (case when cc_m1 > 0 then cc_m1/dias_uteis_m1 end) as cc_dia_m1, 
-                    
-                    (case when nf_m0 > 0 then nf_m0/dias_uteis_m0 end) as nf_dia_m0,
-                    (case when nf_m1 > 0 then nf_m1/dias_uteis_m1 end) as nf_dia_m1,         
-  
-                    dias_uteis_m0,
-                    dias_uteis_m1,            
-                  
-                    a.estoque_qtde,
-                    a.estoque_valor,
-                    a.estoque_sku_disp
-                   
-            from (select ic.id_marca, m.descricao as marca, 
-                         sum(e.estoque) as estoque_qtde, sum(e.estoque*e.custo_contabil) as estoque_valor,
-                         sum(case when nvl(e.estoque,0) > 0 then 1 end) estoque_sku_disp
-                    from ms.tb_estoque e, ms.tb_item_categoria ic, ms.tb_marca m
-                    where e.id_item = ic.id_item
-                    and e.id_categoria = ic.id_categoria
-                    and ic.id_marca = m.id_marca
-                    --$andEmpEstoque
-                    --$andMarca
-                    group by ic.id_marca, m.descricao) a,
-                    (select xv.id_marca,
-                            sum(case when xv.data = trunc(sysdate,'MM') then xv.rol end) as rol_m0,
-                            sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.rol end) as rol_m1,          
-  
-                            sum(case when xv.data = trunc(sysdate,'MM') then xv.lb end) as lb_m0,
-                            sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.lb end) as lb_m1,     
+                            dias_uteis_m0, -- Dias úteis atual
+                            dias_uteis_m1, -- Dias úteis mês anterior
                             
-                            sum(case when xv.data = trunc(sysdate,'MM') then xv.qtde end) as qtde_m0,
-                            sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.qtde end) as qtde_m1,       
+                            rol_m0, -- ROL Atual
+                            lb_m0, -- LB Atual
+                            qtde_m0, -- QTD Atual
+                            cc_m0, -- CC Atual
+                            nf_m0, -- NF Atual
+                            sku_m0, -- SKU Atual
                             
-                            sum(case when xv.data = trunc(sysdate,'MM') then xv.cc end) as cc_m0,
-                            sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.cc end) as cc_m1, 
+                            rol_dia_m0, -- ROL Dia Atual
+                            rol_dia_m1, -- ROL Dia mês anterior
+                        
+                            lb_dia_m0, -- LB Dia Atual
+                            lb_dia_m1, -- LB Dia mês anterior
+                    
+                            round(mb_m0,2) as mb_m0, -- MB Atual
+                            round(mb_m1,2) as mb_m1, -- MB Mês Anterior
+                    
+                            qtde_dia_m0, -- QTD Dia Atual
+                            qtde_dia_m1, -- QTD Dia mês anterior
                             
-                            sum(case when xv.data = trunc(sysdate,'MM') then xv.nf end) as nf_m0,
-                            sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.nf end) as nf_m1,     
+                            cc_dia_m0, -- CC Dia Atual
+                            cc_dia_m1, -- CC Dia mês anterior
                             
-                            sum(case when xv.data = trunc(sysdate,'MM') then xv.sku end) as sku_m0,
-                            --sum(case when xv.data = add_months(trunc(sysdate,'MM'),-1) then xv.sku end) as sku_m1,          
-  
-                            sum(case when xd.data = trunc(sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
-                            sum(case when xd.data = add_months(trunc(sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1
-                  
-                    from (select trunc(vi.data_emissao, 'MM') as data,
-                                ic.id_marca as id_marca,
-                                sum(vi.rob) as rob,
-                                sum(vi.rol) as rol,
-                                sum(vi.custo) as cmv,
-                                sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                                sum(vi.qtde) as qtde,
-                                count(distinct vi.numero_nf) as nf,
-                                count(distinct vi.id_pessoa) as cc,
-                                count(distinct vi.id_item||vi.id_categoria) as sku
-                            from pricing.vm_ie_ve_venda_item vi, ms.tb_item_categoria ic 
-                            where vi.id_item = ic.id_item
-                            and vi.id_categoria = ic.id_categoria
-                            --$andEmpVi
-                            and trunc(vi.data_emissao, 'MM') >= add_months(trunc(sysdate,'MM'), -3)
-                  
-                            group by trunc(vi.data_emissao, 'MM'), ic.id_marca) xv,
-                                          
-                            (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
-                                from PRICING.VW_DIAS_UTEIS
-                                where 1 = 1
-                                --$andEmpUteis
-                                and mes >= add_months(trunc(sysdate,'MM'), -3) ) xd
-                    where xv.data = xd.data(+)
-                    group by xv.id_marca) b
-            where a.id_marca = b.id_marca(+))
-    order by nvl(rol_dia_m0,0) desc";
+                            nf_dia_m0, -- NF Dia Atual
+                            nf_dia_m1, -- NF Dia mês anterior
+                            
+                            round(100*(rol_m0/rol_m1-1),2) as rol_m0_x_1m,
+                            round(100*(rol_dia_m0/rol_dia_m1-1),2) as rol_dia_m0_x_1m, 
+                            round(100*(lb_dia_m0/lb_dia_m1-1),2) as lb_dia_m0_x_1m,              
+                            round(100*(mb_m0/mb_m1-1),2) as mb_m0_x_1m,
+                            round(100*(qtde_dia_m0/qtde_dia_m1-1),2) as qtde_dia_m0_x_1m,
+                            round(100*(cc_dia_m0/cc_dia_m1-1),2) as cc_dia_m0_x_1m,
+                            round(100*(nf_dia_m0/nf_dia_m1-1),2) as nf_dia_m0_x_1m,                
+                                            
+                            estoque_qtde, -- Estoque Qtd
+                            estoque_valor, -- Estoque Valor
+                            estoque_sku_disp -- Estoque Sku Disp.
+                            
+                    from (select a.marca,
+                    
+                                rol_m0,
+                                rol_m1,
+                                lb_m0,
+                                qtde_m0,
+                                cc_m0,
+                                nf_m0,
+                                sku_m0,
+                                
+                                (case when rol_m0 > 0 then rol_m0/dias_uteis_m0 end) as rol_dia_m0,
+                                (case when rol_m1 > 0 then rol_m1/dias_uteis_m1 end) as rol_dia_m1,
+                                
+                                (case when lb_m0 > 0 then lb_m0/dias_uteis_m0 end) as lb_dia_m0,
+                                (case when lb_m1 > 0 then lb_m1/dias_uteis_m1 end) as lb_dia_m1,                  
+            
+                                100*(case when rol_m0 > 0 then lb_m0/rol_m0 end) as mb_m0,
+                                100*(case when rol_m1 > 0 then lb_m1/rol_m1 end) as mb_m1,           
+                                
+                                (case when qtde_m0 > 0 then qtde_m0/dias_uteis_m0 end) as qtde_dia_m0,
+                                (case when qtde_m1 > 0 then qtde_m1/dias_uteis_m1 end) as qtde_dia_m1,
+                                
+                                (case when cc_m0 > 0 then cc_m0/dias_uteis_m0 end) as cc_dia_m0,
+                                (case when cc_m1 > 0 then cc_m1/dias_uteis_m1 end) as cc_dia_m1, 
+                                
+                                (case when nf_m0 > 0 then nf_m0/dias_uteis_m0 end) as nf_dia_m0,
+                                (case when nf_m1 > 0 then nf_m1/dias_uteis_m1 end) as nf_dia_m1,         
+            
+                                dias_uteis_m0,
+                                dias_uteis_m1,            
+                            
+                                a.estoque_qtde,
+                                a.estoque_valor,
+                                a.estoque_sku_disp
+                                
+                            from (select ic.id_marca, m.descricao as marca, 
+                                        sum(e.estoque) as estoque_qtde, sum(e.estoque*e.custo_contabil) as estoque_valor,
+                                        sum(case when nvl(e.estoque,0) > 0 then 1 end) estoque_sku_disp
+                                    from ms.tb_estoque e, ms.tb_item_categoria ic, ms.tb_marca m
+                                    where e.id_item = ic.id_item
+                                    and e.id_categoria = ic.id_categoria
+                                    and ic.id_marca = m.id_marca
+                                    $andEmpEstoque
+                                    $andMarca
+                                    group by ic.id_marca, m.descricao) a,
+                                    (select xv.id_marca,
+                                            sum(case when xv.data = trunc($sysdate,'MM') then xv.rol end) as rol_m0,
+                                            sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.rol end) as rol_m1,          
+                
+                                            sum(case when xv.data = trunc($sysdate,'MM') then xv.lb end) as lb_m0,
+                                            sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.lb end) as lb_m1,     
+                                            
+                                            sum(case when xv.data = trunc($sysdate,'MM') then xv.qtde end) as qtde_m0,
+                                            sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.qtde end) as qtde_m1,       
+                                            
+                                            sum(case when xv.data = trunc($sysdate,'MM') then xv.cc end) as cc_m0,
+                                            sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.cc end) as cc_m1, 
+                                            
+                                            sum(case when xv.data = trunc($sysdate,'MM') then xv.nf end) as nf_m0,
+                                            sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.nf end) as nf_m1,     
+                                            
+                                            sum(case when xv.data = trunc($sysdate,'MM') then xv.sku end) as sku_m0,
+                                            --sum(case when xv.data = add_months(trunc($sysdate,'MM'),-1) then xv.sku end) as sku_m1,          
+                
+                                            sum(case when xd.data = trunc($sysdate,'MM') then xd.dias_uteis end) as dias_uteis_m0,
+                                            sum(case when xd.data = add_months(trunc($sysdate,'MM'),-1) then xd.dias_uteis end) as dias_uteis_m1
+                                
+                                    from (select trunc(vi.data_emissao, 'MM') as data,
+                                                ic.id_marca as id_marca,
+                                                sum(vi.rob) as rob,
+                                                sum(vi.rol) as rol,
+                                                sum(vi.custo) as cmv,
+                                                sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                                round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                                sum(vi.qtde) as qtde,
+                                                count(distinct vi.numero_nf) as nf,
+                                                count(distinct vi.id_pessoa) as cc,
+                                                count(distinct vi.id_item||vi.id_categoria) as sku
+                                            from pricing.vm_ie_ve_venda_item vi, ms.tb_item_categoria ic 
+                                            where vi.id_item = ic.id_item
+                                            and vi.id_categoria = ic.id_categoria
+                                            $andEmpVi
+                                            and trunc(vi.data_emissao, 'MM') >= add_months(trunc($sysdate,'MM'), -3)
+                                
+                                            group by trunc(vi.data_emissao, 'MM'), ic.id_marca) xv,
+                                                        
+                                            (select MES AS DATA, DECODE(MES,'01/05/2019',DIAS_UTEIS+0.33,DIAS_UTEIS) AS DIAS_UTEIS
+                                                from PRICING.VW_DIAS_UTEIS
+                                                where 1 = 1
+                                                $andEmpUteis
+                                                and mes >= add_months(trunc($sysdate,'MM'), -3) ) xd
+                                    where xv.data = xd.data(+)
+                                    group by xv.id_marca) b
+                            where a.id_marca = b.id_marca(+))
+                    order by nvl(rol_dia_m0,0) desc";
 
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
@@ -314,6 +314,7 @@ class MarcaoverviewController extends AbstractRestfulController
             $hydrator->addStrategy('nf_dia_m0', new ValueStrategy);
             $hydrator->addStrategy('nf_dia_m0_x_1m', new ValueStrategy);
             $hydrator->addStrategy('sku_m0', new ValueStrategy);
+            $hydrator->addStrategy('estoque_qtde', new ValueStrategy);
             $hydrator->addStrategy('estoque_valor', new ValueStrategy);
             $hydrator->addStrategy('estoque_sku_disp', new ValueStrategy);
             $stdClass = new StdClass;
