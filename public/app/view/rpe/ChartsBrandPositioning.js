@@ -153,7 +153,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                 },
                 labels: {
                    formatter: function () {
-                    return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                    return utilFormat.Value2(this.value,0);
                    }
                 },
                 // },
@@ -190,7 +190,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                 
                 labels: {
                     // formatter: function () {
-                    //     return utilFormat.Value2(this.value,this.chart.options.series[this.chart.index].vDecimos);
+                    //     return utilFormat.Value2(this.value,0);
                     // },
                     x: 0,
                     y: 0,
@@ -201,34 +201,23 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                         border: '0px'
                     }
                 },
-                // plotLines: [{
-                //     color: 'black',
-                //     dashStyle: 'dot',
-                //     width: 2,
-                //     value: 50,
-                //     label: {
-                //         align: 'right',
-                //         style: {
-                //             fontStyle: 'italic'
-                //         },
-                //         text: 'Safe sugar intake 50g/day',
-                //         x: -10
-                //     },
-                //     zIndex: 3
-                // }],
-                // accessibility: {
-                //     rangeDescription: 'Range: 0 to 160 grams.'
-                // }
             },
         
             tooltip: {
                 useHTML: true,
-                headerFormat: '<table>',
-                pointFormat: '<tr><th colspan="2"><h3>{point.descricao}</h3></th></tr>' +
-                             '<tr><th>ROL:</th><td>{point.x}</td></tr>' +
-                             '<tr><th>MB:</th><td>{point.y}</td></tr>' +
-                             '<tr><th>CC:</th><td>{point.z}</td></tr>',
-                footerFormat: '</table>',
+                formatter: function () {
+
+                    var pointFormat = '<table>';
+                    pointFormat += '<tr><th colspan="2"><h3>'+this.point.descricao+'</h3></th></tr>';
+                    pointFormat += '</table>';
+                    pointFormat += '<table>';
+                    pointFormat += '<tr><th align="left">ROL:</th><td  align="left">'+utilFormat.Value2(this.point.x,0)+'</td></tr>';
+                    pointFormat += '<tr><th align="left">MB:</th><td  align="left">'+utilFormat.Value2(this.point.y,0)+'</td></tr>';
+                    pointFormat += '<tr><th align="left">CC:</th><td  align="left">'+this.point.z+'</td></tr>';
+                    pointFormat += '</table>';
+
+                    return pointFormat;
+                },
                 followPointer: true
             },
         

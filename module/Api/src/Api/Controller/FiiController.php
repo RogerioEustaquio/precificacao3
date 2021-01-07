@@ -249,6 +249,7 @@ class FiiController extends AbstractRestfulController
             $EstoqueDias        = array();
             $EstoqueInRol       = array();
             $EstoqueInLb        = array();
+            $EstoqueInGiro      = array();
 
             foreach ($resultSet as $row) {
                 $data1 = $hydrator->extract($row);
@@ -260,6 +261,7 @@ class FiiController extends AbstractRestfulController
                 $EstoqueDias[]          = 0;
                 $EstoqueInRol[]         = 0;
                 $EstoqueInLb[]          = 0;
+                $EstoqueInGiro[]        = 0;
 
             }
 
@@ -268,7 +270,8 @@ class FiiController extends AbstractRestfulController
                             a.estoque_final,
                             (case when b.cmv > 0 then round((a.estoque_final/b.cmv)*30,2) end) as estoque_dias, -- Dias de Estoque
                             (case when b.cmv > 0 then round(a.estoque_inicial/b.rol,2) end) as estoque_indice_rol, -- Índice Estoque/ROL
-                            (case when b.cmv > 0 then round(a.estoque_inicial/b.lb,2) end) as estoque_indice_lb -- Índice Estoque/LB
+                            (case when b.cmv > 0 then round(a.estoque_inicial/b.lb,2) end) as estoque_indice_lb, -- Índice Estoque/LB
+                            (case when b.cmv > 0 then round((b.cmv*12)/a.estoque_final,2) end) as estoque_indice_giro -- Índice Estoque/Giro
                         from (select e.data,
                                      sum(e.esi_valor) as estoque_inicial, 
                                      sum(e.esf_valor) as estoque_final
@@ -317,6 +320,7 @@ class FiiController extends AbstractRestfulController
             $hydrator->addStrategy('estoque_dias', new ValueStrategy);
             $hydrator->addStrategy('estoque_indice_rol', new ValueStrategy);
             $hydrator->addStrategy('estoque_indice_lb', new ValueStrategy);
+            $hydrator->addStrategy('estoque_indice_giro', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
@@ -339,6 +343,7 @@ class FiiController extends AbstractRestfulController
                     $EstoqueDias[$contMes]          = (float) $elementos['estoqueDias'];
                     $EstoqueInRol[$contMes]         = (float) $elementos['estoqueIndiceRol'];
                     $EstoqueInLb[$contMes]          = (float) $elementos['estoqueIndiceLb'];
+                    $EstoqueInGiro[$contMes]        = (float) $elementos['estoqueIndiceGiro'];
                 }
 
                 $contMes++;
@@ -352,6 +357,7 @@ class FiiController extends AbstractRestfulController
             $EstoqueDias        = null;
             $EstoqueInRol       = null;
             $EstoqueInLb        = null;
+            $EstoqueInGiro      = null;
         }
 
         $arrayEstoqueMes[] = $EstoqueMesInicial;
@@ -359,6 +365,7 @@ class FiiController extends AbstractRestfulController
         $arrayEstoqueMes[] = $EstoqueDias;
         $arrayEstoqueMes[] = $EstoqueInRol;
         $arrayEstoqueMes[] = $EstoqueInLb;
+        $arrayEstoqueMes[] = $EstoqueInGiro;
 
         return $arrayEstoqueMes;
     }
@@ -595,6 +602,7 @@ class FiiController extends AbstractRestfulController
                 $EstoqueDias        = $EstoqueMes[2];
                 $EstoqueInRol       = $EstoqueMes[3];
                 $EstoqueInLb        = $EstoqueMes[4];
+                $EstoqueInGiro      = $EstoqueMes[5];
             }
 
             $sql = " select b.data,
@@ -1265,6 +1273,22 @@ class FiiController extends AbstractRestfulController
                             'valorM1'=> $EstoqueInLb[10],
                             'valorM0'=> $EstoqueInLb[11]
                 ];
+
+                $data[] = ['indicador'=>'Índice Estoque/Giro',
+                            'vDecimos'=> 2,
+                            'valorM11'=> $EstoqueInGiro[0],
+                            'valorM10'=> $EstoqueInGiro[1],
+                            'valorM9'=> $EstoqueInGiro[2],
+                            'valorM8'=> $EstoqueInGiro[3],
+                            'valorM7'=> $EstoqueInGiro[4],
+                            'valorM6'=> $EstoqueInGiro[5],
+                            'valorM5'=> $EstoqueInGiro[6],
+                            'valorM4'=> $EstoqueInGiro[7],
+                            'valorM3'=> $EstoqueInGiro[8],
+                            'valorM2'=> $EstoqueInGiro[9],
+                            'valorM1'=> $EstoqueInGiro[10],
+                            'valorM0'=> $EstoqueInGiro[11]
+                ];
             }
 
             $this->setCallbackData($data);
@@ -1490,6 +1514,7 @@ class FiiController extends AbstractRestfulController
             $EstoqueDias        = array();
             $EstoqueInRol       = array();
             $EstoqueInLb        = array();
+            $EstoqueInGiro      = array();
 
             if($indicadoresAdd){
 
@@ -1509,6 +1534,7 @@ class FiiController extends AbstractRestfulController
                 $EstoqueDias        = $EstoqueMes[2];
                 $EstoqueInRol       = $EstoqueMes[3];
                 $EstoqueInLb        = $EstoqueMes[4];
+                $EstoqueInGiro      = $EstoqueMes[5];
             }
 
             $sql = " select b.data,
@@ -2115,6 +2141,20 @@ class FiiController extends AbstractRestfulController
                                 'yAxis'=> 31,
                                 'color'=> $colors[21],
                                 'data' => $EstoqueInLb,
+                                'vFormat' => '',
+                                'vDecimos' => '2',
+                                'visible' => false,
+                                'showInLegend' => false,
+                                'dataLabels' => array(
+                                     'enabled' => true,
+                                     'style' => array( 'fontSize' => '10')
+                                    )
+                            ),
+                            array(
+                                'name' => 'Índice Estoque/Giro',
+                                'yAxis'=> 32,
+                                'color'=> $colors[22],
+                                'data' => $EstoqueInGiro,
                                 'vFormat' => '',
                                 'vDecimos' => '2',
                                 'visible' => false,

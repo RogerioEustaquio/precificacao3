@@ -224,7 +224,7 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                                 //     }
                                 // }
 
-                                var serieExtras = ['Estoque Inicial','Estoque Final','Dias de Estoque','Índice Estoque/ROL','Índice Estoque/LB'];
+                                var serieExtras = ['Estoque Inicial','Estoque Final','Dias de Estoque','Índice Estoque/ROL','Índice Estoque/LB','Índice Estoque/Giro'];
 
                                 for (let e = 0; e < serieExtras.length; e++) {
                                     if(serieExtras[e] == record.name){
@@ -1111,6 +1111,29 @@ Ext.define('App.view.fii.ContainerHighCharts', {
                             padding: 0,
                             style: {
                                 color: colors[21],
+                                fontSize: '10px'
+                            }
+                        },
+                        opposite: true,
+                        visible: false
+                    },
+                    {
+                        title: {
+                            text: 'Índice Estoque/Giro',
+                            style: {
+                                color: colors[22],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,this.chart.options.series[parseFloat(this.chart.index)].vDecimos);
+                            },
+                            x: 0,
+                            y: 0,
+                            padding: 0,
+                            style: {
+                                color: colors[22],
                                 fontSize: '10px'
                             }
                         },
