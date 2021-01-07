@@ -131,7 +131,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'rolM0',
-                                                width: 90,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -180,7 +180,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'lbM0',
-                                                width: 90,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -229,7 +229,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'mbM0',
-                                                width: 90,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -263,7 +263,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'qtdeM0',
-                                                width: 80,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -277,7 +277,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'qtdeDiaM0',
-                                                width: 78,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -311,7 +311,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'ccM0',
-                                                width: 80,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -325,7 +325,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'ccDiaM0',
-                                                width: 78,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -359,7 +359,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'nfM0',
-                                                width: 80,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
@@ -373,7 +373,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                             {
                                                 text: 'Atual',
                                                 dataIndex: 'nfDiaM0',
-                                                width: 78,
+                                                width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
                                                     return utilFormat.ValueZero(v);
