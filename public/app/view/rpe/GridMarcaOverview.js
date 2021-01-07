@@ -232,7 +232,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                                 width: 75,
                                                 align: 'right',
                                                 renderer: function (v) {
-                                                    return utilFormat.ValueZero(v);
+                                                    return utilFormat.Value(v);
                                                 },
                                             },
                                             {
