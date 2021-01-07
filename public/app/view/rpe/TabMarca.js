@@ -2,7 +2,7 @@ Ext.define('App.view.rpe.TabMarca', {
     extend: 'Ext.panel.Panel',
     xtype: 'tabmarca',
     itemId: 'tabmarca',
-    closable: true,
+    closable: false,
     requires: [
         'App.view.rpe.GridMarcaOverview',
         'App.view.rpe.GridMarcaPerformance',

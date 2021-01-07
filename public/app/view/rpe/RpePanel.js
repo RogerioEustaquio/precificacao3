@@ -12,32 +12,32 @@ Ext.define('App.view.rpe.RpePanel', {
     
     title: 'Rastreador de Performance',
     layout: 'border',
-    tbar:[
-        {
-            xtype: 'button',
-            text: 'RPE',
-            menu: [
-                // {
-                //     text: 'Loja',
-                //     handler: function(){
-                //         this.up('button').up('panel').ontabs('tabloja');
-                //     }
-                // },
-                {
-                    text: 'Marca',
-                    handler: function(){
-                        this.up('button').up('panel').ontabs('tabmarca');
-                    }
-                },
-                // {
-                //     text: 'Produto',
-                //     handler: function(){
-                //         this.up('button').up('panel').ontabs('tabproduto');
-                //     }
-                // }
-            ]
-        }
-    ],
+    // tbar:[
+    //     {
+    //         xtype: 'button',
+    //         text: 'RPE',
+    //         menu: [
+    //             // {
+    //             //     text: 'Loja',
+    //             //     handler: function(){
+    //             //         this.up('button').up('panel').ontabs('tabloja');
+    //             //     }
+    //             // },
+    //             {
+    //                 text: 'Marca',
+    //                 handler: function(){
+    //                     this.up('button').up('panel').ontabs('tabmarca');
+    //                 }
+    //             },
+    //             // {
+    //             //     text: 'Produto',
+    //             //     handler: function(){
+    //             //         this.up('button').up('panel').ontabs('tabproduto');
+    //             //     }
+    //             // }
+    //         ]
+    //     }
+    // ],
 
     initComponent: function() {
         var me = this;
