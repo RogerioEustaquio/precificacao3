@@ -2,6 +2,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
     extend: 'Ext.Container',
     xtype: 'chartsbrandpositioning',
     itemId: 'chartsbrandpositioning',
+    // id: 'chartsbrandpositioning',
     width: '100%',
     height: '60%',
     // margin: '10 2 2 2',
@@ -39,6 +40,12 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                         afterrender: function(el){
 
                             me.setLoading({msg: 'Carregando...'});
+
+                            var idEixos = {
+                                x: 'rol',
+                                y: 'mb',
+                                z: 'cc'
+                            }
                             
                             Ext.Ajax.request({
                                 url: BASEURL +'/api/marcabrandpositioning/marcabrandpositioning',
@@ -54,11 +61,17 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
 
                                         rsarray = result.data;
 
+                                        var x='',y='',z='';
                                         var iCont = 0
                                         rsarray.forEach(function(rowSerie){
-                                            rsarray[iCont].x = parseFloat(rowSerie.x);
-                                            rsarray[iCont].y = parseFloat(rowSerie.y);
-                                            rsarray[iCont].z = parseFloat(rowSerie.z);
+
+                                            x = rowSerie[idEixos.x];
+                                            y = rowSerie[idEixos.y];
+                                            z = rowSerie[idEixos.z];
+
+                                            rsarray[iCont].x = parseFloat(x);
+                                            rsarray[iCont].y = parseFloat(y);
+                                            rsarray[iCont].z = parseFloat(z);
 
                                             iCont++;
                                         });
@@ -225,7 +238,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                 series: {
                     dataLabels: {
                         enabled: true,
-                        format: '{point.desc}'
+                        format: '{point.ds}'
                     }
                 }
             },

@@ -132,5 +132,26 @@ class RpeController extends AbstractRestfulController
         $this->setCallbackData($marcas);
         return $this->getCallbackModel();
     }
+
+    public function listareixosAction()
+    {
+        $data = array();
+        
+        try {
+
+            // $pEmp    = $this->params()->fromQuery('emp',null);
+
+            $data[] = ['id'=> 'ROL','name'=> 'ROL','vExemplo'=> 1000000];
+            $data[] = ['id'=> 'MB','name'=> 'MB','vExemplo'=> 30];
+            $data[] = ['id'=> 'CC','name'=> 'Cliente','vExemplo'=> 1000];
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
     
 }

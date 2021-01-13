@@ -292,10 +292,103 @@ Ext.define('App.view.rpe.TabMarca', {
                             tooltip: 'Consultar',
                             handler: function() {
 
-                                var me = this.up('panel').up('container').up('panel');
-                                var panelBolha =  this.up('panel');
+                                var filtromarca =  this.up('panel').up('container').down('#filtrobrandpositioning');
+                                var empresas = filtromarca.down('#elEmpresa').getValue();
+                                var datainicio = filtromarca.down('#datainicio').getRawValue();
+                                var datafim = filtromarca.down('#datafim').getRawValue();
+                                var marcas = filtromarca.down('#elmarca').getValue();
+                                
+                                var params = {
+                                    idEmpresas: Ext.encode(empresas),
+                                    datainicio : datainicio,
+                                    datafim: datafim,
+                                    idMarcas: Ext.encode(marcas)
+                                };
 
-                                me.onConsultar(panelBolha,null);
+                                var panelBolha =  this.up('panel');
+                                var charts = panelBolha.down('#chartsbrandpositioning');
+
+                                var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
+
+                                for(var i = seriesLength - 1; i > -1; i--)
+                                {
+                                    charts.chart.series[i].remove();
+                                }
+                                charts.setLoading(true);
+                                charts.chart.update(false,false);
+
+                                Ext.Ajax.request({
+                                    url: BASEURL +'/api/marcabrandpositioning/marcabrandpositioning',
+                                    method: 'POST',
+                                    params: params,
+                                    async: true,
+                                    timeout: 240000,
+                                    success: function (response) {
+                                        var result = Ext.decode(response.responseText);
+
+                                        charts.setLoading(false);
+                                        // charts.chart.hideLoading();
+                                        if(result.success){
+
+                                            rsarray = result.data;
+                                            var cont = 0;
+                                            
+                                            // charts.chart.xAxis[0].setCategories(rsarray.categories);
+
+                                            var vSerie = Object();
+                                            var vData = Array();
+
+                                            rsarray.forEach(function(record){
+
+                                                vData.push({
+                                                        x: parseFloat(record.x),
+                                                        y: parseFloat(record.y),
+                                                        z: parseFloat(record.z),
+                                                        desc: record.desc,
+                                                        descricao: record.descricao
+                                                });
+
+                                                cont++;
+                                            });
+
+                                            vSerie = {data: vData};
+                                            charts.chart.addSeries(vSerie);
+
+                                            textSubtitle = {
+                                                subtitle:{
+                                                    text: result.referencia.incio + ' até ' + result.referencia.fim
+                                                }
+                                            };
+        
+                                            charts.chart.update(textSubtitle);
+
+                                        }else{
+                                            rsarray = [];
+
+                                            new Noty({
+                                                theme: 'relax',
+                                                layout: 'bottomRight',
+                                                type: 'error',
+                                                closeWith: [],
+                                                text: 'Erro sistema: '+ result.message.substr(0,20)
+                                            }).show();
+                                        }
+                                        
+                                    },
+                                    error: function() {
+                                        rsarray = [];
+                                        charts.setLoading(false);
+                                        // charts.chart.hideLoading();
+
+                                        new Noty({
+                                            theme: 'relax',
+                                            layout: 'bottomRight',
+                                            type: 'error',
+                                            closeWith: [],
+                                            text: 'Erro sistema: '+ result.message.substr(0,20)
+                                        }).show();
+                                    }
+                                });
                 
                             }
                         },
@@ -304,33 +397,17 @@ Ext.define('App.view.rpe.TabMarca', {
                             xtype: 'button',
                             iconCls: 'fa fa-cog',
                             handler: function() {
-
-                                var me = this.up('panel').up('container').up('panel');
-                                var panelBolha =  this.up('panel');
-
+                                
                                 var window = Ext.getCmp('eixowindow');
 
                                 if(!window){
                                     window = Ext.create('App.view.rpe.EixoWindow', {
                                         listeners: {
                                             render: function(w){
-
                                                 w.down('#btnconfirmar').on('click',function(btn){
-
-                                                    var eixoSelecionado = w.down('#bxElement').getValue();
                                                     w.close();
+
                                                     
-                                                    var x = eixoSelecionado[0] ? eixoSelecionado[0].toLowerCase() : 'rol';
-                                                    var y = eixoSelecionado[1] ? eixoSelecionado[1].toLowerCase() : 'mb';
-                                                    var z = eixoSelecionado[2] ? eixoSelecionado[2].toLowerCase() : 'cc';
-
-                                                    var idEixos = {
-                                                        x: x,
-                                                        y: y,
-                                                        z: z
-                                                    };
-
-                                                    me.onConsultar(panelBolha,idEixos);
 
                                                 });
                                             }
@@ -342,6 +419,11 @@ Ext.define('App.view.rpe.TabMarca', {
                                 }
 
                                 window.show();
+
+                                // window.down('#btnconfirmar').click(function(){
+
+                                //     console.log('window')    ;
+                                // });
 
                             }
                         }
@@ -355,170 +437,30 @@ Ext.define('App.view.rpe.TabMarca', {
                 }
             ]
         }
+        // {
+        //     xtype: 'container',
+        //     layout:'border',
+        //     itemId: 'containerbolha',
+        //     items:[
+        //         {
+        //             xtype: 'panel',
+        //             region: 'center',
+        //             layout: 'fit',
+        //             itemId: 'panelbolha',
+        //             items:[
+        //                 // {
+        //                 //     xtype: 'chartsbrandpositioning',
+        //                 //     title: 'Bolha'
+        //                 // }
+        //             ]
+                    
+        //         }
+        //     ]
+        // }
     ],
 
-    onConsultar: function(panelBolha,idEixos){
+    onConsultar: function(){
         var me = this;
-        var utilFormat = Ext.create('Ext.ux.util.Format');
-
-        var filtromarca =  panelBolha.up('container').down('#filtrobrandpositioning');
-        var empresas = filtromarca.down('#elEmpresa').getValue();
-        var datainicio = filtromarca.down('#datainicio').getRawValue();
-        var datafim = filtromarca.down('#datafim').getRawValue();
-        var marcas = filtromarca.down('#elmarca').getValue();
         
-        var params = {
-            idEmpresas: Ext.encode(empresas),
-            datainicio : datainicio,
-            datafim: datafim,
-            idMarcas: Ext.encode(marcas)
-        };
-
-        if(!idEixos){
-
-            idEixos = {
-                x: 'rol',
-                y: 'mb',
-                z: 'cc'
-            };
-            
-        }
-
-        var xtext = idEixos.x.toLocaleUpperCase();
-        var ytext = idEixos.y.toLocaleUpperCase();
-        var ztext = idEixos.z.toLocaleUpperCase();
-
-        var charts = panelBolha.down('#chartsbrandpositioning');
-
-        var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
-
-        for(var i = seriesLength - 1; i > -1; i--)
-        {
-            charts.chart.series[i].remove();
-        }
-        charts.setLoading(true);
-        charts.chart.update(false,false);
-
-        Ext.Ajax.request({
-            url: BASEURL +'/api/marcabrandpositioning/marcabrandpositioning',
-            method: 'POST',
-            params: params,
-            async: true,
-            timeout: 240000,
-            success: function (response) {
-                var result = Ext.decode(response.responseText);
-
-                charts.setLoading(false);
-                // charts.chart.hideLoading();
-                if(result.success){
-
-                    rsarray = result.data;
-                    var cont = 0;
-                    
-                    // charts.chart.xAxis[0].setCategories(rsarray.categories);
-
-                    var vSerie = Object();
-                    var vData = Array();
-
-                    var x='',y='',z='';
-                    var decX = 0,decY = 2,decZ = 0;
-                    rsarray.forEach(function(record){
-
-                        x = record[idEixos.x];
-                        y = record[idEixos.y];
-                        z = record[idEixos.z];
-                        decX = record['dec'+idEixos.x];
-                        decY = record['dec'+idEixos.y];
-                        decZ = record['dec'+idEixos.z];
-
-                        vData.push({
-                                x: parseFloat(x),
-                                y: parseFloat(y),
-                                z: parseFloat(z),
-                                ds: record.ds,
-                                descricao: record.descricao
-                        });
-
-                        cont++;
-                    });
-
-                    vSerie = {data: vData};
-                    charts.chart.addSeries(vSerie);
-
-                    var extraUpdate ={
-
-                        textSubtitle: {
-                            subtitle:{
-                                text: result.referencia.incio + ' até ' + result.referencia.fim
-                            }
-                        },
-                        tooltip: {
-                            formatter: function () {
-        
-                                var pointFormat = '<table>';
-                                pointFormat += '<tr><th colspan="2"><h3>'+this.point.descricao+'</h3></th></tr>';
-                                pointFormat += '</table>';
-                                pointFormat += '<table>';
-                                pointFormat += '<tr><th align="left">'+xtext+'</th><td  align="left">'+utilFormat.Value2(this.point.x,parseFloat(decX))+'</td></tr>';
-                                pointFormat += '<tr><th align="left">'+ytext+'</th><td  align="left">'+utilFormat.Value2(this.point.y,parseFloat(decY))+'</td></tr>';
-                                pointFormat += '<tr><th align="left">'+ztext+'</th><td  align="left">'+utilFormat.Value2(this.point.z,parseFloat(decZ))+'</td></tr>';
-                                pointFormat += '</table>';
-            
-                                return pointFormat;
-                            }
-                        },
-                        xAxis : {
-                            title:{
-                                text: xtext
-                            },
-                            labels: {
-                               formatter: function () {
-                                return utilFormat.Value2(this.value,parseFloat(decX));
-                               }
-                            }
-                        },
-                        yAxis: {
-                            title:{
-                                text: ytext
-                            },
-                            labels: {
-                               formatter: function () {
-                                return utilFormat.Value2(this.value,parseFloat(decY));
-                               }
-                            }
-                        }
-
-                    };
-
-                    charts.chart.update(extraUpdate);
-
-                }else{
-                    rsarray = [];
-
-                    new Noty({
-                        theme: 'relax',
-                        layout: 'bottomRight',
-                        type: 'error',
-                        closeWith: [],
-                        text: 'Erro sistema: '+ result.message.substr(0,20)
-                    }).show();
-                }
-                
-            },
-            error: function() {
-                rsarray = [];
-                charts.setLoading(false);
-                // charts.chart.hideLoading();
-
-                new Noty({
-                    theme: 'relax',
-                    layout: 'bottomRight',
-                    type: 'error',
-                    closeWith: [],
-                    text: 'Erro sistema: '+ result.message.substr(0,20)
-                }).show();
-            }
-        });
-
     }
 })

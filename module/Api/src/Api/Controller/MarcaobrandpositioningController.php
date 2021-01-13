@@ -180,11 +180,17 @@ class MarcabrandpositioningController extends AbstractRestfulController
                             marcax as ds,
                             marcax as descricao,
                             rol,
+                            0 decrol,
                             lb,
+                            0 declb,
                             mb,
+                            2 decmb,
                             qtde,
+                            0 decqtde,
                             nf,
-                            cc
+                            0 decnf,
+                            cc,
+                            0 deccc
                     from (select marca,
                                 REPLACE(marca,'-',' ') as marcax,
                                 rol,
@@ -257,13 +263,15 @@ class MarcabrandpositioningController extends AbstractRestfulController
             foreach ($resultSet as $row) {
                 $elementos = $hydrator->extract($row);
 
-                $data[] = [
-                            'x'=> (float)$elementos['rol'],
-                            'y'=> (float)$elementos['mb'],
-                            'z'=> (float)$elementos['cc'],
-                            'desc'=> $elementos['ds'],
-                            'descricao'=> $elementos['descricao']
-                ];
+                $data[] = $elementos;
+
+                // $data[] = [
+                //             'x'=> (float)$elementos['rol'],
+                //             'y'=> (float)$elementos['mb'],
+                //             'z'=> (float)$elementos['cc'],
+                //             'desc'=> $elementos['ds'],
+                //             'descricao'=> $elementos['descricao']
+                // ];
             }
 
             $this->setCallbackData($data);
