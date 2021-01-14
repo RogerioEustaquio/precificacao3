@@ -130,9 +130,7 @@ Ext.define('App.view.rpe.ChartsBubbleExample', {
                 formatter: function () {
 
                     var pointFormat = '<table>';
-                    pointFormat += '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>';
-                    pointFormat += '</table>';
-                    pointFormat += '<table>';
+                    pointFormat += '<tr><th colspan="2">'+this.point.name+'</th></tr>';
                     pointFormat += '<tr><th align="left">ROL:</th><td  align="left">'+utilFormat.Value2(this.point.x,0)+'</td></tr>';
                     pointFormat += '<tr><th align="left">MB:</th><td  align="left">'+utilFormat.Value2(this.point.y,2)+'</td></tr>';
                     pointFormat += '<tr><th align="left">CC:</th><td  align="left">'+utilFormat.Value2(this.point.z,0)+'</td></tr>';

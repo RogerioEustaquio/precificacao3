@@ -143,7 +143,8 @@ class RpeController extends AbstractRestfulController
 
             $data[] = ['id'=> 'ROL','name'=> 'ROL','vExemplo'=> 1000000];
             $data[] = ['id'=> 'MB','name'=> 'MB','vExemplo'=> 30];
-            $data[] = ['id'=> 'CC','name'=> 'Cliente','vExemplo'=> 1000];
+            $data[] = ['id'=> 'CC','name'=> 'CC','vExemplo'=> 1000];
+            $data[] = ['id'=> 'ESTOQUEVALOR','name'=> 'Estoque Valor','vExemplo'=> 200];
 
             $this->setCallbackData($data);
             

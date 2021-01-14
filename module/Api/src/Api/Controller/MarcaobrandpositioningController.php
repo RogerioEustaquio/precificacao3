@@ -176,8 +176,7 @@ class MarcabrandpositioningController extends AbstractRestfulController
             $stmt->execute();
             $resultCount = $stmt->fetchAll();
 
-            $sql = "select 
-                            marcax as ds,
+            $sql = " select marcax as ds,
                             marcax as descricao,
                             rol,
                             0 decrol,
@@ -190,7 +189,9 @@ class MarcabrandpositioningController extends AbstractRestfulController
                             nf,
                             0 decnf,
                             cc,
-                            0 deccc
+                            0 deccc,
+                            estoque_valor estoquevalor,
+                            0 decestoque_valor
                     from (select marca,
                                 REPLACE(marca,'-',' ') as marcax,
                                 rol,
@@ -199,50 +200,59 @@ class MarcabrandpositioningController extends AbstractRestfulController
                                 qtde,
                                 nf,
                                 cc,
+                                estoque_valor,
                                 fr_rol,
                                 sum(sum(fr_rol)) over (partition by id_empresa order by rol desc rows unbounded preceding) as med_accumulated  
                             from (select id_empresa, marca,
-                                         rol,
-                                         lb,
-                                         mb,
-                                         qtde,
-                                         nf,
-                                         cc,
-                                          100*ratio_to_report((case when rol > 0 then rol end)) over (partition by id_empresa) fr_rol
-                                    from (select 'REDE' id_empresa,
-                                                m.descricao as marca, 
-
-                                                sum(vi.rob) as rob,
-                                                sum(vi.rol) as rol,
-                                                sum(vi.custo) as cmv,
-                                                sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                                round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                                                sum(vi.qtde) as qtde,
-                                                count(distinct vi.numero_nf) as nf,
-                                                count(distinct vi.id_pessoa) as cc
-                                            from pricing.vm_ie_ve_venda_item vi, 
-                                                 ms.tb_item_categoria ic,
-                                                 ms.tb_item i,
-                                                 ms.tb_categoria c, 
-                                                 ms.empresa em,
-                                                 ms.tb_marca m 
-                                            where vi.id_item = ic.id_item
-                                            and vi.id_categoria = ic.id_categoria
-                                            and vi.id_item = i.id_item
-                                            and vi.id_categoria = c.id_categoria
-                                            and vi.id_empresa = em.id_empresa
-                                            and ic.id_marca = m.id_marca
-                                            $andData
-                                            $andEmpUteis
-                                            $andMarca
-                                            --and m.id_marca not in ()
-                                            group by m.descricao))
-                        group by id_empresa, marca, rol, lb, mb, qtde, nf, cc, fr_rol)
+                                        rol,
+                                        lb,
+                                        mb,
+                                        qtde,
+                                        nf,
+                                        cc,
+                                        estoque_valor,
+                                        100*ratio_to_report((case when rol > 0 then rol end)) over (partition by id_empresa) fr_rol
+                                    from (select ax.*, bx.estoque_valor 
+                                            from (select 'REDE' id_empresa,
+                                                        ic.id_marca,
+                                                        m.descricao as marca, 
+                    
+                                                        sum(vi.rob) as rob,
+                                                        sum(vi.rol) as rol,
+                                                        sum(vi.custo) as cmv,
+                                                        sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                                        round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                                        sum(vi.qtde) as qtde,
+                                                        count(distinct vi.numero_nf) as nf,
+                                                        count(distinct vi.id_pessoa) as cc
+                                                    from pricing.vm_ie_ve_venda_item vi, 
+                                                        ms.tb_item_categoria ic,
+                                                        ms.tb_item i,
+                                                        ms.tb_categoria c, 
+                                                        ms.empresa em,
+                                                        ms.tb_marca m 
+                                                    where vi.id_item = ic.id_item
+                                                    and vi.id_categoria = ic.id_categoria
+                                                    and vi.id_item = i.id_item
+                                                    and vi.id_categoria = c.id_categoria
+                                                    and vi.id_empresa = em.id_empresa
+                                                    and ic.id_marca = m.id_marca
+                                                    $andData
+                                                    $andEmpUteis
+                                                    $andMarca
+                                                    --and m.id_marca not in ()
+                                                    group by ic.id_marca, m.descricao) ax,
+                                                (select ic.id_marca, sum(estoque*custo_contabil) as estoque_valor 
+                                                    from ms.tb_estoque e, ms.tb_item_categoria ic 
+                                                where e.id_item = ic.id_item
+                                                    and e.id_categoria = ic.id_categoria
+                                                group by ic.id_marca) bx
+                                        where ax.id_marca = bx.id_marca))
+                        group by id_empresa, marca, rol, lb, mb, qtde, nf, cc, estoque_valor, fr_rol)
                     where 1=1
                     -- Remover esse filtro se utilizar o filtro de marca
                     $andmed_accumulated -- med_accumulated <= 80
-                    order by med_accumulated asc
-                    ";
+                    order by med_accumulated asc";
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $pEmp);
             

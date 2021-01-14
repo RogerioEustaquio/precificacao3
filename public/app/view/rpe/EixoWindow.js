@@ -33,7 +33,7 @@ Ext.define('App.view.rpe.EixoWindow', {
             flex: 1,
             queryParam: 'id',
             queryMode: 'local',
-            displayField: 'id',
+            displayField: 'name',
             valueField: 'id',
             emptyText: 'Selecione os Indicadores',
             fieldLabel: 'Eixos (x, y, z)',
@@ -119,12 +119,12 @@ Ext.define('App.view.rpe.EixoWindow', {
                 storeEixo.forEach(function(record){
 
                     if(cont == 0){
-                        xtext = (xyz[0]) ? xyz[0] : record.data.id;
-                        
+
                         for (let index = 0; index < storeEixo.length; index++) {
                             const element = storeEixo[index];
 
                             if(element.data.id == xyz[0] ){
+                                xtext = element.data.name;
                                 x = element.data.vExemplo ;
                                 break;
                             }else{
@@ -134,12 +134,12 @@ Ext.define('App.view.rpe.EixoWindow', {
                     }
 
                     if(cont == 1){
-                        ytext = (xyz[1]) ? xyz[1] : record.data.id;
 
                         for (let index = 0; index < storeEixo.length; index++) {
                             const element = storeEixo[index];
 
                             if(element.data.id == xyz[1]){
+                                ytext = element.data.name;
                                 y = element.data.vExemplo ;
                                 break;
                             }else{
@@ -147,13 +147,14 @@ Ext.define('App.view.rpe.EixoWindow', {
                             }
                         }
                     }
+                    
                     if(cont == 2){
-                        ztext = (xyz[2]) ? xyz[2] : record.data.id;
 
                         for (let index = 0; index < storeEixo.length; index++) {
                             const element = storeEixo[index];
 
                             if(element.data.id == xyz[2] ){
+                                ztext = element.data.name;
                                 z = element.data.vExemplo ;
                                 break;
                             }else{
@@ -211,12 +212,10 @@ Ext.define('App.view.rpe.EixoWindow', {
                     formatter: function () {
 
                         var pointFormat = '<table>';
-                        pointFormat += '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>';
-                        pointFormat += '</table>';
-                        pointFormat += '<table>';
-                        pointFormat += '<tr><th align="left">'+xtext+'</th><td  align="left">'+utilFormat.Value2(this.point.x,0)+'</td></tr>';
-                        pointFormat += '<tr><th align="left">'+ytext+'</th><td  align="left">'+utilFormat.Value2(this.point.y,2)+'</td></tr>';
-                        pointFormat += '<tr><th align="left">'+ztext+'</th><td  align="left">'+utilFormat.Value2(this.point.z,0)+'</td></tr>';
+                        pointFormat += '<tr><th colspan="2">'+this.point.name+'</th></tr>';
+                        pointFormat += '<tr><th align="left">'+xtext+':</th><td  align="left">'+utilFormat.Value2(this.point.x,0)+'</td></tr>';
+                        pointFormat += '<tr><th align="left">'+ytext+':</th><td  align="left">'+utilFormat.Value2(this.point.y,2)+'</td></tr>';
+                        pointFormat += '<tr><th align="left">'+ztext+':</th><td  align="left">'+utilFormat.Value2(this.point.z,0)+'</td></tr>';
                         pointFormat += '</table>';
     
                         return pointFormat;

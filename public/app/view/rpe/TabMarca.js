@@ -295,7 +295,7 @@ Ext.define('App.view.rpe.TabMarca', {
                                 var me = this.up('panel').up('container').up('panel');
                                 var panelBolha =  this.up('panel');
 
-                                me.onConsultar(panelBolha,null);
+                                me.onConsultar(panelBolha,null,null);
                 
                             }
                         },
@@ -317,12 +317,59 @@ Ext.define('App.view.rpe.TabMarca', {
 
                                                 w.down('#btnconfirmar').on('click',function(btn){
 
-                                                    var eixoSelecionado = w.down('#bxElement').getValue();
+                                                    var xyz = w.down('#bxElement').getValue();
+                                                    var storeEixo = w.down('#bxElement').getStore().getData().autoSource.items;
+
                                                     w.close();
+
+                                                    // Na cosulta valores retornarão via Ajax da consulta real
+                                                    var cont = 0;
+                                                    var newSerie='',x='',y='',z='',xtext='',ytext ='',ztext='';
+                                                    storeEixo.forEach(function(record){
+
+                                                        if(cont == 0){
+
+                                                            for (let index = 0; index < storeEixo.length; index++) {
+                                                                const element = storeEixo[index];
+
+                                                                if(element.data.id == xyz[0] ){
+                                                                    xtext = element.data.name;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if(cont == 1){
+
+                                                            for (let index = 0; index < storeEixo.length; index++) {
+                                                                const element = storeEixo[index];
+
+                                                                if(element.data.id == xyz[1]){
+                                                                    ytext = element.data.name;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                        
+                                                        if(cont == 2){
+
+                                                            for (let index = 0; index < storeEixo.length; index++) {
+                                                                const element = storeEixo[index];
+
+                                                                if(element.data.id == xyz[2] ){
+                                                                    ztext = element.data.name;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        cont++;
+
+                                                    });
                                                     
-                                                    var x = eixoSelecionado[0] ? eixoSelecionado[0].toLowerCase() : 'rol';
-                                                    var y = eixoSelecionado[1] ? eixoSelecionado[1].toLowerCase() : 'mb';
-                                                    var z = eixoSelecionado[2] ? eixoSelecionado[2].toLowerCase() : 'cc';
+                                                    var x = xyz[0] ? xyz[0].toLowerCase() : 'rol';
+                                                    var y = xyz[1] ? xyz[1].toLowerCase() : 'mb';
+                                                    var z = xyz[2] ? xyz[2].toLowerCase() : 'cc';
 
                                                     var idEixos = {
                                                         x: x,
@@ -330,13 +377,16 @@ Ext.define('App.view.rpe.TabMarca', {
                                                         z: z
                                                     };
 
-                                                    me.onConsultar(panelBolha,idEixos);
+                                                    var textEixos = {
+                                                        x: xtext,
+                                                        y: ytext,
+                                                        z: ztext
+                                                    };
+
+                                                    me.onConsultar(panelBolha,idEixos,textEixos);
 
                                                 });
                                             }
-                                            // onConfirmarClick: function(btn){
-                                                    
-                                            // }
                                         }
                                     });
                                 }
@@ -357,7 +407,7 @@ Ext.define('App.view.rpe.TabMarca', {
         }
     ],
 
-    onConsultar: function(panelBolha,idEixos){
+    onConsultar: function(panelBolha,idEixos,textEixos){
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
@@ -383,10 +433,19 @@ Ext.define('App.view.rpe.TabMarca', {
             };
             
         }
+        if(!textEixos){
 
-        var xtext = idEixos.x.toLocaleUpperCase();
-        var ytext = idEixos.y.toLocaleUpperCase();
-        var ztext = idEixos.z.toLocaleUpperCase();
+            textEixos = {
+                x: 'ROL',
+                y: 'MB',
+                z: 'CC'
+            };
+            
+        }
+        
+        var xtext = textEixos.x;
+        var ytext = textEixos.y;
+        var ztext = textEixos.z;
 
         var charts = panelBolha.down('#chartsbrandpositioning');
 
@@ -445,7 +504,10 @@ Ext.define('App.view.rpe.TabMarca', {
                     vSerie = {data: vData};
                     charts.chart.addSeries(vSerie);
 
-                    var extraUpdate ={
+                    
+                    console.log(vSerie);
+
+                    var extraUpdate = {
 
                         textSubtitle: {
                             subtitle:{
@@ -456,12 +518,10 @@ Ext.define('App.view.rpe.TabMarca', {
                             formatter: function () {
         
                                 var pointFormat = '<table>';
-                                pointFormat += '<tr><th colspan="2"><h3>'+this.point.descricao+'</h3></th></tr>';
-                                pointFormat += '</table>';
-                                pointFormat += '<table>';
-                                pointFormat += '<tr><th align="left">'+xtext+'</th><td  align="left">'+utilFormat.Value2(this.point.x,parseFloat(decX))+'</td></tr>';
-                                pointFormat += '<tr><th align="left">'+ytext+'</th><td  align="left">'+utilFormat.Value2(this.point.y,parseFloat(decY))+'</td></tr>';
-                                pointFormat += '<tr><th align="left">'+ztext+'</th><td  align="left">'+utilFormat.Value2(this.point.z,parseFloat(decZ))+'</td></tr>';
+                                pointFormat += '<tr><th colspan="2">'+this.point.descricao+'</th></tr>';
+                                pointFormat += '<tr><th align="left">'+xtext+':</th><td  align="left">'+utilFormat.Value2(this.point.x,parseFloat(decX))+'</td></tr>';
+                                pointFormat += '<tr><th align="left">'+ytext+':</th><td  align="left">'+utilFormat.Value2(this.point.y,parseFloat(decY))+'</td></tr>';
+                                pointFormat += '<tr><th align="left">'+ztext+':</th><td  align="left">'+utilFormat.Value2(this.point.z,parseFloat(decZ))+'</td></tr>';
                                 pointFormat += '</table>';
             
                                 return pointFormat;
@@ -473,7 +533,7 @@ Ext.define('App.view.rpe.TabMarca', {
                             },
                             labels: {
                                formatter: function () {
-                                return utilFormat.Value2(this.value,parseFloat(decX));
+                                    return utilFormat.Value2(this.value,parseFloat(decX));
                                }
                             }
                         },
@@ -483,12 +543,14 @@ Ext.define('App.view.rpe.TabMarca', {
                             },
                             labels: {
                                formatter: function () {
-                                return utilFormat.Value2(this.value,parseFloat(decY));
+                                    return utilFormat.Value2(this.value,parseFloat(decY));
                                }
                             }
                         }
 
                     };
+
+                    console.log(extraUpdate);
 
                     charts.chart.update(extraUpdate);
 
