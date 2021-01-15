@@ -504,15 +504,10 @@ Ext.define('App.view.rpe.TabMarca', {
                     vSerie = {data: vData};
                     charts.chart.addSeries(vSerie);
 
-                    
-                    console.log(vSerie);
-
                     var extraUpdate = {
 
-                        textSubtitle: {
-                            subtitle:{
-                                text: result.referencia.incio + ' até ' + result.referencia.fim
-                            }
+                        subtitle:{
+                            text: result.referencia.incio + ' até ' + result.referencia.fim
                         },
                         tooltip: {
                             formatter: function () {
