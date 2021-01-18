@@ -295,7 +295,16 @@ Ext.define('App.view.rpe.TabMarca', {
                                 var me = this.up('panel').up('container').up('panel');
                                 var panelBolha =  this.up('panel');
 
-                                me.onConsultar(panelBolha,null,null);
+                                var idEixos = null;
+                                var textEixos = null
+
+                                var window = Ext.getCmp('eixowindow');
+                                if(window){
+                                    idEixos = window.idEixos;
+                                    textEixos = window.textEixos;
+                                }
+
+                                me.onConsultar(panelBolha,idEixos,textEixos);
                 
                             }
                         },
@@ -309,7 +318,6 @@ Ext.define('App.view.rpe.TabMarca', {
                                 var panelBolha =  this.up('panel');
 
                                 var window = Ext.getCmp('eixowindow');
-
                                 if(!window){
                                     window = Ext.create('App.view.rpe.EixoWindow', {
                                         listeners: {
@@ -324,7 +332,7 @@ Ext.define('App.view.rpe.TabMarca', {
 
                                                     // Na cosulta valores retornarão via Ajax da consulta real
                                                     var cont = 0;
-                                                    var newSerie='',x='',y='',z='',xtext='',ytext ='',ztext='';
+                                                    var newSerie='',x='',y='',z='',xtext='ROL',ytext ='MB',ztext='CC';
                                                     storeEixo.forEach(function(record){
 
                                                         if(cont == 0){
@@ -416,12 +424,14 @@ Ext.define('App.view.rpe.TabMarca', {
         var datainicio = filtromarca.down('#datainicio').getRawValue();
         var datafim = filtromarca.down('#datafim').getRawValue();
         var marcas = filtromarca.down('#elmarca').getValue();
+        var pareto = filtromarca.down('#elPareto').getValue();
         
         var params = {
             idEmpresas: Ext.encode(empresas),
             datainicio : datainicio,
             datafim: datafim,
-            idMarcas: Ext.encode(marcas)
+            idMarcas: Ext.encode(marcas),
+            pareto : Ext.encode(pareto),
         };
 
         if(!idEixos){
@@ -544,8 +554,6 @@ Ext.define('App.view.rpe.TabMarca', {
                         }
 
                     };
-
-                    console.log(extraUpdate);
 
                     charts.chart.update(extraUpdate);
 

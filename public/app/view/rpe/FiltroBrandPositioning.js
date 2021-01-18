@@ -125,6 +125,22 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
             }
         );
 
+        var elPareto = Ext.create('Ext.slider.Multi', {
+            itemId: 'elPareto',
+            name: 'elPareto',
+            labelAlign: 'top',
+            width: 180,
+            values: [0, 80],
+            increment: 5,
+            minValue: 0,
+            maxValue: 100,
+            fieldLabel: 'Pareto 80/20',
+            valueField: 'pareto',
+            // this defaults to true, setting to false allows the thumbs to pass each other
+            constrainThumbs: false,
+            // tipText: 'tipText'
+        });
+
         Ext.applyIf(me, {
 
             items : [
@@ -197,6 +213,23 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
                     ]
                 },
                 {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elPareto,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('multislider').setValue([0, 80]);
+                            }
+                        }
+                    ]
+                },
+                {
                     xtype: 'toolbar',
                     width: '100%',
                     border: false,
@@ -212,6 +245,7 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
                                 // form.up('toolbar').up('panel').down('tagfield[name=elgrupomarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('datefield[name=datainicio]').setValue(null);
                                 form.up('toolbar').up('panel').down('datefield[name=datafim]').setValue(null);
+                                form.up('toolbar').up('panel').down('multislider[name=elPareto]').setValue([0, 80]);
                             }
                         }
                     ]

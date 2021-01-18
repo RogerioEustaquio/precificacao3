@@ -2,6 +2,7 @@ Ext.define('App.view.rpe.EixoWindow', {
     extend: 'Ext.window.Window',
     xtype: 'eixowindow',
     itemId: 'eixowindow',
+    id: 'eixowindow',
     height: 300,
     width: 800,
     title: 'Seleção de Eixos',
@@ -10,9 +11,10 @@ Ext.define('App.view.rpe.EixoWindow', {
         'App.view.rpe.ChartsBubbleExample'
     ],
     layout: 'fit',
+    closeAction: 'method-hide',
+    eixos: null,
     constructor: function() {
         var me = this;
-
 
         var elementbx = Ext.create('Ext.form.field.Tag',{
             name: 'bxElement',
@@ -61,7 +63,6 @@ Ext.define('App.view.rpe.EixoWindow', {
 
                 // Enviar paramentros de selecão de eixo e atualizar chart
 
-                console.log(me)
                 me.fireEvent('onConfirmarClick', btn);
 
             }
@@ -69,11 +70,7 @@ Ext.define('App.view.rpe.EixoWindow', {
 
 
         Ext.applyIf(me, {
-            listeners: {
-                onConfirmarClick: function(){
-                    console.log('onConfirmarClick')
-                }
-            },
+
             items:[
                 {
                     xtype:'panel',
@@ -109,13 +106,14 @@ Ext.define('App.view.rpe.EixoWindow', {
         elementbx.on({
             change: function(){
                 // console.log('select this.value');
+
                 var xyz = this.value;
 
                 var storeEixo = this.getStore().getData().autoSource.items;
 
                 // Na cosulta valores retornarão via Ajax da consulta real
                 var cont = 0;
-                var newSerie='',x='',y='',z='',xtext='',ytext ='',ztext='';
+                var newSerie='',x='',y='',z='',xtext='ROL',ytext ='MB',ztext='CC',xId='rol',yId='mb',zId='cc';
                 storeEixo.forEach(function(record){
 
                     if(cont == 0){
@@ -126,6 +124,7 @@ Ext.define('App.view.rpe.EixoWindow', {
                             if(element.data.id == xyz[0] ){
                                 xtext = element.data.name;
                                 x = element.data.vExemplo ;
+                                xId = element.data.id;
                                 break;
                             }else{
                                 x = 15;
@@ -141,6 +140,7 @@ Ext.define('App.view.rpe.EixoWindow', {
                             if(element.data.id == xyz[1]){
                                 ytext = element.data.name;
                                 y = element.data.vExemplo ;
+                                yId = element.data.id;
                                 break;
                             }else{
                                 y = 25;
@@ -156,6 +156,7 @@ Ext.define('App.view.rpe.EixoWindow', {
                             if(element.data.id == xyz[2] ){
                                 ztext = element.data.name;
                                 z = element.data.vExemplo ;
+                                zId = element.data.id;
                                 break;
                             }else{
                                 z = 35;
@@ -176,11 +177,21 @@ Ext.define('App.view.rpe.EixoWindow', {
                     ]
                 };
 
-                elementbx.xyztext = {
+                me.idEixos= {
+                    x: xId.toLowerCase(),
+                    y: yId.toLowerCase(),
+                    z: zId.toLowerCase()
+                };
+
+                xyztext = {
                     x: xtext,
                     y: ytext,
                     z: ztext
                 };
+                
+                me.textEixos = xyztext;
+
+                elementbx.xyztext = xyztext;
 
                 me.onAtualizaChart(newSerie,xtext,ytext,ztext);
 
@@ -190,16 +201,15 @@ Ext.define('App.view.rpe.EixoWindow', {
 
         me.callParent(arguments);
 
-
     },
 
-    initComponent: function(){
-        var me = this;
+    // initComponent: function(){
+    //     var me = this;
 
-        // me.addEvents('onConfirmarClick');
+    //     // me.addEvents('onConfirmarClick');
 
-        me.callParent(arguments);
-    },
+    //     me.callParent(arguments);
+    // },
 
     onAtualizaChart: function(newSerie,xtext,ytext,ztext){
 

@@ -116,11 +116,15 @@ class MarcabrandpositioningController extends AbstractRestfulController
             $pDataInicio= $this->params()->fromPost('datainicio',null);
             $pDataFim   = $this->params()->fromPost('datafim',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
+            $pareto     = $this->params()->fromPost('pareto',null);
 
             $em = $this->getEntityManager();
 
             if($idEmpresas){
                 $idEmpresas =  implode(",",json_decode($idEmpresas));
+            }
+            if($pareto){
+                $pareto =  json_decode($pareto);
             }
             
             $andEmpEstoque = '';
@@ -158,11 +162,13 @@ class MarcabrandpositioningController extends AbstractRestfulController
                 $idMarcas =  implode(",",json_decode($idMarcas));
             }
             $andMarca = '';
-            $andmed_accumulated = '';
+            $and_accumulated = '';
             if($idMarcas){
                 $andMarca = "and ic.id_marca in ($idMarcas)";
-            }else{
-                $andmed_accumulated = 'and med_accumulated <= 80';
+            }
+            
+            if($pareto){
+                $and_accumulated = "and med_accumulated >= $pareto[0] and med_accumulated <= $pareto[1]";
             }
 
             $em = $this->getEntityManager();
@@ -251,8 +257,10 @@ class MarcabrandpositioningController extends AbstractRestfulController
                         group by id_empresa, marca, rol, lb, mb, qtde, nf, cc, estoque_valor, fr_rol)
                     where 1=1
                     -- Remover esse filtro se utilizar o filtro de marca
-                    $andmed_accumulated -- med_accumulated <= 80
+                    $and_accumulated -- med_accumulated <= 80
                     order by med_accumulated asc";
+            // print "$sql";
+            // exit;
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $pEmp);
             
