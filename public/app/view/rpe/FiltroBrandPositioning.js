@@ -131,7 +131,7 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
             labelAlign: 'top',
             width: 180,
             values: [0, 80],
-            increment: 5,
+            increment: 1,
             minValue: 0,
             maxValue: 100,
             fieldLabel: 'Pareto 80/20',
