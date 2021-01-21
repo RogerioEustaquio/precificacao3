@@ -169,6 +169,8 @@ class MarcabrandpositioningController extends AbstractRestfulController
             
             if($pareto){
                 $and_accumulated = "and med_accumulated >= $pareto[0] and med_accumulated <= $pareto[1]";
+            }else{
+                $and_accumulated = "and med_accumulated >= 0 and med_accumulated <= 80";
             }
 
             $em = $this->getEntityManager();
