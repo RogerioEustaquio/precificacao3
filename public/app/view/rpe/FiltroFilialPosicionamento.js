@@ -1,7 +1,7 @@
-Ext.define('App.view.rpe.FiltroBrandPositioning',{
+Ext.define('App.view.rpe.FiltroFilialPosicionamento',{
     extend: 'Ext.panel.Panel',
-    xtype: 'filtrobrandpositioning',
-    itemId: 'filtrobrandpositioning',
+    xtype: 'filtrofilialposicionamento',
+    itemId: 'filtrofilialposicionamento',
     title: 'Filtro',
     region: 'west',
     width: 220,
@@ -15,8 +15,8 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
         var me = this;
 
         var fielDataInicio = Ext.create('Ext.form.field.Date',{
-            name: 'datainicio',
-            itemId: 'datainicio',
+            name: 'filialdatainicio',
+            itemId: 'filialdatainicio',
             labelAlign: 'top',
             fieldLabel: 'Data Inícial',
             margin: '1 1 1 1',
@@ -30,8 +30,8 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
         });
 
         var fielDataFim = Ext.create('Ext.form.field.Date',{
-            name: 'datafim',
-            itemId: 'datafim',
+            name: 'filialdatafim',
+            itemId: 'filialdatafim',
             labelAlign: 'top',
             fieldLabel: 'Data Final',
             margin: '1 1 1 1',
@@ -44,49 +44,9 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
             // value: sysdate
         });
 
-        var elTagEmpresa = Ext.create('Ext.form.field.Tag',{
-            name: 'elEmpresa',
-            itemId: 'elEmpresa',
-            labelAlign: 'top',
-            multiSelect: true,
-            store: Ext.data.Store({
-                fields: [
-                    { name: 'emp', type: 'string' },
-                    { name: 'idEmpresa', type: 'string' }
-                ],
-                proxy: {
-                    type: 'ajax',
-                    url: BASEURL + '/api/rpe/listarEmpresas',
-                    timeout: 120000,
-                    reader: {
-                        type: 'json',
-                        root: 'data'
-                    }
-                }
-            }),
-            width: 180,
-            queryParam: 'emp',
-            queryMode: 'local',
-            displayField: 'emp',
-            valueField: 'idEmpresa',
-            emptyText: 'Empresa',
-            fieldLabel: 'Empresas',
-            labelWidth: 60,
-            margin: '1 1 1 1',
-            plugins:'dragdroptag',
-            filterPickList: true,
-            publishes: 'value',
-            disabled:true
-        });
-        elTagEmpresa.store.load(
-            function(){
-                elTagEmpresa.setDisabled(false);
-            }
-        );
-
         var elTagMarca = Ext.create('Ext.form.field.Tag',{
-            name: 'elmarca',
-            itemId: 'elmarca',
+            name: 'filialelmarca',
+            itemId: 'filialelmarca',
             multiSelect: true,
             labelAlign: 'top',
             width: 180,
@@ -97,7 +57,7 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
                 ],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/marcabrandpositioning/listarmarca',
+                    url: BASEURL + '/api/filialposicionamento/listarmarca',
                     timeout: 120000,
                     reader: {
                         type: 'json',
@@ -125,21 +85,6 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
             }
         );
 
-        var elPareto = Ext.create('Ext.slider.Multi', {
-            itemId: 'elPareto',
-            name: 'elPareto',
-            labelAlign: 'top',
-            width: 180,
-            values: [0, 80],
-            increment: 5,
-            minValue: 0,
-            maxValue: 100,
-            fieldLabel: 'Pareto 80/20',
-            valueField: 'pareto',
-            // this defaults to true, setting to false allows the thumbs to pass each other
-            constrainThumbs: false,
-            // tipText: 'tipText'
-        });
 
         Ext.applyIf(me, {
 
@@ -183,23 +128,6 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
                     layout: 'hbox',
                     border: false,
                     items:[
-                        elTagEmpresa,
-                        {
-                            xtype: 'button',
-                            iconCls: 'fa fa-file',
-                            tooltip: 'Limpar',
-                            margin: '26 1 1 1',
-                            handler: function(form) {
-                                form.up('panel').down('tagfield').setValue(null);
-                            }
-                        }
-                    ]
-                },
-                {
-                    xtype: 'panel',
-                    layout: 'hbox',
-                    border: false,
-                    items:[
                         elTagMarca,
                         {
                             xtype: 'button',
@@ -208,23 +136,6 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
                             margin: '26 1 1 1',
                             handler: function(form) {
                                 form.up('panel').down('tagfield').setValue(null);
-                            }
-                        }
-                    ]
-                },
-                {
-                    xtype: 'panel',
-                    layout: 'hbox',
-                    border: false,
-                    items:[
-                        elPareto,
-                        {
-                            xtype: 'button',
-                            iconCls: 'fa fa-file',
-                            tooltip: 'Limpar',
-                            margin: '26 1 1 1',
-                            handler: function(form) {
-                                form.up('panel').down('multislider').setValue([0, 80]);
                             }
                         }
                     ]
@@ -241,11 +152,9 @@ Ext.define('App.view.rpe.FiltroBrandPositioning',{
                             text: 'Limpar Filtros',
                             tooltip: 'Limpar Filtros',
                             handler: function(form) {
-                                form.up('toolbar').up('panel').down('tagfield[name=elEmpresa]').setValue(null);
-                                form.up('toolbar').up('panel').down('tagfield[name=elmarca]').setValue(null);
-                                form.up('toolbar').up('panel').down('datefield[name=datainicio]').setValue(null);
-                                form.up('toolbar').up('panel').down('datefield[name=datafim]').setValue(null);
-                                form.up('toolbar').up('panel').down('multislider[name=elPareto]').setValue([0, 80]);
+                                form.up('toolbar').up('panel').down('tagfield[name=filialelmarca]').setValue(null);
+                                form.up('toolbar').up('panel').down('datefield[name=filialdatainicio]').setValue(null);
+                                form.up('toolbar').up('panel').down('datefield[name=filialdatafim]').setValue(null);
                             }
                         }
                     ]

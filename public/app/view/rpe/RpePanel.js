@@ -5,8 +5,8 @@ Ext.define('App.view.rpe.RpePanel', {
     height: Ext.getBody().getHeight() * 0.9,
     width: Ext.getBody().getWidth() * 0.9,
     requires: [
-        'App.view.rpe.TabLoja',
         'App.view.rpe.TabMarca',
+        'App.view.rpe.TabFilial',
         'App.view.rpe.TabProduto',
     ],
     
@@ -52,6 +52,9 @@ Ext.define('App.view.rpe.RpePanel', {
                     items:[
                         {
                             xtype: 'tabmarca'
+                        },
+                        {
+                            xtype: 'tabfilial'
                         }
                     ]
                    

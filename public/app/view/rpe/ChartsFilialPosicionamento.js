@@ -1,7 +1,7 @@
-Ext.define('App.view.rpe.ChartsBrandPositioning', {
+Ext.define('App.view.rpe.ChartsFilialPosicionamento', {
     extend: 'Ext.Container',
-    xtype: 'chartsbrandpositioning',
-    itemId: 'chartsbrandpositioning',
+    xtype: 'chartsfilialposicionamento',
+    itemId: 'chartsfilialposicionamento',
     // id: 'chartsbrandpositioning',
     width: '100%',
     height: '60%',
@@ -9,8 +9,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
     style: {
         background: '#ffffff'
     },
-    requires: [
-        'App.view.rpe.ChartsFilialPosicionamento'
+    requires: [ 
     ],
     showLegend: [],
     // controller: 'chart',
@@ -49,7 +48,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                             }
                             
                             Ext.Ajax.request({
-                                url: BASEURL +'/api/marcabrandpositioning/marcabrandpositioning',
+                                url: BASEURL +'/api/filialposicionamento/filialposicionamento',
                                 method: 'POST',
                                 params: me.params,
                                 async: true,
@@ -145,7 +144,7 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
             },
         
             title: {
-                text: 'Posicionamento de Marca',
+                text: 'Posicionamento de Filial',
                 style: {
                     fontSize: '14px'
                 }
@@ -239,42 +238,11 @@ Ext.define('App.view.rpe.ChartsBrandPositioning', {
                         enabled: true,
                         format: '{point.ds}'
                     },
-                    // events: {
-                    //     click: function (event) {
-                    //         var chartFilial = Ext.create('App.view.rpe.ChartsFilialPosicionamento');
-
-                    //         if(!me.params){
-                    //             me.params = {
-
-                    //                 idEmpresas: null,
-                    //                 datainicio : null,
-                    //                 datafim: null,
-                    //                 idMarcas: null,
-                    //                 pareto : null,
-                    //             }
-                    //         }
-
-                    //         chartFilial.params = {
-                    //             descMarca : event.point.descricao,
-                    //             idEmpresas: me.params.idEmpresas,
-                    //             datainicio : me.params.datainicio,
-                    //             datafim: me.params.datafim,
-                    //             idMarcas: me.params.idMarcas,
-                    //             pareto : me.params.pareto,
-                    //         };
-                            
-                    //         var win = Ext.create('Ext.window.Window',{
-                    //             title: 'Filiais',
-                    //             width : '50%',
-                    //             height: 400,
-                    //             layout:'fit',
-                    //             items:[
-                    //                 chartFilial
-                    //             ]
-                    //         });
-                    //         win.show();
-                    //     }
-                    // }
+                    events: {
+                        click: function (event) {
+                            console.log(' ');
+                        }
+                    }
                 }
             },
         
