@@ -105,6 +105,68 @@ class RpeController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
+    public function listarmarcaAction()
+    {
+        $data = array();
+
+        $emp = $this->params()->fromQuery('emp',null);
+
+        try {
+
+            $session = $this->getSession();
+            $usuario = $session['info'];
+
+            $em = $this->getEntityManager();
+            
+            $sql = "select  g.id_grupo_marca,
+                            m.id_marca,
+                            m.descricao as marca,
+                            count(*) as skus
+                    from ms.tb_estoque e,
+                            ms.tb_item i,
+                            ms.tb_categoria c,
+                            ms.tb_item_categoria ic,
+                            ms.tb_marca m,
+                            ms.tb_grupo_marca g,
+                            ms.empresa em
+                    where e.id_item = i.id_item
+                    and e.id_categoria = c.id_categoria
+                    and e.id_item = ic.id_item
+                    and e.id_categoria = ic.id_categoria
+                    and ic.id_marca = m.id_marca
+                    and m.id_grupo_marca = g.id_grupo_marca
+                    and e.id_empresa = em.id_empresa
+                    --and e.id_curva_abc = 'E'
+                    and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
+                    group by g.id_grupo_marca, m.id_marca, m.descricao
+                    order by skus desc
+            ";
+            
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
     public function listargrupomarcaAction(){
         // return array idEmpresas
 

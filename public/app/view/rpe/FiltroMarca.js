@@ -69,6 +69,47 @@ Ext.define('App.view.rpe.FiltroMarca',{
             }
         );
 
+        var elTagMarca = Ext.create('Ext.form.field.Tag',{
+            name: 'elmarca',
+            itemId: 'elmarca',
+            multiSelect: true,
+            labelAlign: 'top',
+            width: 180,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'marca', type: 'string' },
+                    { name: 'idMarca', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/rpe/listarmarca',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            queryParam: 'marca',
+            queryMode: 'local',
+            displayField: 'marca',
+            valueField: 'idMarca',
+            emptyText: 'Marca',
+            fieldLabel: 'Marcas',
+            // labelWidth: 60,
+            margin: '1 1 1 1',
+            // padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled: true
+        });
+        elTagMarca.store.load(
+            function(){
+                elTagMarca.setDisabled(false);
+            }
+        );
+
         var elTagGrupoMarca = Ext.create('Ext.form.field.Tag',{
             name: 'elgrupomarca',
             itemId: 'elgrupomarca',
@@ -146,6 +187,23 @@ Ext.define('App.view.rpe.FiltroMarca',{
                     layout: 'hbox',
                     border: false,
                     items:[
+                        elTagMarca,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
                         elTagGrupoMarca,
                         {
                             xtype: 'button',
@@ -171,6 +229,7 @@ Ext.define('App.view.rpe.FiltroMarca',{
                             tooltip: 'Limpar Filtros',
                             handler: function(form) {
                                 form.up('toolbar').up('panel').down('tagfield[name=elEmpresa]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=elmarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=elgrupomarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('datefield[name=data]').setValue(null);
                             }

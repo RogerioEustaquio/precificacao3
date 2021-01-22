@@ -81,7 +81,12 @@ Ext.define('App.view.rpe.TabMarca', {
                                 var filtromarca =  this.up('panel').up('container').down('#filtromarca');
                                 var empresas = filtromarca.down('#elEmpresa').getValue();
                                 var data = filtromarca.down('#data').getRawValue();
-                                var marcas = filtromarca.down('#elgrupomarca').getValue();
+                                var marcas = filtromarca.down('#elmarca').getValue();
+                                var grupomarcas = filtromarca.down('#elgrupomarca').getValue();
+
+                                if(grupomarcas.length > 0){
+                                    marcas = marcas.concat(grupomarcas);
+                                }
                                 
                                 var params = {
                                     idEmpresas: Ext.encode(empresas),
@@ -187,7 +192,12 @@ Ext.define('App.view.rpe.TabMarca', {
                                 var filtromarca =  this.up('panel').up('container').down('#filtromarca');
                                 var empresas = filtromarca.down('#elEmpresa').getValue();
                                 var data = filtromarca.down('#data').getRawValue();
-                                var marcas = filtromarca.down('#elgrupomarca').getValue();
+                                var marcas = filtromarca.down('#elmarca').getValue();
+                                var grupomarcas = filtromarca.down('#elgrupomarca').getValue();
+
+                                if(grupomarcas.length > 0){
+                                    marcas = marcas.concat(grupomarcas);
+                                }
                                 
                                 var params = {
                                     idEmpresas: Ext.encode(empresas),
