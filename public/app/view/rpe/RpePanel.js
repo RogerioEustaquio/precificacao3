@@ -7,6 +7,7 @@ Ext.define('App.view.rpe.RpePanel', {
     requires: [
         'App.view.rpe.TabMarca',
         'App.view.rpe.TabFilial',
+        'App.view.rpe.TabCliente',
         'App.view.rpe.TabProduto',
     ],
     
@@ -55,6 +56,9 @@ Ext.define('App.view.rpe.RpePanel', {
                         },
                         {
                             xtype: 'tabfilial'
+                        },
+                        {
+                            xtype: 'tabcliente'
                         }
                     ]
                    
