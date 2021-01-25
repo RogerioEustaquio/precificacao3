@@ -235,11 +235,13 @@ class FilialposicionamentoController extends AbstractRestfulController
                                                 $andData
                                                 $andMarca
                                             group by vi.id_empresa, em.apelido) ax,
-                                            (select e.id_empresa, sum(estoque*custo_contabil) as estoque_valor 
-                                            from ms.tb_estoque e, ms.tb_item_categoria ic 
-                                            where e.id_item = ic.id_item
-                                                and e.id_categoria = ic.id_categoria
-                                                -- and ic.id_marca in ()
+                                            (select e.id_empresa,
+                                                    sum(estoque*custo_contabil) as estoque_valor 
+                                                from ms.tb_estoque e,
+                                                     ms.tb_item_categoria ic 
+                                             where e.id_item = ic.id_item
+                                             and e.id_categoria = ic.id_categoria
+                                             $andMarca
                                             group by e.id_empresa) bx
                                     where ax.id_empresa = bx.id_empresa))
                 group by rede, id_empresa, emp, rol, lb, mb, qtde, nf, cc, estoque_valor, fr_rol)
