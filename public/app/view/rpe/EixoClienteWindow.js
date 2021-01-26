@@ -216,33 +216,33 @@ Ext.define('App.view.rpe.EixoClienteWindow', {
         var utilFormat = Ext.create('Ext.ux.util.Format');
         var charts = this.down('panel').down('#panelchart').down('chartsbubbleexample');
 
-        charts.chart.update(
-            {
-                tooltip: {
-                    formatter: function () {
+        // charts.chart.update(
+        //     {
+        //         // tooltip: {
+        //         //     formatter: function () {
 
-                        var pointFormat = '<table>';
-                        pointFormat += '<tr><th colspan="2">'+this.point.name+'</th></tr>';
-                        pointFormat += '<tr><th align="left">'+xtext+':</th><td  align="left">'+utilFormat.Value2(this.point.x,0)+'</td></tr>';
-                        pointFormat += '<tr><th align="left">'+ytext+':</th><td  align="left">'+utilFormat.Value2(this.point.y,2)+'</td></tr>';
-                        pointFormat += '</table>';
+        //         //         var pointFormat = '<table>';
+        //         //         pointFormat += '<tr><th colspan="2">'+this.point.name+'</th></tr>';
+        //         //         pointFormat += '<tr><th align="left">'+xtext+':</th><td  align="left">'+utilFormat.Value2(this.point.x,0)+'</td></tr>';
+        //         //         pointFormat += '<tr><th align="left">'+ytext+':</th><td  align="left">'+utilFormat.Value2(this.point.y,2)+'</td></tr>';
+        //         //         pointFormat += '</table>';
     
-                        return pointFormat;
-                    }
-                },
-                xAxis : {
-                    title:{
-                        text: xtext
-                    }
-                },
-                yAxis: {
-                    title:{
-                        text: ytext
-                    }
-                },
-                series: [newSerie]
-            }
-        );
+        //         //         return pointFormat;
+        //         //     }
+        //         // },
+        //         xAxis : {
+        //             title:{
+        //                 text: xtext
+        //             }
+        //         },
+        //         yAxis: {
+        //             title:{
+        //                 text: ytext
+        //             }
+        //         },
+        //         series: [newSerie]
+        //     }
+        // );
 
     }
 

@@ -265,31 +265,47 @@ Ext.define('App.view.rpe.TabCliente', {
                     var x='',y='',z='';
                     var arrayPJ = Array();
                     var arrayPF = Array();
+                    var arrayFormatPJ = Array();
+                    var arrayFormatPF = Array();
                     var decX = 0,decY = 2,decZ = 0;
                     rsarray.forEach(function(record){
 
                         x = record[idEixos.x];
                         y = record[idEixos.y];
 
-                        // decX = record['dec'+idEixos.x];
-                        // decY = record['dec'+idEixos.y];
+                        decX = record['dec'+idEixos.x];
+                        decY = record['dec'+idEixos.y];
 
                         if(record.tipoPessoa == 'J'){
                             arrayPJ.push([parseFloat(x),parseFloat(y)]);
+
+                            arrayFormatPJ.push({
+                                idPessoa: record.idPessoa,
+                                nome : record.nome,
+                                eixo: record['dec'+idEixos.x]
+                            });
+
                         }else{
                             arrayPF.push([parseFloat(x),parseFloat(y)]);
+
+                            arrayFormatPF.push({
+                                idPessoa: record.idPessoa,
+                                nome : record.nome
+                            });
                         }
 
                         cont++;
                     });
 
                     arraySeriePj=  {
+                            id: 'PJ',
                             name: 'Pessoa Jurídica',
                             color: 'rgba(223, 83, 83, .5)',
                             data : arrayPJ
                         };
                     arraySeriePf =
                         {
+                            id: 'PF',
                             name: 'Pessoa Física',
                             color: 'rgba(119, 152, 191, .5)',
                             data : arrayPF
@@ -304,8 +320,19 @@ Ext.define('App.view.rpe.TabCliente', {
                             text: result.referencia.incio + ' até ' + result.referencia.fim
                         },
                         tooltip: {
-                            headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '{point.x}, {point.y}'
+                            formatter: function () {
+
+                                var decFormatx = 0;
+                                var decFormaty = 2;
+                                var arrayFormat = arrayFormatPJ.concat(arrayFormatPF);
+                                var descricao =  arrayFormat[this.point.index].idPessoa+ ' '+ arrayFormat[this.point.index].nome;
+
+                                var pointFormat = '<b>'+descricao+'</b><br>';
+                                pointFormat += '<b>'+xtext+':</b><label>'+utilFormat.Value2(this.point.x,parseFloat(decX))+'</label><br>';
+                                pointFormat += '<b>'+ytext+':</b><label>'+utilFormat.Value2(this.point.y,parseFloat(decY))+'</label><br>';
+            
+                                return pointFormat;
+                            }
                         },
                         xAxis : {
                             title:{

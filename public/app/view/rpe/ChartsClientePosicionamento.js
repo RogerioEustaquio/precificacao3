@@ -64,6 +64,8 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                         var x='',y='',z='';
                                         var arrayPJ = Array();
                                         var arrayPF = Array();
+                                        var arrayFormatPJ = Array();
+                                        var arrayFormatPF = Array();
                                         var iCont = 0;
                                         rsarray.forEach(function(rowSerie){
 
@@ -72,8 +74,18 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
 
                                             if(rowSerie.tipoPessoa == 'J'){
                                                 arrayPJ.push([parseFloat(x),parseFloat(y)]);
+
+                                                arrayFormatPJ.push({
+                                                    idPessoa: rowSerie.idPessoa,
+                                                    nome : rowSerie.nome
+                                                });
                                             }else{
                                                 arrayPF.push([parseFloat(x),parseFloat(y)]);
+
+                                                arrayFormatPF.push({
+                                                    idPessoa: rowSerie.idPessoa,
+                                                    nome : rowSerie.nome
+                                                });
                                             }
                                             
                                             // rsarray[iCont].x = parseFloat(x);
@@ -83,11 +95,13 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
 
                                         arraySerie = [
                                             {
+                                                id: 'PJ',
                                                 name: 'Pessoa Jurídica',
                                                 color: 'rgba(223, 83, 83, .5)',
                                                 data : arrayPJ
                                             },
                                             {
+                                                id: 'PF',
                                                 name: 'Pessoa Física',
                                                 color: 'rgba(119, 152, 191, .5)',
                                                 data : arrayPF
@@ -118,7 +132,7 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                     }
                                     // console.log(arraySerie);
 
-                                    me.buildChartContainer(el,arraySerie);
+                                    me.buildChartContainer(el,arraySerie,arrayFormatPJ,arrayFormatPF);
 
                                     textSubtitle = {
                                         subtitle:{
@@ -133,18 +147,20 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                     me.setLoading(false);
                                     arraySerie = [
                                         {
+                                            id: 'PJ',
                                             name: 'Pessoa Jurídica',
                                             color: 'rgba(223, 83, 83, .5)',
                                             data : []
                                         },
                                         {
+                                            id: 'PF',
                                             name: 'Pessoa Física',
                                             color: 'rgba(119, 152, 191, .5)',
                                             data : []
                                         }
                                     ];
 
-                                    me.buildChartContainer(el,arraySerie)
+                                    me.buildChartContainer(el,arraySerie,arrayFormatPJ,arrayFormatPF)
 
                                     new Noty({
                                         theme: 'relax',
@@ -165,7 +181,7 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
         me.callParent(arguments);
     },
 
-    buildChartContainer: function(el,series){
+    buildChartContainer: function(el,series,arrayFormatPJ,arrayFormatPF){
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
@@ -200,12 +216,22 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                 },
                 startOnTick: true,
                 endOnTick: true,
-                showLastLabel: true
+                showLastLabel: true,
+                labels: {
+                    formatter: function () {
+                        return utilFormat.Value2(this.value,0);
+                    }
+                }
             },
         
             yAxis: {
                 title: {
                     text: 'MB'
+                },
+                labels: {
+                    formatter: function () {
+                        return utilFormat.Value2(this.value,2);
+                    }
                 }
             },
 
@@ -214,7 +240,7 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                 align: 'left',
                 verticalAlign: 'top',
                 x: 100,
-                y: 70,
+                y: 0,
                 floating: true,
                 backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
                 borderWidth: 1
@@ -237,14 +263,24 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                 enabled: false
                             }
                         }
-                    },
-                    tooltip: {
-                        headerFormat: '<b>{series.name}</b><br>',
-                        pointFormat: '{point.x}, {point.y}'
                     }
                 }
             },
         
+            tooltip: {
+                formatter: function () {
+
+                    var arrayFormat = arrayFormatPJ.concat(arrayFormatPF);
+                    var descricao =  arrayFormat[this.point.index].idPessoa+ ' '+ arrayFormat[this.point.index].nome;
+
+                    var pointFormat = '<b>'+descricao+'</b><br>';
+                    pointFormat += '<b>ROL:</b><label>'+utilFormat.Value2(this.point.x,0)+'</label><br>';
+                    pointFormat += '<b>MB:</b><label>'+utilFormat.Value2(this.point.y,2)+'</label><br>';
+
+                    return pointFormat;
+                }
+            },
+
             series: series
         
         });

@@ -116,7 +116,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $pDataInicio= $this->params()->fromPost('datainicio',null);
             $pDataFim   = $this->params()->fromPost('datafim',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
-            $descMarca  = $this->params()->fromPost('descMarca',null);
+            $codProdutos= $this->params()->fromPost('produto',null);
 
             $em = $this->getEntityManager();
 
@@ -127,6 +127,10 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $andFilial ='';
             if($filial){
                 $andFilial = " and vi.id_empresa in ($filial)";
+            }
+
+            if($codProdutos){
+                $codProdutos =  implode("','",json_decode($codProdutos));
             }
             /////////////////////////////////////////////////////////////////
             
@@ -162,6 +166,10 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $and_accumulated = '';
             if($idMarcas){
                 $andMarca = "and ic.id_marca in ($idMarcas)";
+            }
+            $andProduto = '';
+            if($codProdutos){
+                $andProduto = " and i.cod_item||c.descricao in ('$codProdutos')";
             }
 
             $em = $this->getEntityManager();
@@ -236,16 +244,20 @@ class ClienteposicionamentoController extends AbstractRestfulController
                                             and vi.id_empresa = em.id_empresa
                                             and ic.id_marca = m.id_marca
                                             and vi.id_pessoa = p.id_pessoa
+                                            --and vi.id_empresa = 23
                                             $andFilial
                                             $andData
                                             $andMarca
+                                            $andProduto
                                             -- and trunc(vi.data_emissao) >= '01/01/2021'
                                             -- and trunc(vi.data_emissao) < sysdate                                    
                                             --and ic.id_marca not in ()
                                             group by vi.id_pessoa, p.nome, p.tipo_pessoa, p.limite_credito))
                         group by rede, id_pessoa, nome, tipo_pessoa, limite_credito, rol, lb, mb, qtde, nf, fr_rol)
                         where 1=1
-                        and mb > -200 and mb < 200
+                        and mb > 0
+                        and mb < 50
+                        and rol > 0
                         -- Remover esse filtro se utilizar o filtro de marca
                         -- med_accumulated <= 80
                         order by med_accumulated asc";
