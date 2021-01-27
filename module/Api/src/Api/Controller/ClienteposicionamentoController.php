@@ -117,6 +117,8 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $pDataFim   = $this->params()->fromPost('datafim',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $codProdutos= $this->params()->fromPost('produto',null);
+            $pareto     = $this->params()->fromPost('pareto',null);
+            $idEixos    = $this->params()->fromPost('idEixos',null);
 
             $em = $this->getEntityManager();
 
@@ -131,6 +133,22 @@ class ClienteposicionamentoController extends AbstractRestfulController
 
             if($codProdutos){
                 $codProdutos =  implode("','",json_decode($codProdutos));
+            }
+
+            if($idEixos){
+                $idEixos = json_decode($idEixos);
+            }else{
+                $idEixos = new \stdClass;
+                $idEixos->x = 'rol';
+                $idEixos->y = 'mb';
+            }
+            if($pareto){
+                $pareto =  json_decode($pareto);
+            }
+            if($pareto){
+                $and_accumulated = "and med_accumulated >= $pareto[0] and med_accumulated <= $pareto[1]";
+            }else{
+                $and_accumulated = "and med_accumulated >= 0 and med_accumulated <= 80";
             }
             /////////////////////////////////////////////////////////////////
             
@@ -259,7 +277,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
                         and mb < 50
                         and rol > 0
                         -- Remover esse filtro se utilizar o filtro de marca
-                        -- med_accumulated <= 80
+                        $and_accumulated
                         order by med_accumulated asc";
             // print "$sql";
             // exit;
@@ -280,19 +298,46 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $resultSet->initialize($results);
 
             $data = array();
+            $arrayPJ = array();
+            $arrayPF = array();
             foreach ($resultSet as $row) {
                 $elementos = $hydrator->extract($row);
 
-                $data[] = $elementos;
+                if($elementos['tipoPessoa'] == 'J'){
+                    $arrayPJ[] = array(
+                        'x'=> (float)$elementos[$idEixos->x],
+                        'y'=> (float)$elementos[$idEixos->y],
+                        'idPessoa' => $elementos['idPessoa'],
+                        'nome' => $elementos['nome'],
+                        'decx' => $elementos['dec'.$idEixos->x],
+                        'decy' => $elementos['dec'.$idEixos->y]
+                    );
+                }else{
+                    $arrayPF[] = array(
+                        'x'=> (float)$elementos[$idEixos->x],
+                        'y'=> (float)$elementos[$idEixos->y],
+                        'idPessoa' => $elementos['idPessoa'],
+                        'nome' => $elementos['nome'],
+                        'decx' => $elementos['dec'.$idEixos->x],
+                        'decy' => $elementos['dec'.$idEixos->y]
+                    );
+                }
 
-                // $data[] = [
-                //             'x'=> (float)$elementos['rol'],
-                //             'y'=> (float)$elementos['mb'],
-                //             'z'=> (float)$elementos['cc'],
-                //             'desc'=> $elementos['ds'],
-                //             'descricao'=> $elementos['descricao']
-                // ];
             }
+
+            $data = array(
+                    array(
+                        'name' => 'Pessoa Jurídica',
+                        'color'=> 'rgba(223, 83, 83, .5)',
+                        'data' => $arrayPJ
+                    ),
+                    array(
+                        'name' => 'Pessoa Física',
+                        'color'=> 'rgba(119, 152, 191, .5)',
+                        'data' => $arrayPF
+                    )
+                )
+            ;
 
             $this->setCallbackData($data);
             

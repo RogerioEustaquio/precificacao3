@@ -166,11 +166,11 @@ Ext.define('App.view.dolar.ContainerHighCharts', {
                         }
                     }
                 ],
-                tooltip: {
-                    // shared: true,
-                    // outside: true
-                },
-                series: series
+            tooltip: {
+                // shared: true,
+                // outside: true
+            },
+            series: series
         });
 
     }

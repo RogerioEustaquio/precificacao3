@@ -197,6 +197,25 @@ Ext.define('App.view.rpe.TabCliente', {
         var marcas = filtro.down('#climarca').getValue();
         var produto = filtro.down('#cliproduto').getValue();
         var pareto = filtro.down('#clipareto').getValue();
+
+        
+        if(!textEixos){
+
+            textEixos = {
+                x: 'ROL',
+                y: 'MB'
+            };
+            
+        }
+        
+        if(!idEixos){
+
+            idEixos = {
+                x: 'rol',
+                y: 'mb'
+            };
+            
+        }
         
         var params = {
             filial: Ext.encode(filial),
@@ -204,31 +223,12 @@ Ext.define('App.view.rpe.TabCliente', {
             datafim: datafim,
             idMarcas: Ext.encode(marcas),
             produto: Ext.encode(produto),
-            pareto: Ext.encode(pareto)
+            pareto: Ext.encode(pareto),
+            idEixos: Ext.encode(idEixos)
         };
 
-        if(!idEixos){
-
-            idEixos = {
-                x: 'rol',
-                y: 'mb',
-                z: 'nf'
-            };
-            
-        }
-        if(!textEixos){
-
-            textEixos = {
-                x: 'ROL',
-                y: 'MB',
-                z: 'NF'
-            };
-            
-        }
-        
         var xtext = textEixos.x;
         var ytext = textEixos.y;
-        var ztext = textEixos.z;
 
         var charts = panelBolha.down('#chartsclienteposicionamento');
 
@@ -255,64 +255,12 @@ Ext.define('App.view.rpe.TabCliente', {
                 if(result.success){
 
                     rsarray = result.data;
-                    var cont = 0;
-                    
-                    // charts.chart.xAxis[0].setCategories(rsarray.categories);
+ 
+                    charts.chart.addSeries(rsarray[0]);
+                    charts.chart.addSeries(rsarray[1]);
 
-                    var vSerie = Object();
-                    var vData = Array();
-
-                    var x='',y='',z='';
-                    var arrayPJ = Array();
-                    var arrayPF = Array();
-                    var arrayFormatPJ = Array();
-                    var arrayFormatPF = Array();
-                    var decX = 0,decY = 2,decZ = 0;
-                    rsarray.forEach(function(record){
-
-                        x = record[idEixos.x];
-                        y = record[idEixos.y];
-
-                        decX = record['dec'+idEixos.x];
-                        decY = record['dec'+idEixos.y];
-
-                        if(record.tipoPessoa == 'J'){
-                            arrayPJ.push([parseFloat(x),parseFloat(y)]);
-
-                            arrayFormatPJ.push({
-                                idPessoa: record.idPessoa,
-                                nome : record.nome,
-                                eixo: record['dec'+idEixos.x]
-                            });
-
-                        }else{
-                            arrayPF.push([parseFloat(x),parseFloat(y)]);
-
-                            arrayFormatPF.push({
-                                idPessoa: record.idPessoa,
-                                nome : record.nome
-                            });
-                        }
-
-                        cont++;
-                    });
-
-                    arraySeriePj=  {
-                            id: 'PJ',
-                            name: 'Pessoa Jurídica',
-                            color: 'rgba(223, 83, 83, .5)',
-                            data : arrayPJ
-                        };
-                    arraySeriePf =
-                        {
-                            id: 'PF',
-                            name: 'Pessoa Física',
-                            color: 'rgba(119, 152, 191, .5)',
-                            data : arrayPF
-                        };
-
-                    charts.chart.addSeries(arraySeriePj);
-                    charts.chart.addSeries(arraySeriePf);
+                    decX = rsarray[0].data[0].decx;
+                    decY = rsarray[0].data[0].decy;
 
                     var extraUpdate = {
 
@@ -322,15 +270,12 @@ Ext.define('App.view.rpe.TabCliente', {
                         tooltip: {
                             formatter: function () {
 
-                                var decFormatx = 0;
-                                var decFormaty = 2;
-                                var arrayFormat = arrayFormatPJ.concat(arrayFormatPF);
-                                var descricao =  arrayFormat[this.point.index].idPessoa+ ' '+ arrayFormat[this.point.index].nome;
+                                var descricao =  this.point.idPessoa+ ' '+ this.point.nome;
 
                                 var pointFormat = '<b>'+descricao+'</b><br>';
-                                pointFormat += '<b>'+xtext+':</b><label>'+utilFormat.Value2(this.point.x,parseFloat(decX))+'</label><br>';
-                                pointFormat += '<b>'+ytext+':</b><label>'+utilFormat.Value2(this.point.y,parseFloat(decY))+'</label><br>';
-            
+                                pointFormat += '<b>ROL:</b><label>'+utilFormat.Value2(this.point.x,parseFloat(this.point.decx))+'</label><br>';
+                                pointFormat += '<b>MB:</b><label>'+utilFormat.Value2(this.point.y,parseFloat(this.point.decy))+'</label><br>';
+
                                 return pointFormat;
                             }
                         },
@@ -340,7 +285,7 @@ Ext.define('App.view.rpe.TabCliente', {
                             },
                             labels: {
                                formatter: function () {
-                                    return utilFormat.Value2(this.value,parseFloat(decX));
+                                    return utilFormat.Value2(this.value,decX);
                                }
                             }
                         },

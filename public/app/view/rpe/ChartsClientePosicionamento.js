@@ -59,54 +59,7 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                     var result = Ext.decode(response.responseText);
                                     if(result.success){
 
-                                        rsarray = result.data;
-
-                                        var x='',y='',z='';
-                                        var arrayPJ = Array();
-                                        var arrayPF = Array();
-                                        var arrayFormatPJ = Array();
-                                        var arrayFormatPF = Array();
-                                        var iCont = 0;
-                                        rsarray.forEach(function(rowSerie){
-
-                                            x = rowSerie[idEixos.x];
-                                            y = rowSerie[idEixos.y];
-
-                                            if(rowSerie.tipoPessoa == 'J'){
-                                                arrayPJ.push([parseFloat(x),parseFloat(y)]);
-
-                                                arrayFormatPJ.push({
-                                                    idPessoa: rowSerie.idPessoa,
-                                                    nome : rowSerie.nome
-                                                });
-                                            }else{
-                                                arrayPF.push([parseFloat(x),parseFloat(y)]);
-
-                                                arrayFormatPF.push({
-                                                    idPessoa: rowSerie.idPessoa,
-                                                    nome : rowSerie.nome
-                                                });
-                                            }
-                                            
-                                            // rsarray[iCont].x = parseFloat(x);
-
-                                            iCont++;
-                                        });
-
-                                        arraySerie = [
-                                            {
-                                                id: 'PJ',
-                                                name: 'Pessoa Jurídica',
-                                                color: 'rgba(223, 83, 83, .5)',
-                                                data : arrayPJ
-                                            },
-                                            {
-                                                id: 'PF',
-                                                name: 'Pessoa Física',
-                                                color: 'rgba(119, 152, 191, .5)',
-                                                data : arrayPF
-                                            }
-                                        ];
+                                        arraySerie = result.data;
 
                                     }else{
                                         arraySerie = [
@@ -130,9 +83,8 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                             text: 'Erro sistema: '+ result.message.substr(0,20)
                                         }).show();
                                     }
-                                    // console.log(arraySerie);
 
-                                    me.buildChartContainer(el,arraySerie,arrayFormatPJ,arrayFormatPF);
+                                    me.buildChartContainer(el,arraySerie);
 
                                     textSubtitle = {
                                         subtitle:{
@@ -160,7 +112,7 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                                         }
                                     ];
 
-                                    me.buildChartContainer(el,arraySerie,arrayFormatPJ,arrayFormatPF)
+                                    me.buildChartContainer(el,arraySerie)
 
                                     new Noty({
                                         theme: 'relax',
@@ -181,7 +133,7 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
         me.callParent(arguments);
     },
 
-    buildChartContainer: function(el,series,arrayFormatPJ,arrayFormatPF){
+    buildChartContainer: function(el,series){
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
@@ -221,7 +173,8 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                     formatter: function () {
                         return utilFormat.Value2(this.value,0);
                     }
-                }
+                },
+                min: 0
             },
         
             yAxis: {
@@ -232,7 +185,8 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                     formatter: function () {
                         return utilFormat.Value2(this.value,2);
                     }
-                }
+                },
+                min: 0
             },
 
             legend: {
@@ -264,14 +218,16 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
                             }
                         }
                     }
+                },
+                series: {
+                    turboThreshold: 50000
                 }
+                
             },
-        
             tooltip: {
                 formatter: function () {
 
-                    var arrayFormat = arrayFormatPJ.concat(arrayFormatPF);
-                    var descricao =  arrayFormat[this.point.index].idPessoa+ ' '+ arrayFormat[this.point.index].nome;
+                    var descricao =  this.point.idPessoa+ ' '+ this.point.nome;
 
                     var pointFormat = '<b>'+descricao+'</b><br>';
                     pointFormat += '<b>ROL:</b><label>'+utilFormat.Value2(this.point.x,0)+'</label><br>';
