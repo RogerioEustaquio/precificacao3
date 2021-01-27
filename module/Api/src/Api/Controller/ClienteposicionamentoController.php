@@ -181,7 +181,6 @@ class ClienteposicionamentoController extends AbstractRestfulController
                 $idMarcas =  implode(",",json_decode($idMarcas));
             }
             $andMarca = '';
-            $and_accumulated = '';
             if($idMarcas){
                 $andMarca = "and ic.id_marca in ($idMarcas)";
             }
