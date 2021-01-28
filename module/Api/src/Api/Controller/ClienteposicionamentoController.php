@@ -200,10 +200,12 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $stmt->execute();
             $resultCount = $stmt->fetchAll();
 
-            $sql = "select id_pessoa,
+            $sql = "select apelido,
+                            id_pessoa,
                             nome,
                             tipo_pessoa,
-                            limite_credito,
+                            limite_credito lcrt,
+                            0 declcrt,
                             rol,
                             0 decrol,
                             lb,
@@ -213,21 +215,21 @@ class ClienteposicionamentoController extends AbstractRestfulController
                             qtde,
                             0 decqtde,
                             nf,
-                            0 decnf,       
-                            limite_credito,
+                            0 decnf,
                             med_accumulated
-                    from (select id_pessoa,
-                                    nome,
-                                    tipo_pessoa,
-                                    limite_credito,
-                                    rol,
-                                    lb,
-                                    mb,
-                                    qtde,
-                                    nf,
-                                    fr_rol,
-                                    sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
-                            from (select rede, id_pessoa, nome, tipo_pessoa, limite_credito,
+                    from (select apelido,
+                                 id_pessoa,
+                                 nome,
+                                 tipo_pessoa,
+                                 limite_credito,
+                                 rol,
+                                 lb,
+                                 mb,
+                                 qtde,
+                                 nf,
+                                 fr_rol,
+                                 sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
+                            from (select rede, apelido, id_pessoa, nome, tipo_pessoa, limite_credito,
                                             rol,
                                             lb,
                                             mb,
@@ -235,6 +237,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
                                             nf,
                                             100*ratio_to_report((case when rol > 0 then rol end)) over (partition by rede) fr_rol
                                     from (select 'JS' as rede,
+                                                    em.apelido,
                                                     vi.id_pessoa,
                                                     p.nome,
                                                     p.tipo_pessoa,
@@ -269,8 +272,8 @@ class ClienteposicionamentoController extends AbstractRestfulController
                                             -- and trunc(vi.data_emissao) >= '01/01/2021'
                                             -- and trunc(vi.data_emissao) < sysdate                                    
                                             --and ic.id_marca not in ()
-                                            group by vi.id_pessoa, p.nome, p.tipo_pessoa, p.limite_credito))
-                        group by rede, id_pessoa, nome, tipo_pessoa, limite_credito, rol, lb, mb, qtde, nf, fr_rol)
+                                            group by em.apelido, vi.id_pessoa, p.nome, p.tipo_pessoa, p.limite_credito))
+                        group by rede, apelido, id_pessoa, nome, tipo_pessoa, limite_credito, rol, lb, mb, qtde, nf, fr_rol)
                         where 1=1
                         and mb > 0
                         and mb < 50
@@ -306,6 +309,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
                     $arrayPJ[] = array(
                         'x'=> (float)$elementos[$idEixos->x],
                         'y'=> (float)$elementos[$idEixos->y],
+                        'filial'=> $elementos['apelido'],
                         'idPessoa' => $elementos['idPessoa'],
                         'nome' => $elementos['nome'],
                         'decx' => $elementos['dec'.$idEixos->x],
@@ -315,6 +319,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
                     $arrayPF[] = array(
                         'x'=> (float)$elementos[$idEixos->x],
                         'y'=> (float)$elementos[$idEixos->y],
+                        'filial'=> $elementos['apelido'],
                         'idPessoa' => $elementos['idPessoa'],
                         'nome' => $elementos['nome'],
                         'decx' => $elementos['dec'.$idEixos->x],
@@ -509,7 +514,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
         try {
 
             // $pEmp    = $this->params()->fromQuery('emp',null);
-
+            $data[] = ['id'=> 'lcrt','name'=> 'Limite Crédito','vExemplo'=> 1000000];
             $data[] = ['id'=> 'ROL','name'=> 'ROL','vExemplo'=> 1000000];
             $data[] = ['id'=> 'MB','name'=> 'MB','vExemplo'=> 30];
             $data[] = ['id'=> 'NF','name'=> 'NF','vExemplo'=> 1000];

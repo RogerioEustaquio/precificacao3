@@ -229,9 +229,11 @@ Ext.define('App.view.rpe.ChartsClientePosicionamento', {
 
                     var descricao =  this.point.idPessoa+ ' '+ this.point.nome;
 
-                    var pointFormat = '<b>'+descricao+'</b><br>';
-                    pointFormat += '<b>ROL:</b><label>'+utilFormat.Value2(this.point.x,0)+'</label><br>';
-                    pointFormat += '<b>MB:</b><label>'+utilFormat.Value2(this.point.y,2)+'</label><br>';
+                    var pointFormat = '';
+                    pointFormat += '<b>'+this.point.filial+'</b><br>';
+                    pointFormat += '<b>'+descricao+'</b><br>';
+                    pointFormat += '<b>ROL: </b><label>'+utilFormat.Value2(this.point.x,0)+'</label><br>';
+                    pointFormat += '<b>MB: </b><label>'+utilFormat.Value2(this.point.y,2)+'</label><br>';
 
                     return pointFormat;
                 }
