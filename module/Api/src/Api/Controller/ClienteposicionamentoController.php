@@ -118,6 +118,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $codProdutos= $this->params()->fromPost('produto',null);
             $pareto     = $this->params()->fromPost('pareto',null);
+            $paretoMb   = $this->params()->fromPost('paretoMb',null);
             $idEixos    = $this->params()->fromPost('idEixos',null);
 
             $em = $this->getEntityManager();
@@ -149,6 +150,14 @@ class ClienteposicionamentoController extends AbstractRestfulController
                 $and_accumulated = "and med_accumulated >= $pareto[0] and med_accumulated <= $pareto[1]";
             }else{
                 $and_accumulated = "and med_accumulated >= 0 and med_accumulated <= 80";
+            }
+            if($paretoMb){
+                $paretoMb =  json_decode($paretoMb);
+            }
+            if($paretoMb){
+                $and_mb = "and mb >= $paretoMb[0] and mb <= $paretoMb[1]";
+            }else{
+                $and_mb = "and mb > 0 and mb <= 50";
             }
             /////////////////////////////////////////////////////////////////
             
@@ -275,8 +284,7 @@ class ClienteposicionamentoController extends AbstractRestfulController
                                             group by em.apelido, vi.id_pessoa, p.nome, p.tipo_pessoa, p.limite_credito))
                         group by rede, apelido, id_pessoa, nome, tipo_pessoa, limite_credito, rol, lb, mb, qtde, nf, fr_rol)
                         where 1=1
-                        and mb > 0
-                        and mb < 50
+                        $and_mb
                         and rol > 0
                         -- Remover esse filtro se utilizar o filtro de marca
                         $and_accumulated

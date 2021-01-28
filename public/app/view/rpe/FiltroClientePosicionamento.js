@@ -189,6 +189,22 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
             // tipText: 'tipText'
         });
 
+        var elParetoMb = Ext.create('Ext.slider.Multi', {
+            itemId: 'cliparetomb',
+            name: 'cliparetomb',
+            labelAlign: 'top',
+            width: 180,
+            values: [0, 50],
+            increment: 1,
+            minValue: 0,
+            maxValue: 50,
+            fieldLabel: 'Pareto MB',
+            valueField: 'paretoMb',
+            // this defaults to true, setting to false allows the thumbs to pass each other
+            constrainThumbs: false,
+            // tipText: 'tipText'
+        });
+
         Ext.applyIf(me, {
 
             items : [
@@ -289,7 +305,24 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
                             tooltip: 'Limpar',
                             margin: '26 1 1 1',
                             handler: function(form) {
-                                form.up('panel').down('multislider').setValue(null);
+                                form.up('panel').down('multislider').setValue([0,80]);
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elParetoMb,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('multislider').setValue([0,50]);
                             }
                         }
                     ]
@@ -313,6 +346,7 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
                                 form.up('toolbar').up('panel').down('tagfield[name=climarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=cliproduto]').setValue(null);
                                 form.up('toolbar').up('panel').down('multislider[name=clipareto]').setValue([0,80]);
+                                form.up('toolbar').up('panel').down('multislider[name=cliparetomb]').setValue([0,50]);
                             }
                         }
                     ]

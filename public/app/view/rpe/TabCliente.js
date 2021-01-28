@@ -197,6 +197,7 @@ Ext.define('App.view.rpe.TabCliente', {
         var marcas = filtro.down('#climarca').getValue();
         var produto = filtro.down('#cliproduto').getValue();
         var pareto = filtro.down('#clipareto').getValue();
+        var paretoMb = filtro.down('#cliparetomb').getValue();
 
         
         if(!textEixos){
@@ -224,6 +225,7 @@ Ext.define('App.view.rpe.TabCliente', {
             idMarcas: Ext.encode(marcas),
             produto: Ext.encode(produto),
             pareto: Ext.encode(pareto),
+            paretoMb: Ext.encode(paretoMb),
             idEixos: Ext.encode(idEixos)
         };
 
