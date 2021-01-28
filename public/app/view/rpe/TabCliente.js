@@ -273,8 +273,7 @@ Ext.define('App.view.rpe.TabCliente', {
                                 var descricao =  this.point.idPessoa+ ' '+ this.point.nome;
 
                                 var pointFormat = '';
-                                pointFormat += '<b>'+this.point.filial+'</b><br>';
-                                pointFormat += '<b>'+descricao+'</b><br>';
+                                pointFormat += '<b>'+this.point.filial+' '+descricao+'</b><br>';
                                 pointFormat += '<b>'+xtext+': </b><label>'+utilFormat.Value2(this.point.x,parseFloat(this.point.decx))+'</label><br>';
                                 pointFormat += '<b>'+ytext+': </b><label>'+utilFormat.Value2(this.point.y,parseFloat(this.point.decy))+'</label><br>';
 
