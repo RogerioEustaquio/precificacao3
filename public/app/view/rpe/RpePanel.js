@@ -59,6 +59,9 @@ Ext.define('App.view.rpe.RpePanel', {
                         },
                         {
                             xtype: 'tabcliente'
+                        },
+                        {
+                            xtype: 'tabproduto'
                         }
                     ]
                    

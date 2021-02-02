@@ -11,7 +11,7 @@ use Core\Stdlib\StdClass;
 use Core\Hydrator\ObjectProperty;
 use Core\Hydrator\Strategy\ValueStrategy;
 
-class ClienteposicionamentoController extends AbstractRestfulController
+class ProdutoposicionamentoController extends AbstractRestfulController
 {
     
     /**
@@ -105,9 +105,11 @@ class ClienteposicionamentoController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    public function clienteposicionamentoAction()
+    public function produtoposicionamentoAction()
     {
         $data = array();
+
+        ini_set('memory_limit', '256M');
         
         try {
 
@@ -117,7 +119,6 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $pDataFim   = $this->params()->fromPost('datafim',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $codProdutos= $this->params()->fromPost('produto',null);
-            $idPessoas  = $this->params()->fromPost('cliente',null);
             $pareto     = $this->params()->fromPost('pareto',null);
             $paretoMb   = $this->params()->fromPost('paretoMb',null);
             $idEixos    = $this->params()->fromPost('idEixos',null);
@@ -135,9 +136,6 @@ class ClienteposicionamentoController extends AbstractRestfulController
 
             if($codProdutos){
                 $codProdutos =  implode("','",json_decode($codProdutos));
-            }
-            if($idPessoas){
-                $idPessoas =  implode(",",json_decode($idPessoas));
             }
 
             if($idEixos){
@@ -201,10 +199,6 @@ class ClienteposicionamentoController extends AbstractRestfulController
             if($codProdutos){
                 $andProduto = " and i.cod_item||c.descricao in ('$codProdutos')";
             }
-            $andCliente = '';
-            if($idPessoas){
-                $andCliente = " and id_pessoa in ($idPessoas)";
-            }
 
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
@@ -218,86 +212,79 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $resultCount = $stmt->fetchAll();
 
             $sql = "select apelido,
-                            id_pessoa,
-                            nome,
-                            tipo_pessoa,
-                            limite_credito lcrt,
-                            0 declcrt,
+            codProduto,
+            descricao,
+            rol,
+            0 decrol,
+            lb,
+            0 declb,
+            mb,
+            2 decmb,
+            qtde,
+            0 decqtde,
+            nf,
+            0 decnf,
+            med_accumulated
+        from (select apelido,
+                 codProduto,
+                 descricao,
+                 rol,
+                 lb,
+                 mb,
+                 qtde,
+                 nf,
+                 fr_rol,
+                 sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
+            from (select rede, apelido, codProduto, descricao,
                             rol,
-                            0 decrol,
                             lb,
-                            0 declb,
                             mb,
-                            2 decmb,
                             qtde,
-                            0 decqtde,
                             nf,
-                            0 decnf,
-                            med_accumulated
-                    from (select apelido,
-                                 id_pessoa,
-                                 nome,
-                                 tipo_pessoa,
-                                 limite_credito,
-                                 rol,
-                                 lb,
-                                 mb,
-                                 qtde,
-                                 nf,
-                                 fr_rol,
-                                 sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
-                            from (select rede, apelido, id_pessoa, nome, tipo_pessoa, limite_credito,
-                                            rol,
-                                            lb,
-                                            mb,
-                                            qtde,
-                                            nf,
-                                            100*ratio_to_report((case when rol > 0 then rol end)) over (partition by rede) fr_rol
-                                    from (select 'JS' as rede,
-                                                    em.apelido,
-                                                    vi.id_pessoa,
-                                                    p.nome,
-                                                    p.tipo_pessoa,
-                                                    p.limite_credito,
-                                                    sum(vi.rob) as rob,
-                                                    sum(vi.rol) as rol,
-                                                    sum(vi.custo) as cmv,
-                                                    sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                                    round((case when sum(rol) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                                                    sum(vi.qtde) as qtde,
-                                                    count(distinct vi.numero_nf) as nf,
-                                                    count(distinct vi.id_pessoa) as cc
-                                            from pricing.vm_ie_ve_venda_item vi, 
-                                                    ms.tb_item_categoria ic,
-                                                    ms.tb_item i,
-                                                    ms.tb_categoria c, 
-                                                    ms.empresa em,
-                                                    ms.tb_marca m,
-                                                    ms.pessoa p
-                                            where vi.id_item = ic.id_item
-                                            and vi.id_categoria = ic.id_categoria
-                                            and vi.id_item = i.id_item
-                                            and vi.id_categoria = c.id_categoria
-                                            and vi.id_empresa = em.id_empresa
-                                            and ic.id_marca = m.id_marca
-                                            and vi.id_pessoa = p.id_pessoa
-                                            --and vi.id_empresa = 23
-                                            $andFilial
-                                            $andData
-                                            $andMarca
-                                            $andProduto
-                                            -- and trunc(vi.data_emissao) >= '01/01/2021'
-                                            -- and trunc(vi.data_emissao) < sysdate                                    
-                                            --and ic.id_marca not in ()
-                                            group by em.apelido, vi.id_pessoa, p.nome, p.tipo_pessoa, p.limite_credito))
-                        group by rede, apelido, id_pessoa, nome, tipo_pessoa, limite_credito, rol, lb, mb, qtde, nf, fr_rol)
-                        where 1=1
-                        $and_mb
-                        $andCliente
-                        and rol > 0
-                        -- Remover esse filtro se utilizar o filtro de marca
-                        $and_accumulated
-                        order by med_accumulated asc";
+                            100*ratio_to_report((case when rol > 0 then rol end)) over (partition by rede) fr_rol
+                    from (select 'JS' as rede,
+                                    em.apelido,
+                                    i.cod_item||c.descricao codProduto,
+                                    i.descricao,
+                                    sum(vi.rob) as rob,
+                                    sum(vi.rol) as rol,
+                                    sum(vi.custo) as cmv,
+                                    sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                    round((case when sum(rol) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                    sum(vi.qtde) as qtde,
+                                    count(distinct vi.numero_nf) as nf,
+                                    count(distinct vi.id_pessoa) as cc
+                            from pricing.vm_ie_ve_venda_item vi, 
+                                    ms.tb_item_categoria ic,
+                                    ms.tb_item i,
+                                    ms.tb_categoria c, 
+                                    ms.empresa em,
+                                    ms.tb_marca m,
+                                    ms.pessoa p
+                            where vi.id_item = ic.id_item
+                            and vi.id_categoria = ic.id_categoria
+                            and vi.id_item = i.id_item
+                            and vi.id_categoria = c.id_categoria
+                            and vi.id_empresa = em.id_empresa
+                            and ic.id_marca = m.id_marca
+                            and vi.id_pessoa = p.id_pessoa
+                            --and vi.id_empresa = 23
+                            $andFilial
+                            $andData
+                            $andMarca
+                            $andProduto
+                            -- and trunc(vi.data_emissao) >= '01/01/2021'
+                            -- and trunc(vi.data_emissao) < sysdate                                    
+                            --and ic.id_marca not in ()
+                            group by em.apelido, i.descricao, i.cod_item||c.descricao))
+        group by rede, apelido, codProduto, descricao, rol, lb, mb, qtde, nf, fr_rol)
+        where 1=1
+        $and_mb
+        and rol > 0
+        -- Remover esse filtro se utilizar o filtro de marca
+        $and_accumulated
+        and rownum < 20000
+        order by med_accumulated asc";
             // print "$sql";
             // exit;
             $stmt = $conn->prepare($sql);
@@ -317,45 +304,27 @@ class ClienteposicionamentoController extends AbstractRestfulController
             $resultSet->initialize($results);
 
             $data = array();
-            $arrayPJ = array();
-            $arrayPF = array();
+            $arrayProduto = array();
             foreach ($resultSet as $row) {
                 $elementos = $hydrator->extract($row);
 
-                if($elementos['tipoPessoa'] == 'J'){
-                    $arrayPJ[] = array(
-                        'x'=> (float)$elementos[$idEixos->x],
-                        'y'=> (float)$elementos[$idEixos->y],
-                        'filial'=> $elementos['apelido'],
-                        'idPessoa' => $elementos['idPessoa'],
-                        'nome' => $elementos['nome'],
-                        'decx' => $elementos['dec'.$idEixos->x],
-                        'decy' => $elementos['dec'.$idEixos->y]
-                    );
-                }else{
-                    $arrayPF[] = array(
-                        'x'=> (float)$elementos[$idEixos->x],
-                        'y'=> (float)$elementos[$idEixos->y],
-                        'filial'=> $elementos['apelido'],
-                        'idPessoa' => $elementos['idPessoa'],
-                        'nome' => $elementos['nome'],
-                        'decx' => $elementos['dec'.$idEixos->x],
-                        'decy' => $elementos['dec'.$idEixos->y]
-                    );
-                }
+                $arrayProduto[] = array(
+                    'x'=> (float)$elementos[$idEixos->x],
+                    'y'=> (float)$elementos[$idEixos->y],
+                    'filial'=> $elementos['apelido'],
+                    'idPessoa' => $elementos['codproduto'],
+                    'nome' => $elementos['descricao'],
+                    'decx' => $elementos['dec'.$idEixos->x],
+                    'decy' => $elementos['dec'.$idEixos->y]
+                );
 
             }
 
             $data = array(
                     array(
-                        'name' => 'Pessoa Jurídica',
+                        'name' => 'Produto',
                         'color'=> 'rgba(223, 83, 83, .5)',
-                        'data' => $arrayPJ
-                    ),
-                    array(
-                        'name' => 'Pessoa Física',
-                        'color'=> 'rgba(119, 152, 191, .5)',
-                        'data' => $arrayPF
+                        'data' => $arrayProduto
                     )
                 )
             ;
@@ -524,76 +493,16 @@ class ClienteposicionamentoController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    public function listarclientesAction()
-    {
-        $data = array();
-        
-        try {
-
-            $pEmp    = $this->params()->fromQuery('emp',null);
-            $idPessoa= $this->params()->fromQuery('idPessoa',null);
-            $tipoSql = $this->params()->fromQuery('tipoSql',null);
-
-            if(!$idPessoa){
-                throw new \Exception('Parâmetros não informados.');
-            }
-
-            $em = $this->getEntityManager();
-
-            if(!$tipoSql){
-                $filtroCliente = "like upper('".$idPessoa."%')";
-            }else{
-
-                $Cliente =  implode("','",json_decode($idPessoa));
-                $filtroCliente = "in (".$Cliente.")";
-            }
-            
-            $sql = "select id_pessoa,
-                           nome descricao
-                        from ms.pessoa
-                    where 1 =1
-                    and id_pessoa $filtroCliente
-                    order by id_pessoa";
-
-            $conn = $em->getConnection();
-            $stmt = $conn->prepare($sql);
-            // $stmt->bindValue(1, $pEmp);
-            
-            $stmt->execute();
-            $results = $stmt->fetchAll();
-
-            $hydrator = new ObjectProperty;
-            // $hydrator->addStrategy('custo_contabil', new ValueStrategy);
-            $stdClass = new StdClass;
-            $resultSet = new HydratingResultSet($hydrator, $stdClass);
-            $resultSet->initialize($results);
-
-            $data = array();
-            foreach ($resultSet as $row) {
-                $data[] = $hydrator->extract($row);
-            }
-
-            $this->setCallbackData($data);
-            
-        } catch (\Exception $e) {
-            $this->setCallbackError($e->getMessage());
-        }
-        
-        return $this->getCallbackModel();
-    }
-
     public function listareixosAction()
     {
         $data = array();
         
         try {
 
-            // $pEmp    = $this->params()->fromQuery('emp',null);
             $data[] = ['id'=> 'ROL','name'=> 'ROL','vExemplo'=> 1000000];
             $data[] = ['id'=> 'MB','name'=> 'MB','vExemplo'=> 30];
             $data[] = ['id'=> 'NF','name'=> 'NF','vExemplo'=> 1000];
             $data[] = ['id'=> 'QTDE','name'=> 'QTDE','vExemplo'=> 200];
-            $data[] = ['id'=> 'lcrt','name'=> 'Limite Crédito','vExemplo'=> 1000000];
 
             $this->setCallbackData($data);
             

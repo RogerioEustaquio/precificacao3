@@ -117,6 +117,7 @@ class MarcabrandpositioningController extends AbstractRestfulController
             $pDataFim   = $this->params()->fromPost('datafim',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $pareto     = $this->params()->fromPost('pareto',null);
+            $produtos   = $this->params()->fromPost('produto',null);
 
             $em = $this->getEntityManager();
 
@@ -125,6 +126,9 @@ class MarcabrandpositioningController extends AbstractRestfulController
             }
             if($pareto){
                 $pareto =  json_decode($pareto);
+            }
+            if($produtos){
+                $produtos =  implode("','",json_decode($produtos));
             }
             
             $andEmpEstoque = '';
@@ -171,6 +175,11 @@ class MarcabrandpositioningController extends AbstractRestfulController
                 $and_accumulated = "and med_accumulated >= $pareto[0] and med_accumulated <= $pareto[1]";
             }else{
                 $and_accumulated = "and med_accumulated >= 0 and med_accumulated <= 80";
+            }
+
+            $andProduto = '';
+            if($produtos){
+                $andProduto = " and i.cod_item||c.descricao in ('$produtos')";
             }
 
             $em = $this->getEntityManager();
@@ -248,6 +257,7 @@ class MarcabrandpositioningController extends AbstractRestfulController
                                                     $andData
                                                     $andEmpUteis
                                                     $andMarca
+                                                    --$andProduto
                                                     --and m.id_marca not in ()
                                                     group by ic.id_marca, m.descricao) ax,
                                                 (select ic.id_marca, sum(estoque*custo_contabil) as estoque_valor 
@@ -377,6 +387,69 @@ class MarcabrandpositioningController extends AbstractRestfulController
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    public function listarprodutosAction()
+    {
+        $data = array();
+        
+        try {
+
+            $pEmp    = $this->params()->fromQuery('emp',null);
+            $pCod    = $this->params()->fromQuery('codItem',null);
+            $tipoSql = $this->params()->fromQuery('tipoSql',null);
+
+            if(!$pCod){
+                throw new \Exception('Parâmetros não informados.');
+            }
+
+            $em = $this->getEntityManager();
+
+            if(!$tipoSql){
+                $filtroProduto = "like upper('".$pCod."%')";
+            }else{
+                $produtos =  implode("','",json_decode($pCod));
+                $filtroProduto = "in ('".$produtos."')";
+            }
+            
+            $sql = "select i.cod_item||c.descricao as cod_item,
+                           i.descricao,
+                           m.descricao as marca
+                        from ms.tb_item_categoria ic,
+                        ms.tb_marca m,
+                        ms.tb_item i,
+                        ms.tb_categoria c
+                    where ic.id_item = i.id_item
+                    and ic.id_categoria = c.id_categoria
+                    and ic.id_marca = m.id_marca
+                    and i.cod_item||c.descricao $filtroProduto
+                    order by cod_item asc";
+
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindValue(1, $pEmp);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('custo_contabil', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);

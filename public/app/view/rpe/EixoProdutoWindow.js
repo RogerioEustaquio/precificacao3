@@ -1,9 +1,9 @@
 
-Ext.define('App.view.rpe.EixoClienteWindow', {
+Ext.define('App.view.rpe.EixoProdutoWindow', {
     extend: 'Ext.window.Window',
-    xtype: 'eixoclientewindow',
-    itemId: 'eixoclientewindow',
-    id: 'eixoclientewindow',
+    xtype: 'eixoprodutowindow',
+    itemId: 'eixoprodutowindow',
+    id: 'eixoprodutowindow',
     height: 300,
     width: 800,
     title: 'Seleção de Eixos',
@@ -24,7 +24,7 @@ Ext.define('App.view.rpe.EixoClienteWindow', {
                 fields: [{ name: 'id', type: 'string' }],
                 proxy: {
                     type: 'ajax',
-                    url: BASEURL + '/api/clienteposicionamento/listareixos',
+                    url: BASEURL + '/api/produtoposicionamento/listareixos',
                     timeout: 120000,
                     reader: {
                         type: 'json',

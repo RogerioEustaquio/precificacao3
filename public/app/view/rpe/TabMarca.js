@@ -435,6 +435,7 @@ Ext.define('App.view.rpe.TabMarca', {
         var datafim = filtromarca.down('#datafim').getRawValue();
         var marcas = filtromarca.down('#elmarca').getValue();
         var pareto = filtromarca.down('#elPareto').getValue();
+        // var produto = filtromarca.down('#brandproduto').getValue();
         
         var params = {
             idEmpresas: Ext.encode(empresas),
@@ -442,6 +443,7 @@ Ext.define('App.view.rpe.TabMarca', {
             datafim: datafim,
             idMarcas: Ext.encode(marcas),
             pareto : Ext.encode(pareto),
+            // produto : Ext.encode(produto)
         };
 
         if(!idEixos){

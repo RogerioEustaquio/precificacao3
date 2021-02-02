@@ -190,14 +190,15 @@ Ext.define('App.view.rpe.TabCliente', {
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
-        var filtro =  panelBolha.up('container').down('#filtroclienteposicionamento');
-        var filial = filtro.down('#clifilial').getValue();
-        var datainicio = filtro.down('#clidatainicio').getRawValue();
-        var datafim = filtro.down('#clidatafim').getRawValue();
-        var marcas = filtro.down('#climarca').getValue();
-        var produto = filtro.down('#cliproduto').getValue();
-        var pareto = filtro.down('#clipareto').getValue();
-        var paretoMb = filtro.down('#cliparetomb').getValue();
+        var filtro      =  panelBolha.up('container').down('#filtroclienteposicionamento');
+        var filial      = filtro.down('#clifilial').getValue();
+        var datainicio  = filtro.down('#clidatainicio').getRawValue();
+        var datafim     = filtro.down('#clidatafim').getRawValue();
+        var marcas      = filtro.down('#climarca').getValue();
+        var produto     = filtro.down('#cliproduto').getValue();
+        var cliente     = filtro.down('#cliente').getValue();
+        var pareto      = filtro.down('#clipareto').getValue();
+        var paretoMb    = filtro.down('#cliparetomb').getValue();
 
         
         if(!textEixos){
@@ -224,6 +225,7 @@ Ext.define('App.view.rpe.TabCliente', {
             datafim: datafim,
             idMarcas: Ext.encode(marcas),
             produto: Ext.encode(produto),
+            cliente: Ext.encode(cliente),
             pareto: Ext.encode(pareto),
             paretoMb: Ext.encode(paretoMb),
             idEixos: Ext.encode(idEixos)

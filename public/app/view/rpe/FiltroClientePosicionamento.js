@@ -173,6 +173,55 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
             }
         });
 
+        
+        var elTagCliente = Ext.create('Ext.form.field.Tag',{
+            name: 'cliente',
+            itemId: 'cliente',
+            multiSelect: true,
+            labelAlign: 'top',
+            width: 180,
+            labelWidth: 60,
+            store: Ext.data.Store({
+                fields: [{ name: 'idPessoa' }, { name: 'descricao' }],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/clienteposicionamento/listarclientes',
+                    reader: { type: 'json', root: 'data' },
+                    extraParams: { tipoSql: 0}
+                }
+            }),
+            queryParam: 'idPessoa',
+            queryMode: 'remote',
+            displayField: 'idPessoa',
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',		                            
+                '{idPessoa} {descricao}',
+                '</tpl>'), 
+            valueField: 'idPessoa',
+            // emptyText: 'Produto',
+            fieldLabel: 'Clientes',
+            emptyText: 'CNPJ/CPF',
+            // matchFieldWidth: false,
+            // padding: 1,
+            margin: '1 1 1 1',
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+
+            listeners: {
+                
+            },
+            
+            // allowBlank: false,
+            listConfig: {
+                loadingText: 'Carregando...',
+                emptyText: '<div class="notificacao-red">Nenhuma Cliente encontrado!</div>',
+                getInnerTpl: function() {
+                    return '{[ values.idPessoa]} {[ values.descricao]}';
+                }
+            }
+        });
+
         var elPareto = Ext.create('Ext.slider.Multi', {
             itemId: 'clipareto',
             name: 'clipareto',
@@ -198,7 +247,7 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
             increment: 1,
             minValue: 0,
             maxValue: 50,
-            fieldLabel: 'Pareto MB',
+            fieldLabel: 'MB',
             valueField: 'paretoMb',
             // this defaults to true, setting to false allows the thumbs to pass each other
             constrainThumbs: false,
@@ -282,6 +331,23 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
                     border: false,
                     items:[
                         elTagProduto,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
+                        elTagCliente,
                         {
                             xtype: 'button',
                             iconCls: 'fa fa-file',
