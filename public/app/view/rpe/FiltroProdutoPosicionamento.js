@@ -15,8 +15,8 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
         var me = this;
 
         var elTagEmpresa = Ext.create('Ext.form.field.Tag',{
-            name: 'clifilial',
-            itemId: 'clifilial',
+            name: 'prodfilial',
+            itemId: 'prodfilial',
             labelAlign: 'top',
             multiSelect: true,
             store: Ext.data.Store({
@@ -55,8 +55,8 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
         );
 
         var fielDataInicio = Ext.create('Ext.form.field.Date',{
-            name: 'clidatainicio',
-            itemId: 'clidatainicio',
+            name: 'proddatainicio',
+            itemId: 'proddatainicio',
             labelAlign: 'top',
             fieldLabel: 'Data Inícial',
             margin: '1 1 1 1',
@@ -70,8 +70,8 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
         });
 
         var fielDataFim = Ext.create('Ext.form.field.Date',{
-            name: 'clidatafim',
-            itemId: 'clidatafim',
+            name: 'proddatafim',
+            itemId: 'proddatafim',
             labelAlign: 'top',
             fieldLabel: 'Data Final',
             margin: '1 1 1 1',
@@ -85,8 +85,8 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
         });
 
         var elTagMarca = Ext.create('Ext.form.field.Tag',{
-            name: 'climarca',
-            itemId: 'climarca',
+            name: 'prodmarca',
+            itemId: 'prodmarca',
             multiSelect: true,
             labelAlign: 'top',
             width: 180,
@@ -126,8 +126,8 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
         );
 
         var elTagProduto = Ext.create('Ext.form.field.Tag',{
-            name: 'cliproduto',
-            itemId: 'cliproduto',
+            name: 'prodproduto',
+            itemId: 'prodproduto',
             multiSelect: true,
             labelAlign: 'top',
             width: 180,
@@ -173,9 +173,57 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
             }
         });
 
+        var elTagCliente = Ext.create('Ext.form.field.Tag',{
+            name: 'prodcliente',
+            itemId: 'prodcliente',
+            multiSelect: true,
+            labelAlign: 'top',
+            width: 180,
+            labelWidth: 60,
+            store: Ext.data.Store({
+                fields: [{ name: 'idPessoa' }, { name: 'descricao' }],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/produtoposicionamento/listarclientes',
+                    reader: { type: 'json', root: 'data' },
+                    extraParams: { tipoSql: 0}
+                }
+            }),
+            queryParam: 'idPessoa',
+            queryMode: 'remote',
+            displayField: 'idPessoa',
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',		                            
+                '{idPessoa} {descricao}',
+                '</tpl>'), 
+            valueField: 'idPessoa',
+            // emptyText: 'Produto',
+            fieldLabel: 'Clientes',
+            emptyText: 'CNPJ/CPF',
+            // matchFieldWidth: false,
+            // padding: 1,
+            margin: '1 1 1 1',
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+
+            listeners: {
+                
+            },
+            
+            // allowBlank: false,
+            listConfig: {
+                loadingText: 'Carregando...',
+                emptyText: '<div class="notificacao-red">Nenhuma Cliente encontrado!</div>',
+                getInnerTpl: function() {
+                    return '{[ values.idPessoa]} {[ values.descricao]}';
+                }
+            }
+        });
+
         var elPareto = Ext.create('Ext.slider.Multi', {
-            itemId: 'clipareto',
-            name: 'clipareto',
+            itemId: 'prodpareto',
+            name: 'prodpareto',
             labelAlign: 'top',
             width: 180,
             values: [0, 80],
@@ -190,8 +238,8 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
         });
 
         var elParetoMb = Ext.create('Ext.slider.Multi', {
-            itemId: 'cliparetomb',
-            name: 'cliparetomb',
+            itemId: 'prodparetomb',
+            name: 'prodparetomb',
             labelAlign: 'top',
             width: 180,
             values: [0, 50],
@@ -298,6 +346,23 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
                     layout: 'hbox',
                     border: false,
                     items:[
+                        elTagCliente,
+                        {
+                            xtype: 'button',
+                            iconCls: 'fa fa-file',
+                            tooltip: 'Limpar',
+                            margin: '26 1 1 1',
+                            handler: function(form) {
+                                form.up('panel').down('tagfield').setValue(null);
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    layout: 'hbox',
+                    border: false,
+                    items:[
                         elPareto,
                         {
                             xtype: 'button',
@@ -339,14 +404,15 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
                             text: 'Limpar Filtros',
                             tooltip: 'Limpar Filtros',
                             handler: function(form) {
-                                form.up('toolbar').up('panel').down('tagfield[name=clifilial]').setValue(null);
-                                form.up('toolbar').up('panel').down('datefield[name=clidatainicio]').setValue(null);
-                                form.up('toolbar').up('panel').down('datefield[name=clidatafim]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=prodfilial]').setValue(null);
+                                form.up('toolbar').up('panel').down('datefield[name=proddatainicio]').setValue(null);
+                                form.up('toolbar').up('panel').down('datefield[name=proddatafim]').setValue(null);
 
-                                form.up('toolbar').up('panel').down('tagfield[name=climarca]').setValue(null);
-                                form.up('toolbar').up('panel').down('tagfield[name=cliproduto]').setValue(null);
-                                form.up('toolbar').up('panel').down('multislider[name=clipareto]').setValue([0,80]);
-                                form.up('toolbar').up('panel').down('multislider[name=cliparetomb]').setValue([0,50]);
+                                form.up('toolbar').up('panel').down('tagfield[name=prodmarca]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=prodproduto]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=prodcliente]').setValue(null);
+                                form.up('toolbar').up('panel').down('multislider[name=prodpareto]').setValue([0,80]);
+                                form.up('toolbar').up('panel').down('multislider[name=prodaretomb]').setValue([0,50]);
                             }
                         }
                     ]

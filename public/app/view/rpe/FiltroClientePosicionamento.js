@@ -173,7 +173,6 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
             }
         });
 
-        
         var elTagCliente = Ext.create('Ext.form.field.Tag',{
             name: 'cliente',
             itemId: 'cliente',
@@ -411,6 +410,7 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
 
                                 form.up('toolbar').up('panel').down('tagfield[name=climarca]').setValue(null);
                                 form.up('toolbar').up('panel').down('tagfield[name=cliproduto]').setValue(null);
+                                form.up('toolbar').up('panel').down('tagfield[name=cliente]').setValue(null);
                                 form.up('toolbar').up('panel').down('multislider[name=clipareto]').setValue([0,80]);
                                 form.up('toolbar').up('panel').down('multislider[name=cliparetomb]').setValue([0,50]);
                             }

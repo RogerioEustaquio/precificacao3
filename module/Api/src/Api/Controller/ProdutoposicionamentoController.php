@@ -119,6 +119,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             $pDataFim   = $this->params()->fromPost('datafim',null);
             $idMarcas   = $this->params()->fromPost('idMarcas',null);
             $codProdutos= $this->params()->fromPost('produto',null);
+            $idPessoas  = $this->params()->fromPost('cliente',null);
             $pareto     = $this->params()->fromPost('pareto',null);
             $paretoMb   = $this->params()->fromPost('paretoMb',null);
             $idEixos    = $this->params()->fromPost('idEixos',null);
@@ -136,6 +137,9 @@ class ProdutoposicionamentoController extends AbstractRestfulController
 
             if($codProdutos){
                 $codProdutos =  implode("','",json_decode($codProdutos));
+            }
+            if($idPessoas){
+                $idPessoas =  implode(",",json_decode($idPessoas));
             }
 
             if($idEixos){
@@ -198,6 +202,10 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             $andProduto = '';
             if($codProdutos){
                 $andProduto = " and i.cod_item||c.descricao in ('$codProdutos')";
+            }
+            $andCliente = '';
+            if($idPessoas){
+                $andCliente = " and p.id_pessoa in ($idPessoas)";
             }
 
             $em = $this->getEntityManager();
@@ -273,6 +281,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
                             $andData
                             $andMarca
                             $andProduto
+                            $andCliente
                             -- and trunc(vi.data_emissao) >= '01/01/2021'
                             -- and trunc(vi.data_emissao) < sysdate                                    
                             --and ic.id_marca not in ()
@@ -283,7 +292,6 @@ class ProdutoposicionamentoController extends AbstractRestfulController
         and rol > 0
         -- Remover esse filtro se utilizar o filtro de marca
         $and_accumulated
-        and rownum < 20000
         order by med_accumulated asc";
             // print "$sql";
             // exit;
@@ -475,6 +483,65 @@ class ProdutoposicionamentoController extends AbstractRestfulController
 
             $hydrator = new ObjectProperty;
             $hydrator->addStrategy('custo_contabil', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
+
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
+
+            $this->setCallbackData($data);
+            
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
+        
+        return $this->getCallbackModel();
+    }
+
+    
+    public function listarclientesAction()
+    {
+        $data = array();
+        
+        try {
+
+            $pEmp    = $this->params()->fromQuery('emp',null);
+            $idPessoa= $this->params()->fromQuery('idPessoa',null);
+            $tipoSql = $this->params()->fromQuery('tipoSql',null);
+
+            if(!$idPessoa){
+                throw new \Exception('Parâmetros não informados.');
+            }
+
+            $em = $this->getEntityManager();
+
+            if(!$tipoSql){
+                $filtroCliente = "like upper('".$idPessoa."%')";
+            }else{
+
+                $Cliente =  implode("','",json_decode($idPessoa));
+                $filtroCliente = "in (".$Cliente.")";
+            }
+            
+            $sql = "select id_pessoa,
+                           nome descricao
+                        from ms.pessoa
+                    where 1 =1
+                    and id_pessoa $filtroCliente
+                    order by id_pessoa";
+
+            $conn = $em->getConnection();
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindValue(1, $pEmp);
+            
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+
+            $hydrator = new ObjectProperty;
+            // $hydrator->addStrategy('custo_contabil', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
