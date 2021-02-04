@@ -519,18 +519,18 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             $em = $this->getEntityManager();
 
             if(!$tipoSql){
-                $filtroCliente = "like upper('".$idPessoa."%')";
+                $filtroCliente = "and ( id_pessoa like upper('".$idPessoa."%') or nome like upper('%".$idPessoa."%'))";
             }else{
 
                 $Cliente =  implode("','",json_decode($idPessoa));
-                $filtroCliente = "in (".$Cliente.")";
+                $filtroCliente = "and id_pessoa in (".$Cliente.")";
             }
             
             $sql = "select id_pessoa,
                            nome descricao
                         from ms.pessoa
                     where 1 =1
-                    and id_pessoa $filtroCliente
+                     $filtroCliente
                     order by id_pessoa";
 
             $conn = $em->getConnection();

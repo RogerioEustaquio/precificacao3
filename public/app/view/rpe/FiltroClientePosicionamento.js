@@ -199,7 +199,7 @@ Ext.define('App.view.rpe.FiltroClientePosicionamento',{
             valueField: 'idPessoa',
             // emptyText: 'Produto',
             fieldLabel: 'Clientes',
-            emptyText: 'CNPJ/CPF',
+            emptyText: 'CNPJ/CPF/NOME',
             // matchFieldWidth: false,
             // padding: 1,
             margin: '1 1 1 1',
