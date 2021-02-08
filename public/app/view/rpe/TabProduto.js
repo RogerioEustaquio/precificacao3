@@ -191,6 +191,7 @@ Ext.define('App.view.rpe.TabProduto', {
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
         var filtro      =  panelBolha.up('container').down('#filtroprodutoposicionamento');
+        var rede        = filtro.down('#agrupafilial').getValue();
         var filial      = filtro.down('#prodfilial').getValue();
         var datainicio  = filtro.down('#proddatainicio').getRawValue();
         var datafim     = filtro.down('#proddatafim').getRawValue();
@@ -220,6 +221,7 @@ Ext.define('App.view.rpe.TabProduto', {
         }
         
         var params = {
+            rede: Ext.encode(rede),
             filial: Ext.encode(filial),
             datainicio : datainicio,
             datafim: datafim,

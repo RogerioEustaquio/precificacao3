@@ -257,6 +257,24 @@ Ext.define('App.view.rpe.FiltroProdutoPosicionamento',{
 
             items : [
                 {
+                    xtype: 'form',
+                    border: false,
+                    items:[
+                        {
+                            xtype: 'checkboxfield',
+                            name : 'agrupafilial',
+                            itemId : 'agrupafilial',
+                            boxLabel: 'Agrupamento Filial',
+                            labelTextAlign: 'right',
+                            checked: true,
+                            value: true,
+                            style: {
+                                'text-align': 'right'
+                              },
+                        }
+                    ]
+                },
+                {
                     xtype: 'panel',
                     layout: 'hbox',
                     border: false,

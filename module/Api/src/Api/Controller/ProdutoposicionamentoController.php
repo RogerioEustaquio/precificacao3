@@ -113,6 +113,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
         
         try {
 
+            $rede       = $this->params()->fromPost('rede',null);
             $filial     = $this->params()->fromPost('filial',null);
             $pData      = $this->params()->fromPost('data',null);
             $pDataInicio= $this->params()->fromPost('datainicio',null);
@@ -127,6 +128,12 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             $em = $this->getEntityManager();
 
             /////////////////////////////////////////////////////////////////
+            $paramRede ='apelido,';
+            $paramRede2 ='em.apelido,';
+            if($rede ==  'true'){
+                $paramRede ='';
+                $paramRede2 ='';
+            }
             if($filial){
                 $filial = implode(",",json_decode($filial));
             }
@@ -219,7 +226,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             $stmt->execute();
             $resultCount = $stmt->fetchAll();
 
-            $sql = "select apelido,
+            $sql = "select $paramRede
             codProduto,
             descricao,
             rol,
@@ -233,7 +240,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             nf,
             0 decnf,
             med_accumulated
-        from (select apelido,
+        from (select $paramRede
                  codProduto,
                  descricao,
                  rol,
@@ -243,7 +250,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
                  nf,
                  fr_rol,
                  sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
-            from (select rede, apelido, codProduto, descricao,
+            from (select rede, $paramRede codProduto, descricao,
                             rol,
                             lb,
                             mb,
@@ -251,7 +258,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
                             nf,
                             100*ratio_to_report((case when rol > 0 then rol end)) over (partition by rede) fr_rol
                     from (select 'JS' as rede,
-                                    em.apelido,
+                                    $paramRede2
                                     i.cod_item||c.descricao codProduto,
                                     i.descricao,
                                     sum(vi.rob) as rob,
@@ -285,8 +292,8 @@ class ProdutoposicionamentoController extends AbstractRestfulController
                             -- and trunc(vi.data_emissao) >= '01/01/2021'
                             -- and trunc(vi.data_emissao) < sysdate                                    
                             --and ic.id_marca not in ()
-                            group by em.apelido, i.descricao, i.cod_item||c.descricao))
-        group by rede, apelido, codProduto, descricao, rol, lb, mb, qtde, nf, fr_rol)
+                            group by $paramRede2 i.descricao, i.cod_item||c.descricao))
+        group by rede, $paramRede codProduto, descricao, rol, lb, mb, qtde, nf, fr_rol)
         where 1=1
         $and_mb
         and rol > 0
@@ -316,10 +323,15 @@ class ProdutoposicionamentoController extends AbstractRestfulController
             foreach ($resultSet as $row) {
                 $elementos = $hydrator->extract($row);
 
+                $filial = '';
+                if($rede == 'false'){
+                    $filial = $elementos['apelido'];
+                }
+
                 $arrayProduto[] = array(
                     'x'=> (float)$elementos[$idEixos->x],
                     'y'=> (float)$elementos[$idEixos->y],
-                    'filial'=> $elementos['apelido'],
+                    'filial'=> $filial,
                     'idPessoa' => $elementos['codproduto'],
                     'nome' => $elementos['descricao'],
                     'decx' => $elementos['dec'.$idEixos->x],

@@ -46,6 +46,10 @@ Ext.define('App.view.rpe.ChartsProdutoPosicionamento', {
                                 y: 'mb',
                                 z: 'nf'
                             }
+
+                            if(!me.params){
+                                me.params = { rede: true};
+                            }
                             
                             Ext.Ajax.request({
                                 url: BASEURL +'/api/produtoposicionamento/produtoposicionamento',
