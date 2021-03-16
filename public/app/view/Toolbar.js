@@ -4,6 +4,19 @@ Ext.define('App.view.Toolbar', {
 
     initComponent: function() {
         var me = this;
+
+        var btnanlysis = Ext.create('Ext.Button',{
+            text: 'Price Analiytics',
+            handler: function(){
+                window.document.location= BASEURL +'/#priceanalytics';
+            }
+        });
+
+        var user = JSON.parse(USUARIO);
+
+        if(user.usuarioSistema != 'ROGERIOADM'){
+            btnanlysis= '';
+        }
         
         Ext.applyIf(me, {
             items: [
@@ -21,6 +34,7 @@ Ext.define('App.view.Toolbar', {
                         window.document.location= BASEURL +'/#rpe';
                     }
                 },
+                btnanlysis,
                 // {
                 //     xtype: 'button',
                 //     text: 'Performance Venda Dia',

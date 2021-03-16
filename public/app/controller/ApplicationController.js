@@ -8,6 +8,7 @@ Ext.define('App.controller.ApplicationController', {
         'App.view.fii.FiiPanel',
         'App.view.rpe.RpePanel',
         'App.view.dsh-pvd.DashboardPerformanceVendaDiaPanel',
+        'App.view.price.PriceAnalyticsPanel'
     ],
 
     control: {
@@ -20,6 +21,7 @@ Ext.define('App.controller.ApplicationController', {
         'fii': { action: 'fiiAction' },
         'rpe': { action: 'rpeAction' },
         'dashboardperformancevendadia': { action: 'dashboardperformancevendadiaAction' },
+        'priceanalytics': { action: 'priceanalyticsAction' }
     },
 
     controllerEvent: function(){
@@ -71,6 +73,10 @@ Ext.define('App.controller.ApplicationController', {
 
     dashboardperformancevendadiaAction: function(){
         this.goActionMasterTab('dashboardperformancevendadia', true)
+    },
+
+    priceanalyticsAction: function(){
+        this.goActionMasterTab('priceanalytics', true)
     },
 
     configViewport: function(){

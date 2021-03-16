@@ -488,9 +488,9 @@ class ClienteposicionamentoController extends AbstractRestfulController
                            i.descricao,
                            m.descricao as marca
                         from ms.tb_item_categoria ic,
-                        ms.tb_marca m,
-                        ms.tb_item i,
-                        ms.tb_categoria c
+                            ms.tb_marca m,
+                            ms.tb_item i,
+                            ms.tb_categoria c
                     where ic.id_item = i.id_item
                     and ic.id_categoria = c.id_categoria
                     and ic.id_marca = m.id_marca
