@@ -290,6 +290,12 @@ Ext.define('App.view.price.TabBalanced', {
 
                                                     charts.chart.addSeries(series1);
                                                     charts.chart.addSeries(series2);
+
+                                                    charts.chart.update({
+                                                        rangeSelector: {
+                                                            selected: 5
+                                                        }
+                                                    });
                                 
                                                 }else{
                                                     rsarray = [];

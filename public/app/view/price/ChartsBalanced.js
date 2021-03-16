@@ -156,6 +156,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                         return pointFormat;
                     }
                 },
+                rangeSelector: {
+                    selected: 5
+                },
 
                 series: [
                     {

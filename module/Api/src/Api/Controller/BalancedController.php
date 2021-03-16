@@ -845,7 +845,7 @@ class BalancedController extends AbstractRestfulController
                                                 $andSql
                                             group by vi.id_empresa, vi.numero_nf)
                                     group by preco_medio))
-                    where rank <= 15
+                    where rank <= 18
             ";
 
             $sql1 = "select count(*) as totalCount from ($sql)";

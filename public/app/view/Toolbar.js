@@ -11,8 +11,11 @@ Ext.define('App.view.Toolbar', {
                 window.document.location= BASEURL +'/#priceanalytics';
             }
         });
+        var user = {usuarioSistema: null};
 
-        var user = JSON.parse(USUARIO);
+        if(USUARIO){
+            user = JSON.parse(USUARIO);
+        }
 
         if(user.usuarioSistema != 'ROGERIOADM'){
             btnanlysis= '';
