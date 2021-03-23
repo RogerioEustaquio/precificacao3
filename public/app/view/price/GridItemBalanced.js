@@ -14,7 +14,8 @@ Ext.define('App.view.price.GridItemBalanced', {
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
-        var coresVariaveis = ['#5A8AC6',
+        var coresVariaveis = [
+                              '#5A8AC6', //------------------
                               '#719ACE',
                               '#88AAD6',
                               '#9FBADE',
@@ -28,18 +29,27 @@ Ext.define('App.view.price.GridItemBalanced', {
                               '#FAA8AB',
                               '#FA9396',
                               '#F97E81',
-                              '#F8696B'];
+                              '#F8696B'
+                            ];
 
-        var mymodel = Ext.create('Ext.data.Model', {
-                                fields:[{name:'preco', type: 'number'},
-                                        {name:'numeroNf', type: 'number'},
-                                        {name:'rol', type: 'number'},
-                                        {name:'mb', type: 'number'}
-                                        ]
-                    });
+        // var mymodel = Ext.create('Ext.data.Model', {
+        //                         fields:[{name:'precoMedio', mapping:'precoMedio', type:'number'},
+        //                                 {name:'numeroNf', type: 'float'},
+        //                                 {name:'rol', type: 'float'},
+        //                                 {name:'mb', type: 'float'},
+        //                                 {name:'order', type: 'float'}
+        //                                 ]
+        //             });
         
         var mystore = Ext.create('Ext.data.Store', {
-                                model: mymodel,
+                                model: Ext.create('Ext.data.Model', {
+                                                fields:[{name:'precoMedio', type:'number'},
+                                                        {name:'numeroNf', type: 'float'},
+                                                        {name:'rol', type: 'float'},
+                                                        {name:'mb', type: 'float'},
+                                                        {name:'order', type: 'float'}
+                                                        ]
+                                }),
                                 proxy: {
                                     type: 'ajax',
                                     method:'POST',
@@ -52,7 +62,7 @@ Ext.define('App.view.price.GridItemBalanced', {
                                         rootProperty: 'data'
                                     }
                                 },
-                                autoLoad: true
+                                autoLoad: false
                     });
 
         Ext.applyIf(me, {
@@ -65,32 +75,38 @@ Ext.define('App.view.price.GridItemBalanced', {
                     {
                         text: 'Preço',
                         dataIndex: 'precoMedio',
-                        width: 60  
+                        minWidth: 75,
+                        flex: 1,
+                        renderer: function (v) {
+                            return utilFormat.Value(v);
+                        }
                     },
                     {
                         text: 'Notas',
                         dataIndex: 'notas',
-                        width: 80
+                        width: 75
                     },
                     {
                         text: 'ROL',
                         dataIndex: 'rol',
-                        width: 60,
+                        width: 80,
                         renderer: function (v, metaData, record,index) {
 
-                            var valor = utilFormat.Value(v);
-                            var totalLinha = this.getStore().getData().length;
+                            var valor = utilFormat.Value2(v,0);
+                            var gridData = this.getStore().getData();
 
-                            var divisao = totalLinha/15; // 15 é a grade de cores
+                            var divisao = gridData.length/15; // 15 é a grade de cores
+                            
+                            var order = gridData.items[index].data.order;
 
-                            if (index < divisao){
+                            if (order < divisao){
                                 // metaData.tdCls = 'background-color:#88AAD6';
                                 metaData.style = 'background-color:'+ coresVariaveis[0];
 
                                 // cont = index == (divisao-1) ? cont++ : 0;
                             }else {
 
-                                cont = utilFormat.Value2((index / divisao),0);
+                                cont = utilFormat.Value2((order / divisao),0);
 
                                 metaData.style = 'background-color:'+ coresVariaveis[parseFloat(cont)];
 
@@ -102,8 +118,19 @@ Ext.define('App.view.price.GridItemBalanced', {
                     {
                         text: 'MB',
                         dataIndex: 'mb',
-                        width: 60
-                    }
+                        width: 54,
+                        renderer: function (v) {
+                            return utilFormat.Value(v);
+                        }
+                    },
+                    {
+                        text: 'Qtde',
+                        dataIndex: 'qtde',
+                        width: 60,
+                        renderer: function (v) {
+                            return utilFormat.Value2(v,0);
+                        }
+                    },
                 ]
             }
         });

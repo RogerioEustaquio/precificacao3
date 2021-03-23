@@ -97,6 +97,10 @@ Ext.define('App.view.price.TabBalanced', {
             }
         );
 
+        var today = new Date();
+        // var mes = today.getMonth() < 10 ? '0'+ today.getMonth(): today.getMonth();
+        var sysdate = /*today.getDate()*/'01' +'/'+ /*mes*/'01' +'/'+ today.getFullYear();
+
         var fielDataInicio = Ext.create('Ext.form.field.Date',{
             name: 'datainicio',
             itemId: 'datainicio',
@@ -109,7 +113,7 @@ Ext.define('App.view.price.TabBalanced', {
             format: 'd/m/Y',
             altFormats: 'dmY',
             emptyText: '__/__/____',
-            // value: sysdate
+            value: sysdate
         });
 
         var fielDataFim = Ext.create('Ext.form.field.Date',{
@@ -332,6 +336,8 @@ Ext.define('App.view.price.TabBalanced', {
                         },
                         {
                             xtype:'panel',
+                            title: 'Lista de Produtos',
+                            collapsible: true,
                             itemId: 'panelgridproduto',
                             region: 'west',
                             layout: 'fit',
@@ -355,7 +361,7 @@ Ext.define('App.view.price.TabBalanced', {
                                     xtype: 'griditembalanced',
                                     region: 'west',
                                     layout:'fit',
-                                    width: 276
+                                    width: 348
                                 },
                                 {
                                     xtype: 'chartsbalanced',

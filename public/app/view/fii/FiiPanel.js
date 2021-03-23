@@ -4,7 +4,6 @@ Ext.define('App.view.fii.FiiPanel', {
     itemId: 'fiipanel',
     // height: Ext.getBody().getHeight() * 0.9,
     // width: Ext.getBody().getWidth() * 0.9,
-    layout: 'fit',
     requires: [
         'App.view.fii.Toolbar',
         'App.view.fii.ContainerHighCharts',

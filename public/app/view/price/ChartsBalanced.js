@@ -149,7 +149,7 @@ Ext.define('App.view.price.ChartsBalanced', {
 
                         var pointFormat = '<table>';
                         pointFormat += '<tr><th colspan="2" align="center">'+ this.points[0].point.data+ '</th></tr>';
-                        pointFormat += '<tr><th align="left">'+this.points[0].point.ds+': </th><td  align="left">'+utilFormat.Value2(this.points[0].point.y,2)+'</td></tr>';
+                        pointFormat += '<tr><th align="left">'+this.points[0].point.ds+': </th><td  align="left">'+utilFormat.Value2(this.points[0].point.y,0)+'</td></tr>';
                         pointFormat += '<tr><th align="left">'+this.points[1].point.ds+': </th><td  align="left">'+utilFormat.Value2(this.points[1].point.y,0)+'</td></tr>';
                         pointFormat += '</table>';
 

@@ -28,7 +28,7 @@ Ext.define('App.view.price.GridProdutoBalanced', {
                         rootProperty: 'data'
                     }
                 },
-                autoLoad: true
+                autoLoad: false
     }),
     columns: [
         {

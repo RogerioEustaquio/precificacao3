@@ -83,21 +83,42 @@ class BalancedController extends AbstractRestfulController
 
             $marca      = $this->params()->fromPost('marca',null); //Ex: 130,128,131,129,146,136
             $filial     = $this->params()->fromPost('filial',null);
-            $dtinicio   = $this->params()->fromPost('dtinicio',null);
-            $dtfinal    = $this->params()->fromPost('dtfinal',null);
+            $datainicio = $this->params()->fromPost('datainicio',null);
+            $datafim    = $this->params()->fromPost('datafim',null);
             $produtos   = $this->params()->fromPost('produtos',null);
             $periodo    = $this->params()->fromPost('periodo',null);
 
             $sqlData = '';
             $andSql = '';
-            if($periodo == 'M'){
-                $sqlData = "to_date(to_char(trunc(vi.data_emissao,'MM'),'dd/mm/yyyy'))";
-                $andSql .=  "and trunc(vi.data_emissao) >= add_months(trunc(sysdate,'MM'),-12)";
-            }else{
-                $sqlData = "to_date(to_char(trunc(vi.data_emissao,'DD'),'dd/mm/yyyy'))";
-                $andSql .= "and trunc(vi.data_emissao) >= add_months(trunc(sysdate,'MM'),-0)";
+            if($filial){
+                $filial = implode(",",json_decode($filial));
+            }
+            $andFilial ='';
+            if($filial){
+                $andFilial = " and vi.id_empresa in ($filial)";
             }
 
+            $andData = '';
+            if($datainicio){
+                $andData = "and trunc(vi.data_emissao) >= to_date('".$datainicio."')";
+            }else{
+                $andData =  "and trunc(vi.data_emissao) >= to_date('01/01/|| to_char(sysdate,'yyyy'))";
+            }
+            if($datafim){
+                $andData .= " and trunc(vi.data_emissao) <= to_date('".$datafim."')";
+            }
+
+            if(!$datainicio && !$datafim){
+                $andData = "and trunc(vi.data_emissao) >= to_date('01/01/'|| to_char(sysdate,'yyyy'))";
+            }
+
+            if($periodo == 'M'){
+                $sqlData = "to_date(to_char(trunc(vi.data_emissao,'MM'),'dd/mm/yyyy'))";
+                // $andSql .=  "and trunc(vi.data_emissao) >= to_date('01/01/|| to_char(sysdate,'yyyy'))";
+            }else{
+                $sqlData = "to_date(to_char(trunc(vi.data_emissao,'DD'),'dd/mm/yyyy'))";
+                // $andSql .= "and trunc(vi.data_emissao) >= to_date('01/01/'|| to_char(sysdate,'yyyy'))";
+            }
 
             $em = $this->getEntityManager();
             
@@ -122,7 +143,8 @@ class BalancedController extends AbstractRestfulController
                     --and i.cod_item||c.descricao = 'JS00506.0'
                     --and trunc(vi.data_emissao) >= '01/03/2021'
                     --and trunc(vi.data_emissao) <= '12/03/2021'
-                    $andSql
+                    $andData
+                    $andFilial
                     group by $sqlData
                     order by 1 asc";
             // print "$sql";
@@ -629,46 +651,49 @@ class BalancedController extends AbstractRestfulController
                 $filial = implode(",",json_decode($filial));
             }
             if($filial){
-                $andSql .= " and e.id_empresa in ($filial)";
+                $andSql .= " and vi.id_empresa in ($filial)";
             }
 
             $sysdateInicio = 'add_months(trunc(sysdate,\'MM\'),-0)';
             $sysdateFim = 'sysdate';
             if($dtinicio){
-                $andSql .= " and trunc(e.ultima_compra) >= $sysdateInicio";
+                $andSql .= " and trunc(vi.data_emissao) >= $sysdateInicio";
             }else{
-                $andSql .= " and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )";
+                $andSql .= " and ( vi.data_emissao > add_months(sysdate, -6))";
             }
 
             if($dtfinal){
-                $andSql .= " and trunc(e.ultima_compra) <= '$dtfinal'";
+                $andSql .= " and trunc(vi.data_emissao) <= '$dtfinal'";
             }
 
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             
-            $sql = "select distinct i.cod_item||c.descricao as cod_item,
-                                i.descricao
-                        from ms.tb_estoque e,
-                                ms.tb_item i,
-                                ms.tb_categoria c,
-                                ms.tb_item_categoria ic,
-                                ms.tb_marca m,
-                                ms.tb_grupo_marca g,
-                                ms.empresa em
-                        where e.id_item = i.id_item
-                        and e.id_categoria = c.id_categoria
-                        and e.id_item = ic.id_item
-                        and e.id_categoria = ic.id_categoria
+            $sql = "select i.cod_item||c.descricao as cod_item,
+                            i.descricao,
+                            --sum(vi.rol) as rol,
+                            --sum(vi.qtde) as qtde
+                            --count(distinct vi.numero_nf) as nf,
+                            count(distinct vi.id_pessoa) as cc
+                    from pricing.vm_ie_ve_venda_item vi,
+                         ms.tb_item_categoria ic,
+                         ms.tb_item i,
+                         ms.tb_categoria c,
+                         ms.tb_marca m
+                    where vi.id_item = ic.id_item
+                        and vi.id_categoria = ic.id_categoria
+                        and vi.id_item = i.id_item
+                        and vi.id_categoria = c.id_categoria
                         and ic.id_marca = m.id_marca
-                        and m.id_grupo_marca = g.id_grupo_marca
-                        and e.id_empresa = em.id_empresa
-                        --and e.id_curva_abc = 'E'
-                        --and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
-                        --and em.id_empresa = 23
-                        --and trunc(e.ultima_compra) >= add_months(trunc(sysdate,'MM'),-0)
+                        and vi.id_operacao in (4,7)
+                        and vi.status_venda = 'A'                                    
+                        --and m.descricao = 'YPF'                   
+                        --and trunc(vi.data_emissao) >= '01/03/2021'
+                        --and trunc(vi.data_emissao) <= '12/03/2021'
+                        --and vi.id_empresa = 8
                         $andSql
-                        order by i.cod_item||c.descricao
+                    group by i.cod_item||c.descricao, i.descricao
+                    order by nvl(cc,0) desc
             ";
             // print "$sql";
             // exit;
@@ -780,7 +805,7 @@ class BalancedController extends AbstractRestfulController
     {
         $data = array();
 
-        $emp        = $this->params()->fromQuery('emp',null);
+        $filial     = $this->params()->fromQuery('filial',null);
         $marca      = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
         $dtinicio   = $this->params()->fromQuery('dtinicio',null);
         $dtfinal    = $this->params()->fromQuery('dtfinal',null);
@@ -794,6 +819,13 @@ class BalancedController extends AbstractRestfulController
             $andSql = '';
             $sysdateInicio = 'add_months(trunc(sysdate,\'MM\'),-0)';
             $sysdateFim = 'sysdate';
+
+            if($filial){
+                $filial = implode(",",json_decode($filial));
+            }
+            if($filial){
+                $andSql .= " and vi.id_empresa in ($filial)";
+            }
 
             if($dtinicio){
                 $andSql .= " and trunc(vi.data_emissao) >= sysdateInicio";
@@ -831,44 +863,67 @@ class BalancedController extends AbstractRestfulController
                                                     sum(vi.qtde) as qtde
                                                     --count(distinct vi.numero_nf) as nf,
                                                     --count(distinct vi.id_pessoa) as cc
-                                                from pricing.vm_ie_ve_venda_item vi, ms.tb_item_categoria ic, ms.tb_item i, ms.tb_categoria c
+                                                from pricing.vm_ie_ve_venda_item vi,
+                                                     ms.tb_item_categoria ic,
+                                                     ms.tb_item i,
+                                                     ms.tb_categoria c
                                             where vi.id_item = ic.id_item
-                                                and vi.id_categoria = ic.id_categoria
-                                                and vi.id_item = i.id_item
-                                                and vi.id_categoria = c.id_categoria
-                                                and vi.id_operacao in (4,7)
-                                                and vi.status_venda = 'A'
-                                                --and i.cod_item||c.descricao = 'JS00506.0'
-                                                --and trunc(vi.data_emissao) >= '01/03/2021'
-                                                --and trunc(vi.data_emissao) <= '12/03/2021'
-                                                --and vi.id_empresa = 8
-                                                $andSql
+                                            and vi.id_categoria = ic.id_categoria
+                                            and vi.id_item = i.id_item
+                                            and vi.id_categoria = c.id_categoria
+                                            and vi.id_operacao in (4,7)
+                                            and vi.status_venda = 'A'
+                                            --and i.cod_item||c.descricao = 'JS00506.0'
+                                            --and trunc(vi.data_emissao) >= '01/03/2021'
+                                            --and trunc(vi.data_emissao) <= '12/03/2021'
+                                            --and vi.id_empresa = 8
+                                            $andSql
                                             group by vi.id_empresa, vi.numero_nf)
                                     group by preco_medio))
                     where rank <= 18
+                    order by preco_medio desc
             ";
-
-            $sql1 = "select count(*) as totalCount from ($sql)";
-            $stmt = $conn->prepare($sql1);
-            $stmt->execute();
-            $resultCount = $stmt->fetchAll();
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
-            $hydrator->addStrategy('preco_medio', new ValueStrategy);
-            $hydrator->addStrategy('rol', new ValueStrategy);
-            $hydrator->addStrategy('qtde', new ValueStrategy);
-            $hydrator->addStrategy('mb', new ValueStrategy);
+            // $hydrator->addStrategy('preco_medio', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
 
             $data = array();
+            $orderRol = array();
+            $cont = 0;
             foreach ($resultSet as $row) {
                 $data[] = $hydrator->extract($row);
+                $data[$cont]['precoMedio'] = (float) $data[$cont]['precoMedio'];
+                $data[$cont]['notas'] = (float) $data[$cont]['notas'];
+                $data[$cont]['rol'] = (float) $data[$cont]['rol'];
+                $data[$cont]['qtde'] = (float) $data[$cont]['qtde'];
+                $data[$cont]['mb'] = (float) $data[$cont]['mb'];
+                // $data[$cont]['order'] = $cont;
+
+                $orderRol[] = (float) $data[$cont]['rol'];
+
+                $cont++;
+            }
+
+            $cont = 0;
+            asort($orderRol);
+            foreach ($data as $row) {
+
+                $contRol=0;
+                foreach ($orderRol as $key => $val) {
+
+                    if($data[$cont]['rol'] == $val){
+                        $data[$cont]['order'] = $contRol;
+                    }
+                    $contRol++;
+                }
+                $cont++;
             }
 
             $this->setCallbackData($data);
@@ -879,7 +934,7 @@ class BalancedController extends AbstractRestfulController
         
         $objReturn = $this->getCallbackModel();
 
-        $objReturn->total = $resultCount[0]['TOTALCOUNT'];
+        // $objReturn->total = $resultCount[0]['TOTALCOUNT'];
 
         return $objReturn;
     }
