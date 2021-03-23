@@ -90,6 +90,14 @@ class BalancedController extends AbstractRestfulController
 
             $sqlData = '';
             $andSql = '';
+
+            if($marca){
+                $marca = implode(",",json_decode($marca));
+            }
+            if($marca){
+                $andSql .= " and ic.id_marca in ($marca)";
+            }
+
             if($filial){
                 $filial = implode(",",json_decode($filial));
             }
@@ -145,6 +153,7 @@ class BalancedController extends AbstractRestfulController
                     --and trunc(vi.data_emissao) <= '12/03/2021'
                     $andData
                     $andFilial
+                    $andSql
                     group by $sqlData
                     order by 1 asc";
             // print "$sql";
@@ -805,10 +814,10 @@ class BalancedController extends AbstractRestfulController
     {
         $data = array();
 
-        $filial     = $this->params()->fromQuery('filial',null);
         $marca      = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
-        $dtinicio   = $this->params()->fromQuery('dtinicio',null);
-        $dtfinal    = $this->params()->fromQuery('dtfinal',null);
+        $filial     = $this->params()->fromQuery('filial',null);
+        $datainicio = $this->params()->fromQuery('datainicio',null);
+        $datafim    = $this->params()->fromQuery('datafim',null);
         $produtos   = $this->params()->fromQuery('produtos',null);
         
         try {
@@ -820,6 +829,13 @@ class BalancedController extends AbstractRestfulController
             $sysdateInicio = 'add_months(trunc(sysdate,\'MM\'),-0)';
             $sysdateFim = 'sysdate';
 
+            if($marca){
+                $marca = implode(",",json_decode($marca));
+            }
+            if($marca){
+                $andSql .= " and ic.id_marca in ($marca)";
+            }
+
             if($filial){
                 $filial = implode(",",json_decode($filial));
             }
@@ -827,14 +843,14 @@ class BalancedController extends AbstractRestfulController
                 $andSql .= " and vi.id_empresa in ($filial)";
             }
 
-            if($dtinicio){
-                $andSql .= " and trunc(vi.data_emissao) >= sysdateInicio";
+            if($datainicio){
+                $andSql .= " and trunc(vi.data_emissao) >= '$datainicio'";
             }else{
                 $andSql .= " and trunc(vi.data_emissao) >= to_char($sysdateInicio,'dd/mm/yyyy')";
             }
 
-            if($dtfinal){
-                $andSql .= " and trunc(vi.data_emissao) <= '$dtfinal'";
+            if($datafim){
+                $andSql .= " and trunc(vi.data_emissao) <= '$datafim'";
             }else{
                 $andSql .= " and trunc(vi.data_emissao) <= $sysdateFim";
             }
