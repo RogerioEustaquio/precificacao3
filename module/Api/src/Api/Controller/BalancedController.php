@@ -128,6 +128,10 @@ class BalancedController extends AbstractRestfulController
                 // $andSql .= "and trunc(vi.data_emissao) >= to_date('01/01/'|| to_char(sysdate,'yyyy'))";
             }
 
+            if($produtos){
+                $andSql .= " and i.cod_item||c.descricao in ('$produtos')";
+            }
+
             $em = $this->getEntityManager();
             
             $sql = "select $sqlData as data,
@@ -169,6 +173,7 @@ class BalancedController extends AbstractRestfulController
             $hydrator = new ObjectProperty;
             $hydrator->addStrategy('data', new ValueStrategy);
             $hydrator->addStrategy('preco_medio', new ValueStrategy);
+            $hydrator->addStrategy('rol', new ValueStrategy);
             $hydrator->addStrategy('qtde', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
@@ -176,6 +181,7 @@ class BalancedController extends AbstractRestfulController
 
             $data1 = array();
             $data2 = array();
+            $data3 = array();
             $data = array();
             // $date = date_create();
 
@@ -196,15 +202,22 @@ class BalancedController extends AbstractRestfulController
                 $elementos['data'] = $timeEmissao .'000';
 
                 $data1[] = array(
-                    'ds'=> 'ROL',
+                    'ds'=> 'Preço',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['precoMedio']
                 );
 
                 $data2[] = array(
+                    'ds'=> 'ROL',
+                    'data'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['rol']
+                );
+
+                $data3[] = array(
                     'ds'=> 'Qtde',
-                    // 'data'=> $dataEmissao,
+                    'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['qtde']
                 );
@@ -212,6 +225,7 @@ class BalancedController extends AbstractRestfulController
             }
             $data[] = $data1;
             $data[] = $data2;
+            $data[] = $data3;
 
             $this->setCallbackData($data);
             

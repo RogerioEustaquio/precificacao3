@@ -284,22 +284,26 @@ Ext.define('App.view.price.TabBalanced', {
                                                     };
 
                                                     var series2 = {
-                                                                type: 'column',
-                                                                id: 'quantidade',
-                                                                name: 'quantidade',
-                                                                data: rsarray[1],
-                                                                color: 'green',
-                                                                yAxis: 1
+                                                        type: 'line',
+                                                        name: 'ROL',
+                                                        data: rsarray[1],
+                                                        yAxis: 1
+                                                    };
+
+                                                    var series3 = {
+                                                        type: 'column',
+                                                        id: 'quantidade',
+                                                        name: 'quantidade',
+                                                        data: rsarray[2],
+                                                        color: 'green',
+                                                        yAxis: 2
                                                     };
 
                                                     charts.chart.addSeries(series1);
                                                     charts.chart.addSeries(series2);
-
-                                                    charts.chart.update({
-                                                        rangeSelector: {
-                                                            selected: 5
-                                                        }
-                                                    });
+                                                    charts.chart.addSeries(series3);
+                                                    
+                                                    charts.chart.redraw();
                                 
                                                 }else{
                                                     rsarray = [];
