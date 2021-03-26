@@ -41,7 +41,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                             me.setLoading(true);
 
                             var serie = Array();
-                            
+                            var categories = Array();
                             // me.buildChartContainer(el,serie);
                             // me.chart.reflow();
                             Ext.Ajax.request({
@@ -57,8 +57,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                                     if(result.success){
 
                                         rsarray = result.data;
+                                        categories = result.categories;
 
-                                        me.buildChartContainer(el,rsarray);
+                                        me.buildChartContainer(el,rsarray,categories);
                                         me.chart.reflow();
 
                                     }else{
@@ -74,7 +75,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                                         }).show();
                                     }
 
-                                    me.buildChartContainer(el,rsarray);
+                                    me.buildChartContainer(el,rsarray,categories);
 
                                     me.setLoading(false);
                                 },
@@ -83,7 +84,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                                     me.setLoading(false);
                                     rsarray = [];
 
-                                    me.buildChartContainer(el,rsarray)
+                                    me.buildChartContainer(el,rsarray,categories)
 
                                     new Noty({
                                         theme: 'relax',
@@ -106,19 +107,26 @@ Ext.define('App.view.price.ChartsBalanced', {
         me.callParent(arguments);
     },
 
-    buildChartContainer: function(el,series){
+    buildChartContainer: function(el,series,categories){
         var me = this;
         var utilFormat = Ext.create('Ext.ux.util.Format');
 
         var data = series;
 
+        var getCategory = function(value) {
+            // return 'FY-' + (new Date(value)).getFullYear()
+            return new Date(value);
+        };
+        
         me.chart = Highcharts.stockChart(el.id, {
 
                 credits:{
                     enabled: false
                 },
                 rangeSelector: {
-                    selected: 2
+                    selected: 5,
+                    inputEnabled: true,
+                    allButtonsEnabled: true,
                 },
         
                 title: {
@@ -128,23 +136,10 @@ Ext.define('App.view.price.ChartsBalanced', {
                 xAxis: {
                     type: 'datetime'
                 },
-                // xAxis: [
-                //         {
-                //             title : {
-                //                 text: 'Preço'
-                //             } 
-                //         },
-                //         {
-                //             title : {
-                //                 text: 'ROL'
-                //             }
-                //         },
-                //         {
-                //             title : {
-                //                 text: 'Quantidade'
-                //             }
-                //         }
-                // ],
+                // xAxis: {
+                //     categories: categories,
+                //     crosshair: true
+                // },
                 yAxis: [
                     {
                         height: '100%',
@@ -185,12 +180,31 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
+                        height: '100%',
+                        title: {
+                            text: 'MB',
+                            style: {
+                                color: Highcharts.getOptions().colors[2],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,2);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[2],
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
                         top: '60%',
                         height: '40%',
                         title: {
                             text: 'Quantidade',
                             style: {
-                                color: 'green',
+                                color: '#2EBD85',
                                 fontSize: '10px'
                             }
                         },
@@ -200,7 +214,26 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,0);
                             },
                             style: {
-                                color: 'green',
+                                color: '#2EBD85', //09ffa0 , 2EBD85 4caf50
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
+                        height: '100%',
+                        title: {
+                            text: 'Nota',
+                            style: {
+                                color: Highcharts.getOptions().colors[3],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,0);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[3],
                                 fontSize: '10px'
                             }
                         }
@@ -213,10 +246,10 @@ Ext.define('App.view.price.ChartsBalanced', {
                 tooltip: {
                     pointFormatter: function(){
 
-                        var dicima = this.ds == 'Preço'? 2 : 0;
+                        var dicima = this.name == 'Preço' || this.name == 'MB' ? 2 : 0;
 
                         var valor = utilFormat.Value2(this.y,dicima);
-                        return '<span style="color: '+this.series.color+'">'+this.ds+'</span>: <b>'+valor+'</b><br/>';
+                        return '<span style="color: '+this.series.color+'">'+this.name+'</span>: <b>'+valor+'</b><br/>';
                     },
                     valueDecimals: 2,
                     split: true
@@ -239,9 +272,6 @@ Ext.define('App.view.price.ChartsBalanced', {
                 //         return pointFormat;
                 //     }
                 // },
-                rangeSelector: {
-                    selected: 5
-                },
 
                 series: [
                     {
@@ -264,16 +294,36 @@ Ext.define('App.view.price.ChartsBalanced', {
                         
                     },
                     {
-                        type: 'column',
-                        id: 'quantidade',
-                        name: 'quantidade',
+                        type: 'line',
+                        name: 'rol',
                         data: data[2],
-                        color: 'green',
                         yAxis: 2,
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
-                    }
+                        
+                    },
+                    {
+                        type: 'column',
+                        id: 'quantidade',
+                        name: 'quantidade',
+                        data: data[3],
+                        color: '#2EBD85',
+                        yAxis: 3,
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                    },
+                    {
+                        type: 'line',
+                        name: 'Nota',
+                        data: data[4],
+                        yAxis: 4,
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                        
+                    },
                 ]
             });
 

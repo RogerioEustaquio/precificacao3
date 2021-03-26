@@ -138,9 +138,9 @@ class BalancedController extends AbstractRestfulController
                             round(sum(vi.rob)/sum(vi.qtde),2) as preco_medio,
                             sum(vi.rol) as rol,
                             --sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                            --round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                            sum(vi.qtde) as qtde
-                            --count(distinct vi.numero_nf) as nf,
+                            round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                            sum(vi.qtde) as qtde,
+                            count(distinct vi.numero_nf) as nf
                             --count(distinct vi.id_pessoa) as cc
                     from pricing.vm_ie_ve_venda_item vi,
                          ms.tb_item_categoria ic,
@@ -182,7 +182,10 @@ class BalancedController extends AbstractRestfulController
             $data1 = array();
             $data2 = array();
             $data3 = array();
+            $data4 = array();
+            $data5 = array();
             $data = array();
+            $categories= array();
             // $date = date_create();
 
             foreach ($resultSet as $row) {
@@ -202,38 +205,64 @@ class BalancedController extends AbstractRestfulController
                 $elementos['data'] = $timeEmissao .'000';
 
                 $data1[] = array(
-                    'ds'=> 'Preço',
+                    'name'=> 'Preço',
+                    'type'=> 'line',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['precoMedio']
                 );
 
                 $data2[] = array(
-                    'ds'=> 'ROL',
+                    'name'=> 'ROL',
+                    'type'=> 'line',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['rol']
                 );
 
                 $data3[] = array(
-                    'ds'=> 'Qtde',
+                    'name'=> 'MB',
+                    'type'=> 'line',
+                    'data'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['mb']
+                );
+
+                $data4[] = array(
+                    'name'=> 'Quantidade',
+                    'type'=> 'column',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['qtde']
                 );
+
+                $data5[] = array(
+                    'name'=> 'Nota',
+                    'type'=> 'column',
+                    'data'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['nf']
+                );
+
+                $categories[] = (float) $elementos['data'];
                 
             }
             $data[] = $data1;
             $data[] = $data2;
             $data[] = $data3;
+            $data[] = $data4;
+            $data[] = $data5;
 
             $this->setCallbackData($data);
             
         } catch (\Exception $e) {
             $this->setCallbackError($e->getMessage());
         }
+
+        $objReturn = $this->getCallbackModel();
+        $objReturn->categories = $categories;
         
-        return $this->getCallbackModel();
+        return $objReturn;
     }
 
     public function produtoposicionamentoAction()

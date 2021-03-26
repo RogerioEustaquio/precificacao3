@@ -213,6 +213,11 @@ Ext.define('App.view.price.TabBalanced', {
                                         var datafim  = form.up('toolbar').down('datefield[name=datafim]').getRawValue();
                                         var periodo  = form.up('toolbar').down('combobox[name=periodo]').getValue();
 
+                                        var desMarca  = form.up('toolbar').down('tagfield[name=prodmarca]').getRawValue();
+                                        desMarca = desMarca.replace(',',', ');
+                                        var descFilial= form.up('toolbar').down('tagfield[name=prodfilial]').getRawValue();
+                                        descFilial = descFilial.replace(',',', ');
+
                                         var container = form.up('toolbar').up('container');
 
                                         var gridproduto = container.down('#panelgridproduto').down('#gridprodutobalanced');
@@ -225,12 +230,13 @@ Ext.define('App.view.price.TabBalanced', {
                                             if(stringProduto){
                                                 
                                                 stringProduto += "','"+element.data.codItem;
+                                                descProduto += " "+element.data.codItem;
                                             }else{
                                                 
                                                 stringProduto = element.data.codItem;
+                                                descProduto = element.data.codItem;
                                             }
                                         }
-                                        
                                        
                                         var storeitem = container.down('#panelcentral').down('#griditembalanced').down('grid').getStore();
                     
@@ -249,8 +255,6 @@ Ext.define('App.view.price.TabBalanced', {
                                         // update gráfico
                                         var charts = me.down('container').down('#panelcentral').down('#chartsbalanced');
 
-                                        // console.log(charts);
-
                                         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
 
                                         for(var i = seriesLength - 1; i > -1; i--)
@@ -259,8 +263,6 @@ Ext.define('App.view.price.TabBalanced', {
                                         }
                                         charts.setLoading(true);
                                         // charts.chart.update(false,false);
-
-                                        
 
                                         Ext.Ajax.request({
                                             url: BASEURL + '/api/balanced/listaritensbalanced',
@@ -278,9 +280,9 @@ Ext.define('App.view.price.TabBalanced', {
                                                     rsarray = result.data;
 
                                                     var series1 = {
-                                                                type: 'line',
-                                                                name: 'preco',
-                                                                data: rsarray[0]
+                                                        type: 'line',
+                                                        name: 'preco',
+                                                        data: rsarray[0]
                                                     };
 
                                                     var series2 = {
@@ -291,18 +293,44 @@ Ext.define('App.view.price.TabBalanced', {
                                                     };
 
                                                     var series3 = {
+                                                        type: 'line',
+                                                        name: 'MB',
+                                                        data: rsarray[2],
+                                                        yAxis: 2
+                                                    };
+
+                                                    var series4 = {
                                                         type: 'column',
                                                         id: 'quantidade',
                                                         name: 'quantidade',
-                                                        data: rsarray[2],
-                                                        color: 'green',
-                                                        yAxis: 2
+                                                        data: rsarray[3],
+                                                        color: '#2EBD85',
+                                                        yAxis: 3
+                                                    };
+
+                                                    var series5 = {
+                                                        type: 'line',
+                                                        name: 'Nota',
+                                                        data: rsarray[4],
+                                                        // color: '#2EBD85',
+                                                        yAxis: 4
                                                     };
 
                                                     charts.chart.addSeries(series1);
                                                     charts.chart.addSeries(series2);
                                                     charts.chart.addSeries(series3);
-                                                    
+                                                    charts.chart.addSeries(series4);
+                                                    charts.chart.addSeries(series5);
+
+                                                    charts.chart.update({
+                                                        title : {
+                                                            text: desMarca + ' | ' + descFilial
+                                                        },
+                                                        subtitle: {
+                                                            text: descProduto
+                                                        }
+                                                    });
+
                                                     charts.chart.redraw();
                                 
                                                 }else{
