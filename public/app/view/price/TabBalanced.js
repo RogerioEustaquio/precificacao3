@@ -256,10 +256,19 @@ Ext.define('App.view.price.TabBalanced', {
                                         var charts = me.down('container').down('#panelcentral').down('#chartsbalanced');
 
                                         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
+                                        var seriesCores= Array();
+
+                                        for(var i = 0; i < seriesLength; i++)
+                                        {
+                                            
+                                            console.log(charts.chart.series[i]);
+                                            // seriesCores.push(charts.chart.series[i].color);
+                                        }
 
                                         for(var i = seriesLength - 1; i > -1; i--)
                                         {
                                             charts.chart.series[i].remove();
+
                                         }
                                         charts.setLoading(true);
                                         // charts.chart.update(false,false);
@@ -281,39 +290,47 @@ Ext.define('App.view.price.TabBalanced', {
 
                                                     var series1 = {
                                                         type: 'line',
-                                                        name: 'preco',
-                                                        data: rsarray[0]
+                                                        name: 'Preço',
+                                                        data: rsarray[0],
+                                                        color: seriesCores[0],
+                                                        visible: charts.showLegend[0]
                                                     };
 
                                                     var series2 = {
                                                         type: 'line',
                                                         name: 'ROL',
                                                         data: rsarray[1],
-                                                        yAxis: 1
+                                                        color: seriesCores[1],
+                                                        yAxis: 1,
+                                                        visible: charts.showLegend[1]
                                                     };
 
                                                     var series3 = {
                                                         type: 'line',
                                                         name: 'MB',
                                                         data: rsarray[2],
-                                                        yAxis: 2
+                                                        color: seriesCores[2],
+                                                        yAxis: 2,
+                                                        visible: charts.showLegend[2]
                                                     };
 
                                                     var series4 = {
                                                         type: 'column',
-                                                        id: 'quantidade',
-                                                        name: 'quantidade',
+                                                        id: 'Quantidade',
+                                                        name: 'Quantidade',
                                                         data: rsarray[3],
                                                         color: '#2EBD85',
-                                                        yAxis: 3
+                                                        yAxis: 3,
+                                                        visible: charts.showLegend[3]
                                                     };
 
                                                     var series5 = {
                                                         type: 'line',
                                                         name: 'Nota',
                                                         data: rsarray[4],
-                                                        // color: '#2EBD85',
-                                                        yAxis: 4
+                                                        color: seriesCores[4],
+                                                        yAxis: 4,
+                                                        visible: charts.showLegend[4]
                                                     };
 
                                                     charts.chart.addSeries(series1);
@@ -322,14 +339,31 @@ Ext.define('App.view.price.TabBalanced', {
                                                     charts.chart.addSeries(series4);
                                                     charts.chart.addSeries(series5);
 
+                                                    var subtitle = '';
+                                                    if(descProduto){
+
+                                                        subtitle= {
+                                                            text: descProduto
+                                                        };
+                                                    }
+
                                                     charts.chart.update({
                                                         title : {
                                                             text: desMarca + ' | ' + descFilial
                                                         },
-                                                        subtitle: {
-                                                            text: descProduto
-                                                        }
+                                                        subtitle
                                                     });
+
+                                                    // rsarray.forEach(function(record){
+
+                                                    //     record[0].visible = charts.showLegend[cont];
+
+                                                    //     record.visible      = seriesOrig[cont].visible;
+                                                    //     record.color        = seriesCores[cont];
+                                                    //     record.showInLegend = charts.showLegend[cont];
+                                                    //     charts.chart.addSeries(record);
+                                                    //     cont++;
+                                                    // });
 
                                                     charts.chart.redraw();
                                 

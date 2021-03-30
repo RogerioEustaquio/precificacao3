@@ -209,7 +209,8 @@ class BalancedController extends AbstractRestfulController
                     'type'=> 'line',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
-                    'y'=> (float) $elementos['precoMedio']
+                    'y'=> (float) $elementos['precoMedio'],
+                    'showInLegend' => true
                 );
 
                 $data2[] = array(
@@ -217,7 +218,8 @@ class BalancedController extends AbstractRestfulController
                     'type'=> 'line',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
-                    'y'=> (float) $elementos['rol']
+                    'y'=> (float) $elementos['rol'],
+                    'show' => true
                 );
 
                 $data3[] = array(
@@ -225,7 +227,8 @@ class BalancedController extends AbstractRestfulController
                     'type'=> 'line',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
-                    'y'=> (float) $elementos['mb']
+                    'y'=> (float) $elementos['mb'],
+                    'show' => true
                 );
 
                 $data4[] = array(
@@ -233,7 +236,8 @@ class BalancedController extends AbstractRestfulController
                     'type'=> 'column',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
-                    'y'=> (float) $elementos['qtde']
+                    'y'=> (float) $elementos['qtde'],
+                    'show' => true
                 );
 
                 $data5[] = array(
@@ -241,10 +245,11 @@ class BalancedController extends AbstractRestfulController
                     'type'=> 'column',
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
-                    'y'=> (float) $elementos['nf']
+                    'y'=> (float) $elementos['nf'],
+                    'show' => true
                 );
 
-                $categories[] = (float) $elementos['data'];
+                // $categories[] = (float) $elementos['data'];
                 
             }
             $data[] = $data1;
@@ -260,7 +265,7 @@ class BalancedController extends AbstractRestfulController
         }
 
         $objReturn = $this->getCallbackModel();
-        $objReturn->categories = $categories;
+        // $objReturn->categories = $categories;
         
         return $objReturn;
     }

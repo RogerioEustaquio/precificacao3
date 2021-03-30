@@ -2,6 +2,7 @@ Ext.define('App.view.price.ChartsBalanced', {
     extend: 'Ext.Container',
     xtype: 'chartsbalanced',
     itemId: 'chartsbalanced',
+    name: 'chartsbalanced',
     width: '100%',
     height: '60%',
     // margin: '10 2 2 2',
@@ -40,8 +41,8 @@ Ext.define('App.view.price.ChartsBalanced', {
 
                             me.setLoading(true);
 
-                            var serie = Array();
                             var categories = Array();
+                            // var serie = Array();
                             // me.buildChartContainer(el,serie);
                             // me.chart.reflow();
                             Ext.Ajax.request({
@@ -57,7 +58,17 @@ Ext.define('App.view.price.ChartsBalanced', {
                                     if(result.success){
 
                                         rsarray = result.data;
-                                        categories = result.categories;
+                                        // categories = result.categories;
+
+                                        // console.log(rsarray);
+
+                                        rsarray.forEach(function(record){
+
+                                            // console.log(record);
+                                            if(me.showLegend){
+                                                me.showLegend.push(record[0].show);
+                                            }
+                                        })
 
                                         me.buildChartContainer(el,rsarray,categories);
                                         me.chart.reflow();
@@ -118,7 +129,10 @@ Ext.define('App.view.price.ChartsBalanced', {
             return new Date(value);
         };
         
-        me.chart = Highcharts.stockChart(el.id, {
+
+        console.log(Highcharts);
+
+        me.chart = Highcharts.Chart(el.id, {
 
                 credits:{
                     enabled: false
@@ -128,6 +142,192 @@ Ext.define('App.view.price.ChartsBalanced', {
                     inputEnabled: true,
                     allButtonsEnabled: true,
                 },
+                
+            exporting: {
+                menuItemDefinitions: {
+                    fullscreen: {
+                        onclick: function() {
+                        //   Highcharts.FullScreen.prototype.open(this.renderTo);
+                            // this.fullscreen.prototype.open();
+                            this.fullscreen.toggle();
+                        },
+                        text: 'Full screen'
+                    },
+                    indicadores: {
+                        onclick: function () {
+                            var meChart = this;                            
+                            var lista = [];
+                            var element = '';
+
+                            meChart.series.forEach(function(record){
+
+                                var recordSeries = record;
+                                
+                                element = {
+                                    xtype: 'checkboxfield',
+                                    margin: '2 2 2 2',
+                                    labelWidth: 120,
+                                    fieldLabel: record.name,
+                                    name: record.name,
+                                    checked: recordSeries.visible,
+                                    handler: function(record,index){
+                                        
+                                        let cont = 0;
+                                        if(index){
+
+                                            var listaCheck = record.up('window').items;
+
+                                            for (let i = 0; i < listaCheck.length; i++) {
+                                                const element = listaCheck.items[i];
+
+                                                cont = (element.checked) ? cont+1 : cont;
+                                                
+                                            }
+                                        }
+
+                                        if(cont > 8){
+
+                                            Ext.Msg.alert('Alerta','Permitido selecionar 8 indicadores.');
+                                            record.setValue(false);
+                                            me.showLegend[recordSeries.index] = false ;
+                                            recordSeries.update({showInLegend: false, visible: false},false);
+                                            meChart.yAxis[recordSeries.index].update({visible: false},false);
+                                            cont--;
+
+                                        }else{
+
+                                            console.log(index);
+
+                                            me.showLegend[recordSeries.index] = index ;
+                                            recordSeries.update({showInLegend: index, visible: index},false);
+                                            meChart.yAxis[recordSeries.index].update({visible: index},false);
+
+                                            var iColor = 0
+                                            var iCont = 0
+                                            meChart.series.forEach(function(rowSerie){
+                                                if(rowSerie.visible){
+                                                    var color = Highcharts.getOptions().colors[iColor];
+
+                                                    if(rowSerie.name == 'Quantidade'){
+                                                        color = '#2EBD85';
+                                                        iColor--;
+                                                    }
+
+                                                    rowSerie.update({color:color},false);
+                                                    meChart.yAxis[iCont].update(
+                                                        {
+                                                            title:{
+                                                                style: {
+                                                                    color: color
+                                                                }
+                                                            },
+                                                            labels:{
+                                                                style: {
+                                                                    color: color
+                                                                }
+                                                            }
+                                                        }
+                                                        ,false);
+                                                        
+                                                    iColor++;
+                                                }
+
+                                                iCont++;
+                                            });
+                                        }
+
+                                        meChart.redraw();
+                                        record.up('window').down('displayfield[name=contCheck]').setValue(cont);
+                                    }
+                                };
+
+                                // if(recordSeries.name == 'Navigator 1'){
+                                //     return;
+                                // }
+
+                                if(element)
+                                    lista.push(element);
+                                
+                            });
+
+                            Ext.create('Ext.window.Window', {
+                                title: 'Habilitar/Desabilitar Indicadores',
+                                // renderTo: me,
+                                scrollable: true,
+                                height: 300,
+                                width: 260,
+                                // padding: '1 1 1 1',
+                                // layout: 'fit',
+                                tbar: [
+                                    {
+                                        xtype: 'displayfield',
+                                        name: 'contCheck',
+                                        itemId: 'contCheck',
+                                        renderer: function(){
+                                            let cont =0;
+                                            me.showLegend.forEach(function(record){
+                                                if(record){
+                                                    cont++
+                                                }
+                                            })
+                                            return cont;
+                                        }
+                                    },
+                                    '->',
+                                    {
+                                        xtype: 'panel',
+                                        items: {
+                                            xtype: 'button',
+                                            iconCls: 'fa fa-file',
+                                            tooltip: 'Limpar seleção',
+                                            handler: function(){
+        
+                                                var listaCheck = this.up('panel').up('window').items;
+
+                                                for (let i = 0; i < listaCheck.length; i++) {
+                                                    const element = listaCheck.items[i];
+
+                                                    element.setValue(false);
+                                                    me.showLegend[i] = false ;
+                                                    meChart.series[i].setVisible(false, false);
+                                                    meChart.yAxis[i].update({visible: false},false);
+                                                    
+                                                }
+
+                                                meChart.redraw();
+
+                                                this.up('panel').up('window').down('displayfield[name=contCheck]').setValue(0);
+                                            }
+                                        }
+                                        
+                                    }
+                                ],
+                                items: lista
+                            }).show();
+                        },
+                        text: 'Selecionar Indicadores'
+                    },
+                    ocultar: {
+                        onclick: function () {
+                            var meChart = this;
+
+                            $(meChart.series).each(function(){
+                                //this.hide();
+                                this.setVisible(false, false);
+                            });
+                            meChart.redraw();
+
+                        },
+                        text: 'Ocultar Indicadores'
+                    }
+
+                },
+                buttons: {
+                    contextButton: {
+                        menuItems: ['viewFullscreen','downloadPNG', 'downloadXLS', 'indicadores', 'ocultar']
+                    }
+                }
+            },
         
                 title: {
                     text: ' '
@@ -251,7 +451,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         var valor = utilFormat.Value2(this.y,dicima);
                         return '<span style="color: '+this.series.color+'">'+this.name+'</span>: <b>'+valor+'</b><br/>';
                     },
-                    valueDecimals: 2,
+                    // valueDecimals: 2,
                     split: true
                 },
 
@@ -276,7 +476,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                 series: [
                     {
                         type: 'line',
-                        name: 'preco',
+                        name: 'Preço',
                         data: data[0],
                         // tooltip: {
                         //     valueDecimals: 2
@@ -285,7 +485,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'line',
-                        name: 'rol',
+                        name: 'ROL',
                         data: data[1],
                         yAxis: 1,
                         // tooltip: {
@@ -295,7 +495,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'line',
-                        name: 'rol',
+                        name: 'MB',
                         data: data[2],
                         yAxis: 2,
                         // tooltip: {
@@ -305,8 +505,8 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'column',
-                        id: 'quantidade',
-                        name: 'quantidade',
+                        id: 'Quantidade',
+                        name: 'Quantidade',
                         data: data[3],
                         color: '#2EBD85',
                         yAxis: 3,
