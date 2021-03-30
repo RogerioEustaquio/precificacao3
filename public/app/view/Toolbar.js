@@ -17,8 +17,8 @@ Ext.define('App.view.Toolbar', {
             user = JSON.parse(USUARIO);
         }
 
-        btnanlysis= '';
-        
+        // btnanlysis= '';
+
         // if(user.usuarioSistema != 'ROGERIOADM'){
         //     btnanlysis= '';
         // }
