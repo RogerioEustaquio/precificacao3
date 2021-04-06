@@ -21,21 +21,30 @@
         ?>
 
         <!-- Scripts -->
-        <!-- <?= $this->headScript()
-            // ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/highstock.js'))
-            
-            ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/modules/stock.js'))
-        ?>
+
+        <!-- Versão 9 funciona -->
+        <!-- <script src='../../js/highcharts-9.0.1/code/stock/highstock.js'></script>
         <script>
             var Highstock = Highcharts;
-            // Highcharts = null;
-        </script> -->
+            Highcharts = null;
+        </script>
+        <script src='../../js/highcharts-9.0.1/code/highcharts.js'></script> -->
+
+        <script src='../../js/highcharts-8.2.0/code/stock/highstock.js'></script>
+        <script src='../../js/highcharts-8.2.0/code//modules/data.js'></script>
+        <script src='../../js/highcharts-8.2.0/code//modules/exporting.js'></script>
+        <script src='../../js/highcharts-8.2.0/code//modules/export-data.js'></script>
+        <script src='../../js/highcharts-8.2.0/code//modules/accessibility.js'></script>
+        <script>
+            var Highstock = Highcharts;
+            Highcharts = null;
+        </script>
+        <script src='../../js/highcharts-8.2.0/code/highcharts.js'></script>
+        <script src='../../js/highcharts-8.2.0/code/highcharts-more.js'></script>
         <?= $this->headScript()
-            ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/highcharts.js'))
+            // ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/highcharts.js')) 
             // ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/highstock.js'))
-            ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/highcharts-more.js'))
-            ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/modules/stock.js'))
-            // ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/modules/map.js'))
+            // ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/highcharts-more.js'))
             ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/modules/data.js'))
             ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/modules/exporting.js'))
             // ->appendFile($this->basePath('../../js/highcharts-8.2.0/code/modules/full-screen.js'))

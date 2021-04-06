@@ -6,7 +6,7 @@ Ext.define('App.view.Toolbar', {
         var me = this;
 
         var btnanlysis = Ext.create('Ext.Button',{
-            text: 'Price Analiytics',
+            text: 'Price Analytics',
             handler: function(){
                 window.document.location= BASEURL +'/#priceanalytics';
             }

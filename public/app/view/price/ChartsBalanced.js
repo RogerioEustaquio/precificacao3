@@ -60,8 +60,6 @@ Ext.define('App.view.price.ChartsBalanced', {
                                         rsarray = result.data;
                                         // categories = result.categories;
 
-                                        // console.log(rsarray);
-
                                         rsarray.forEach(function(record){
 
                                             // console.log(record);
@@ -128,206 +126,221 @@ Ext.define('App.view.price.ChartsBalanced', {
             // return 'FY-' + (new Date(value)).getFullYear()
             return new Date(value);
         };
-        
 
-        console.log(Highcharts);
-
-        me.chart = Highcharts.Chart(el.id, {
+        me.chart = Highstock.stockChart(el.id, {
 
                 credits:{
                     enabled: false
                 },
                 rangeSelector: {
-                    selected: 5,
+                    buttons: [
+                        {
+                            type:'day',
+                            count: 1,
+                            text: 'D'
+                        },
+                        {
+                            type:'day',
+                            count: 30,
+                            text: 'D30'
+                        },
+                        {
+                            type:'all',
+                            text: 'Todos'
+                        }
+                    ],
+                    selected: 2,
                     inputEnabled: true,
                     allButtonsEnabled: true,
                 },
                 
-            exporting: {
-                menuItemDefinitions: {
-                    fullscreen: {
-                        onclick: function() {
-                        //   Highcharts.FullScreen.prototype.open(this.renderTo);
-                            // this.fullscreen.prototype.open();
-                            this.fullscreen.toggle();
+                exporting: {
+                    menuItemDefinitions: {
+                        fullscreen: {
+                            onclick: function() {
+                            //   Highcharts.FullScreen.prototype.open(this.renderTo);
+                                // this.fullscreen.prototype.open();
+                                this.fullscreen.toggle();
+                            },
+                            text: 'Full screen'
                         },
-                        text: 'Full screen'
-                    },
-                    indicadores: {
-                        onclick: function () {
-                            var meChart = this;                            
-                            var lista = [];
-                            var element = '';
+                        indicadores: {
+                            onclick: function () {
+                                var meChart = this;                            
+                                var lista = [];
+                                var element = '';
 
-                            meChart.series.forEach(function(record){
+                                meChart.series.forEach(function(record){
 
-                                var recordSeries = record;
-                                
-                                element = {
-                                    xtype: 'checkboxfield',
-                                    margin: '2 2 2 2',
-                                    labelWidth: 120,
-                                    fieldLabel: record.name,
-                                    name: record.name,
-                                    checked: recordSeries.visible,
-                                    handler: function(record,index){
-                                        
-                                        let cont = 0;
-                                        if(index){
+                                    var recordSeries = record;
+                                    
+                                    element = {
+                                        xtype: 'checkboxfield',
+                                        margin: '2 2 2 2',
+                                        labelWidth: 120,
+                                        fieldLabel: record.name,
+                                        name: record.name,
+                                        checked: recordSeries.visible,
+                                        handler: function(record,index){
+                                            
+                                            let cont = 0;
+                                            if(index){
 
-                                            var listaCheck = record.up('window').items;
-
-                                            for (let i = 0; i < listaCheck.length; i++) {
-                                                const element = listaCheck.items[i];
-
-                                                cont = (element.checked) ? cont+1 : cont;
-                                                
-                                            }
-                                        }
-
-                                        if(cont > 8){
-
-                                            Ext.Msg.alert('Alerta','Permitido selecionar 8 indicadores.');
-                                            record.setValue(false);
-                                            me.showLegend[recordSeries.index] = false ;
-                                            recordSeries.update({showInLegend: false, visible: false},false);
-                                            meChart.yAxis[recordSeries.index].update({visible: false},false);
-                                            cont--;
-
-                                        }else{
-
-                                            console.log(index);
-
-                                            me.showLegend[recordSeries.index] = index ;
-                                            recordSeries.update({showInLegend: index, visible: index},false);
-                                            meChart.yAxis[recordSeries.index].update({visible: index},false);
-
-                                            var iColor = 0
-                                            var iCont = 0
-                                            meChart.series.forEach(function(rowSerie){
-                                                if(rowSerie.visible){
-                                                    var color = Highcharts.getOptions().colors[iColor];
-
-                                                    if(rowSerie.name == 'Quantidade'){
-                                                        color = '#2EBD85';
-                                                        iColor--;
-                                                    }
-
-                                                    rowSerie.update({color:color},false);
-                                                    meChart.yAxis[iCont].update(
-                                                        {
-                                                            title:{
-                                                                style: {
-                                                                    color: color
-                                                                }
-                                                            },
-                                                            labels:{
-                                                                style: {
-                                                                    color: color
-                                                                }
-                                                            }
-                                                        }
-                                                        ,false);
-                                                        
-                                                    iColor++;
-                                                }
-
-                                                iCont++;
-                                            });
-                                        }
-
-                                        meChart.redraw();
-                                        record.up('window').down('displayfield[name=contCheck]').setValue(cont);
-                                    }
-                                };
-
-                                // if(recordSeries.name == 'Navigator 1'){
-                                //     return;
-                                // }
-
-                                if(element)
-                                    lista.push(element);
-                                
-                            });
-
-                            Ext.create('Ext.window.Window', {
-                                title: 'Habilitar/Desabilitar Indicadores',
-                                // renderTo: me,
-                                scrollable: true,
-                                height: 300,
-                                width: 260,
-                                // padding: '1 1 1 1',
-                                // layout: 'fit',
-                                tbar: [
-                                    {
-                                        xtype: 'displayfield',
-                                        name: 'contCheck',
-                                        itemId: 'contCheck',
-                                        renderer: function(){
-                                            let cont =0;
-                                            me.showLegend.forEach(function(record){
-                                                if(record){
-                                                    cont++
-                                                }
-                                            })
-                                            return cont;
-                                        }
-                                    },
-                                    '->',
-                                    {
-                                        xtype: 'panel',
-                                        items: {
-                                            xtype: 'button',
-                                            iconCls: 'fa fa-file',
-                                            tooltip: 'Limpar seleção',
-                                            handler: function(){
-        
-                                                var listaCheck = this.up('panel').up('window').items;
+                                                var listaCheck = record.up('window').items;
 
                                                 for (let i = 0; i < listaCheck.length; i++) {
                                                     const element = listaCheck.items[i];
 
-                                                    element.setValue(false);
-                                                    me.showLegend[i] = false ;
-                                                    meChart.series[i].setVisible(false, false);
-                                                    meChart.yAxis[i].update({visible: false},false);
+                                                    cont = (element.checked) ? cont+1 : cont;
                                                     
                                                 }
-
-                                                meChart.redraw();
-
-                                                this.up('panel').up('window').down('displayfield[name=contCheck]').setValue(0);
                                             }
+
+                                            if(cont > 8){
+
+                                                Ext.Msg.alert('Alerta','Permitido selecionar 8 indicadores.');
+                                                record.setValue(false);
+                                                me.showLegend[recordSeries.index] = false ;
+                                                recordSeries.update({showInLegend: false, visible: false},false);
+                                                meChart.yAxis[recordSeries.index].update({visible: false},false);
+                                                cont--;
+
+                                            }else{
+
+                                                me.showLegend[recordSeries.index] = index ;
+                                                recordSeries.update({showInLegend: index, visible: index},false);
+                                                meChart.yAxis[recordSeries.index].update({visible: index},false);
+
+                                                var iColor = 0;
+                                                var iCont = 0;
+                                                meChart.series.forEach(function(rowSerie){
+
+                                                    if(rowSerie.visible){
+                                                        var color = Highcharts.getOptions().colors[iColor];
+
+                                                        if(rowSerie.name == 'Quantidade' || rowSerie.name == 'Navigator 1'){
+                                                            color = '#2EBD85';
+                                                            // iColor--;
+                                                        }else{
+                                                            
+                                                            iColor++;
+                                                        }
+
+                                                        rowSerie.update({color:color},false);
+
+                                                        meChart.yAxis[iCont].update(
+                                                            {
+                                                                title:{
+                                                                    style: {
+                                                                        color: color
+                                                                    }
+                                                                },
+                                                                labels:{
+                                                                    style: {
+                                                                        color: color
+                                                                    }
+                                                                }
+                                                            }
+                                                            ,false);
+                                                            
+                                                    }
+
+                                                    iCont++;
+                                                });
+                                            }
+
+                                            meChart.redraw();
+                                            record.up('window').down('displayfield[name=contCheck]').setValue(cont);
                                         }
-                                        
+                                    };
+
+                                    if(recordSeries.name == 'Navigator 1'){
+                                        element = null;
                                     }
-                                ],
-                                items: lista
-                            }).show();
+
+                                    if(element)
+                                        lista.push(element);
+                                    
+                                });
+
+                                Ext.create('Ext.window.Window', {
+                                    title: 'Habilitar/Desabilitar Indicadores',
+                                    // renderTo: me,
+                                    scrollable: true,
+                                    height: 300,
+                                    width: 260,
+                                    // padding: '1 1 1 1',
+                                    // layout: 'fit',
+                                    tbar: [
+                                        {
+                                            xtype: 'displayfield',
+                                            name: 'contCheck',
+                                            itemId: 'contCheck',
+                                            renderer: function(){
+                                                let cont =0;
+                                                me.showLegend.forEach(function(record){
+                                                    if(record){
+                                                        cont++
+                                                    }
+                                                })
+                                                return cont;
+                                            }
+                                        },
+                                        '->',
+                                        {
+                                            xtype: 'panel',
+                                            items: {
+                                                xtype: 'button',
+                                                iconCls: 'fa fa-file',
+                                                tooltip: 'Limpar seleção',
+                                                handler: function(){
+            
+                                                    var listaCheck = this.up('panel').up('window').items;
+
+                                                    for (let i = 0; i < listaCheck.length; i++) {
+                                                        const element = listaCheck.items[i];
+
+                                                        element.setValue(false);
+                                                        me.showLegend[i] = false ;
+                                                        meChart.series[i].setVisible(false, false);
+                                                        meChart.yAxis[i].update({visible: false},false);
+                                                        
+                                                    }
+
+                                                    meChart.redraw();
+
+                                                    this.up('panel').up('window').down('displayfield[name=contCheck]').setValue(0);
+                                                }
+                                            }
+                                            
+                                        }
+                                    ],
+                                    items: lista
+                                }).show();
+                            },
+                            text: 'Selecionar Indicadores'
                         },
-                        text: 'Selecionar Indicadores'
+                        ocultar: {
+                            onclick: function () {
+                                var meChart = this;
+
+                                $(meChart.series).each(function(){
+                                    //this.hide();
+                                    this.setVisible(false, false);
+                                });
+                                meChart.redraw();
+
+                            },
+                            text: 'Ocultar Indicadores'
+                        }
+
                     },
-                    ocultar: {
-                        onclick: function () {
-                            var meChart = this;
-
-                            $(meChart.series).each(function(){
-                                //this.hide();
-                                this.setVisible(false, false);
-                            });
-                            meChart.redraw();
-
-                        },
-                        text: 'Ocultar Indicadores'
+                    buttons: {
+                        contextButton: {
+                            menuItems: ['viewFullscreen','downloadPNG', 'downloadXLS', 'indicadores', 'ocultar']
+                        }
                     }
-
                 },
-                buttons: {
-                    contextButton: {
-                        menuItems: ['viewFullscreen','downloadPNG', 'downloadXLS', 'indicadores', 'ocultar']
-                    }
-                }
-            },
         
                 title: {
                     text: ' '
@@ -440,8 +453,8 @@ Ext.define('App.view.price.ChartsBalanced', {
                     }
                 ],
 
-                plotOptions: {
-                },
+                // plotOptions: {
+                // },
 
                 tooltip: {
                     pointFormatter: function(){
@@ -478,6 +491,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         type: 'line',
                         name: 'Preço',
                         data: data[0],
+                        yAxis: 0
                         // tooltip: {
                         //     valueDecimals: 2
                         // }

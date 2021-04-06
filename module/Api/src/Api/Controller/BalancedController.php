@@ -210,7 +210,7 @@ class BalancedController extends AbstractRestfulController
                     'data'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['precoMedio'],
-                    'showInLegend' => true
+                    'show' => true
                 );
 
                 $data2[] = array(

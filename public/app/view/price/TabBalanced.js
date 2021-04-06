@@ -224,6 +224,7 @@ Ext.define('App.view.price.TabBalanced', {
                                         var arrayproduto = gridproduto.getSelection();
 
                                         stringProduto ='';
+                                        descProduto = '';
                                         for (let index = 0; index < arrayproduto.length; index++) {
                                             var element = arrayproduto[index];
 
@@ -256,14 +257,6 @@ Ext.define('App.view.price.TabBalanced', {
                                         var charts = me.down('container').down('#panelcentral').down('#chartsbalanced');
 
                                         var seriesLength = (charts.chart.series) ? charts.chart.series.length : 0 ;
-                                        var seriesCores= Array();
-
-                                        for(var i = 0; i < seriesLength; i++)
-                                        {
-                                            
-                                            console.log(charts.chart.series[i]);
-                                            // seriesCores.push(charts.chart.series[i].color);
-                                        }
 
                                         for(var i = seriesLength - 1; i > -1; i--)
                                         {
@@ -292,27 +285,37 @@ Ext.define('App.view.price.TabBalanced', {
                                                         type: 'line',
                                                         name: 'Preço',
                                                         data: rsarray[0],
-                                                        color: seriesCores[0],
+                                                        yAxis: 0,
+                                                        index: 0,
+                                                        // color: seriesCores[0],
                                                         visible: charts.showLegend[0]
                                                     };
+
+                                                    charts.chart.addSeries(series1);
 
                                                     var series2 = {
                                                         type: 'line',
                                                         name: 'ROL',
                                                         data: rsarray[1],
-                                                        color: seriesCores[1],
+                                                        // color: seriesCores[1],
                                                         yAxis: 1,
+                                                        index: 1,
                                                         visible: charts.showLegend[1]
                                                     };
+
+                                                    charts.chart.addSeries(series2);
 
                                                     var series3 = {
                                                         type: 'line',
                                                         name: 'MB',
                                                         data: rsarray[2],
-                                                        color: seriesCores[2],
+                                                        // color: seriesCores[2],
                                                         yAxis: 2,
+                                                        index: 2,
                                                         visible: charts.showLegend[2]
                                                     };
+                                                    
+                                                    charts.chart.addSeries(series3);
 
                                                     var series4 = {
                                                         type: 'column',
@@ -321,22 +324,21 @@ Ext.define('App.view.price.TabBalanced', {
                                                         data: rsarray[3],
                                                         color: '#2EBD85',
                                                         yAxis: 3,
+                                                        index: 3,
                                                         visible: charts.showLegend[3]
                                                     };
+                                                    
+                                                    charts.chart.addSeries(series4);
 
                                                     var series5 = {
                                                         type: 'line',
                                                         name: 'Nota',
                                                         data: rsarray[4],
-                                                        color: seriesCores[4],
+                                                        // color: seriesCores[4],
                                                         yAxis: 4,
+                                                        index: 4,
                                                         visible: charts.showLegend[4]
                                                     };
-
-                                                    charts.chart.addSeries(series1);
-                                                    charts.chart.addSeries(series2);
-                                                    charts.chart.addSeries(series3);
-                                                    charts.chart.addSeries(series4);
                                                     charts.chart.addSeries(series5);
 
                                                     var subtitle = '';
@@ -348,22 +350,35 @@ Ext.define('App.view.price.TabBalanced', {
                                                     }
 
                                                     charts.chart.update({
+                                                        rangeSelector: {
+                                                            selected: 2,
+                                                        },
                                                         title : {
                                                             text: desMarca + ' | ' + descFilial
                                                         },
                                                         subtitle
                                                     });
 
-                                                    // rsarray.forEach(function(record){
+                                                    iColor= 0;
+                                                    iCont =0 ;
+                                                    charts.chart.series.forEach(function(record){
 
-                                                    //     record[0].visible = charts.showLegend[cont];
+                                                        if(record.visible){
 
-                                                    //     record.visible      = seriesOrig[cont].visible;
-                                                    //     record.color        = seriesCores[cont];
-                                                    //     record.showInLegend = charts.showLegend[cont];
-                                                    //     charts.chart.addSeries(record);
-                                                    //     cont++;
-                                                    // });
+                                                            var color = Highcharts.getOptions().colors[iColor];
+    
+                                                            if(record.name == 'Quantidade' || record.name == 'Navigator 1'){
+                                                                color = '#2EBD85';
+                                                            }else{
+                                                                
+                                                                iColor++;
+                                                            }
+                                                            record.update({color:color},false);
+                                                            
+                                                        }
+                                                        
+                                                        iCont++;
+                                                    });
 
                                                     charts.chart.redraw();
                                 
