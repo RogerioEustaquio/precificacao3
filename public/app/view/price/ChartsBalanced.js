@@ -457,13 +457,37 @@ Ext.define('App.view.price.ChartsBalanced', {
                 // },
 
                 tooltip: {
-                    pointFormatter: function(){
 
-                        var dicima = this.name == 'Preço' || this.name == 'MB' ? 2 : 0;
+                    formatter: function () {
 
-                        var valor = utilFormat.Value2(this.y,dicima);
-                        return '<span style="color: '+this.series.color+'">'+this.name+'</span>: <b>'+valor+'</b><br/>';
+                        return ['<a>' + this.points[0].point.data + '</a>'].concat(
+                            this.points ?
+                                this.points.map(function (point) {
+
+                                    var dicima = point.series.name == 'Preço' || point.series.name == 'MB' ? 2 : 0;
+                                    var valor = utilFormat.Value2(point.y,dicima);
+
+                                    return '<span style="color: '+point.color+'">'+point.series.name+'</span>: <b>'+valor+'</b><br/>';
+                                }) : []
+                        );
                     },
+                    
+                    
+                    // pointFormatter: function(){
+
+                    //     var dicima = this.name == 'Preço' || this.name == 'MB' ? 2 : 0;
+
+                    //     var valor = utilFormat.Value2(this.y,dicima);
+                    //     console.log(this);
+                    //     return '<span style="color: '+this.series.color+'">'+this.name+'</span>: <b>'+valor+'</b><br/>';
+
+                    //     // return ['<b>' + this.x + '</b>'].concat(
+                    //     //     this.series.points ?
+                    //     //     this.series.points.map(function (point) {
+                    //     //             return point.series.name + ': ' + point.y + 'm';
+                    //     //         }) : []
+                    //     // )
+                    // },
                     // valueDecimals: 2,
                     split: true
                 },

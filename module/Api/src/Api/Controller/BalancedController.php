@@ -174,6 +174,7 @@ class BalancedController extends AbstractRestfulController
             $hydrator->addStrategy('data', new ValueStrategy);
             $hydrator->addStrategy('preco_medio', new ValueStrategy);
             $hydrator->addStrategy('rol', new ValueStrategy);
+            $hydrator->addStrategy('mb', new ValueStrategy);
             $hydrator->addStrategy('qtde', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
@@ -208,6 +209,7 @@ class BalancedController extends AbstractRestfulController
                     'name'=> 'Preço',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['precoMedio'],
                     'show' => true
@@ -217,6 +219,7 @@ class BalancedController extends AbstractRestfulController
                     'name'=> 'ROL',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['rol'],
                     'show' => true
@@ -226,6 +229,7 @@ class BalancedController extends AbstractRestfulController
                     'name'=> 'MB',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['mb'],
                     'show' => true
@@ -234,7 +238,8 @@ class BalancedController extends AbstractRestfulController
                 $data4[] = array(
                     'name'=> 'Quantidade',
                     'type'=> 'column',
-                    'data'=> $dataEmissao,
+                    // 'data'=> $dataEmissao,
+                    'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['qtde'],
                     'show' => true
@@ -244,6 +249,7 @@ class BalancedController extends AbstractRestfulController
                     'name'=> 'Nota',
                     'type'=> 'column',
                     'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['nf'],
                     'show' => true
@@ -947,13 +953,16 @@ class BalancedController extends AbstractRestfulController
                     where rank <= 18
                     order by preco_medio desc
             ";
+            // print "$sql";
+            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
-            // $hydrator->addStrategy('preco_medio', new ValueStrategy);
+            $hydrator->addStrategy('preco_medio', new ValueStrategy);
+            $hydrator->addStrategy('mb', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);
             $resultSet->initialize($results);
@@ -963,11 +972,12 @@ class BalancedController extends AbstractRestfulController
             $cont = 0;
             foreach ($resultSet as $row) {
                 $data[] = $hydrator->extract($row);
-                $data[$cont]['precoMedio'] = (float) $data[$cont]['precoMedio'];
+
+                $data[$cont]['precoMedio'] = $data[$cont]['precoMedio'];
                 $data[$cont]['notas'] = (float) $data[$cont]['notas'];
                 $data[$cont]['rol'] = (float) $data[$cont]['rol'];
                 $data[$cont]['qtde'] = (float) $data[$cont]['qtde'];
-                $data[$cont]['mb'] = (float) $data[$cont]['mb'];
+                $data[$cont]['mb'] = $data[$cont]['mb'];
                 // $data[$cont]['order'] = $cont;
 
                 $orderRol[] = (float) $data[$cont]['rol'];

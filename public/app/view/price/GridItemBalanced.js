@@ -46,7 +46,7 @@ Ext.define('App.view.price.GridItemBalanced', {
                                                 fields:[{name:'precoMedio', type:'number'},
                                                         {name:'numeroNf', type: 'float'},
                                                         {name:'rol', type: 'float'},
-                                                        {name:'mb', type: 'float'},
+                                                        {name:'mb', type: 'number'},
                                                         {name:'order', type: 'float'}
                                                         ]
                                 }),
@@ -78,7 +78,7 @@ Ext.define('App.view.price.GridItemBalanced', {
                         minWidth: 75,
                         flex: 1,
                         renderer: function (v) {
-                            return utilFormat.Value(v);
+                            return utilFormat.Value2(v,2);
                         }
                     },
                     {
@@ -120,7 +120,7 @@ Ext.define('App.view.price.GridItemBalanced', {
                         dataIndex: 'mb',
                         width: 54,
                         renderer: function (v) {
-                            return utilFormat.Value(v);
+                            return utilFormat.Value2(v,2);
                         }
                     },
                     {
