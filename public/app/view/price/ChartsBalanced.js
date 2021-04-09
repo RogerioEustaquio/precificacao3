@@ -128,30 +128,43 @@ Ext.define('App.view.price.ChartsBalanced', {
         };
 
         me.chart = Highstock.stockChart(el.id, {
-
+                // chart: {
+                //     events: {
+                //         // beforePrint: function () {
+                //         //     this.oldhasUserSize = this.hasUserSize;
+                //         //     this.resetParams = [this.chartWidth, this.chartHeight, false];
+                //         //     this.setSize(600, 400, false);
+                //         // },
+                //         afterPrint: function () {
+                //             this.setSize.apply(this, this.resetParams);
+                //             this.hasUserSize = this.oldhasUserSize;
+                //         }
+                //     }
+                // },
                 credits:{
                     enabled: false
                 },
                 rangeSelector: {
-                    buttons: [
-                        {
-                            type:'day',
-                            count: 1,
-                            text: 'D'
-                        },
-                        {
-                            type:'day',
-                            count: 30,
-                            text: 'D30'
-                        },
-                        {
-                            type:'all',
-                            text: 'Todos'
-                        }
-                    ],
-                    selected: 2,
-                    inputEnabled: true,
-                    allButtonsEnabled: true,
+                    enabled: false
+                    // buttons: [
+                    //     {
+                    //         type:'day',
+                    //         count: 1,
+                    //         text: 'D'
+                    //     },
+                    //     {
+                    //         type:'day',
+                    //         count: 30,
+                    //         text: 'D30'
+                    //     },
+                    //     {
+                    //         type:'all',
+                    //         text: 'Todos'
+                    //     }
+                    // ],
+                    // selected: 2,
+                    // inputEnabled: true,
+                    // allButtonsEnabled: true,
                 },
                 
                 exporting: {
@@ -201,14 +214,14 @@ Ext.define('App.view.price.ChartsBalanced', {
                                                 Ext.Msg.alert('Alerta','Permitido selecionar 8 indicadores.');
                                                 record.setValue(false);
                                                 me.showLegend[recordSeries.index] = false ;
-                                                recordSeries.update({showInLegend: false, visible: false},false);
+                                                recordSeries.update({ visible: false},false);
                                                 meChart.yAxis[recordSeries.index].update({visible: false},false);
                                                 cont--;
 
                                             }else{
 
                                                 me.showLegend[recordSeries.index] = index ;
-                                                recordSeries.update({showInLegend: index, visible: index},false);
+                                                recordSeries.update({ visible: index},false);
                                                 meChart.yAxis[recordSeries.index].update({visible: index},false);
 
                                                 var iColor = 0;
@@ -226,8 +239,6 @@ Ext.define('App.view.price.ChartsBalanced', {
                                                             iColor++;
                                                         }
 
-                                                        rowSerie.update({color:color},false);
-
                                                         meChart.yAxis[iCont].update(
                                                             {
                                                                 title:{
@@ -241,7 +252,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                                                                     }
                                                                 }
                                                             }
-                                                            ,false);
+                                                        ,false);
+                                                        
+                                                        rowSerie.update({color:color},false);
                                                             
                                                     }
 
@@ -249,8 +262,15 @@ Ext.define('App.view.price.ChartsBalanced', {
                                                 });
                                             }
 
-                                            meChart.redraw();
+                                            
                                             record.up('window').down('displayfield[name=contCheck]').setValue(cont);
+
+                                            meChart.redraw();
+
+                                            setTimeout(function(){
+                                                meChart.redraw();
+                                            },500);
+
                                         }
                                     };
 
@@ -480,13 +500,6 @@ Ext.define('App.view.price.ChartsBalanced', {
                     //     var valor = utilFormat.Value2(this.y,dicima);
                     //     console.log(this);
                     //     return '<span style="color: '+this.series.color+'">'+this.name+'</span>: <b>'+valor+'</b><br/>';
-
-                    //     // return ['<b>' + this.x + '</b>'].concat(
-                    //     //     this.series.points ?
-                    //     //     this.series.points.map(function (point) {
-                    //     //             return point.series.name + ': ' + point.y + 'm';
-                    //     //         }) : []
-                    //     // )
                     // },
                     // valueDecimals: 2,
                     split: true

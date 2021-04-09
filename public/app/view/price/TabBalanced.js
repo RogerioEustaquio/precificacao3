@@ -353,10 +353,10 @@ Ext.define('App.view.price.TabBalanced', {
                                                         rangeSelector: {
                                                             selected: 2,
                                                         },
-                                                        title : {
-                                                            text: desMarca + ' | ' + descFilial
-                                                        },
-                                                        subtitle
+                                                        // title : {
+                                                        //     text: desMarca + ' | ' + descFilial + ' ' + descProduto
+                                                        // },
+                                                        // subtitle
                                                     });
 
                                                     iColor= 0;
