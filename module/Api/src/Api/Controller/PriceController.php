@@ -347,6 +347,9 @@ class PriceController extends AbstractRestfulController
             where 1=1
             $orderBy";
 
+            print "$sql";
+            exit;
+
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
             

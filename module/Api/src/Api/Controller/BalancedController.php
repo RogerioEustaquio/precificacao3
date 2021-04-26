@@ -222,7 +222,7 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['rol'],
-                    'show' => true
+                    'show' => false
                 );
 
                 $data3[] = array(
@@ -252,7 +252,7 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['nf'],
-                    'show' => true
+                    'show' => false
                 );
 
                 // $categories[] = (float) $elementos['data'];
@@ -471,8 +471,8 @@ class BalancedController extends AbstractRestfulController
         -- Remover esse filtro se utilizar o filtro de marca
         $and_accumulated
         order by med_accumulated asc";
-            // print "$sql";
-            // exit;
+            print "$sql";
+            exit;
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $pEmp);
             

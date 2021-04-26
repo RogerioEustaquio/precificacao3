@@ -261,7 +261,6 @@ Ext.define('App.view.price.ChartsBalanced', {
                                                     iCont++;
                                                 });
                                             }
-
                                             
                                             record.up('window').down('displayfield[name=contCheck]').setValue(cont);
 
@@ -369,12 +368,11 @@ Ext.define('App.view.price.ChartsBalanced', {
                 xAxis: {
                     type: 'datetime'
                 },
-                // xAxis: {
-                //     categories: categories,
-                //     crosshair: true
-                // },
                 yAxis: [
-                    {
+                    {  
+                        visible: me.showLegend[0],
+                        offset: 30,
+                        margin: 2,
                         height: '100%',
                         title: {
                             text: 'Preço',
@@ -394,11 +392,12 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
+                        visible: me.showLegend[1],
                         height: '100%',
                         title: {
                             text: 'ROL',
                             style: {
-                                color: Highcharts.getOptions().colors[1],
+                                color: Highcharts.getOptions().colors[2],  // cor 1 na MB
                                 fontSize: '10px'
                             }
                         },
@@ -407,17 +406,18 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,0);
                             },
                             style: {
-                                color: Highcharts.getOptions().colors[1],
+                                color: Highcharts.getOptions().colors[2],  // cor 1 na MB
                                 fontSize: '10px'
                             }
                         }
                     },
                     {
+                        visible: me.showLegend[2],
                         height: '100%',
                         title: {
                             text: 'MB',
                             style: {
-                                color: Highcharts.getOptions().colors[2],
+                                color: Highcharts.getOptions().colors[1],  // cor 2 no ROL
                                 fontSize: '10px'
                             }
                         },
@@ -426,12 +426,13 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,2);
                             },
                             style: {
-                                color: Highcharts.getOptions().colors[2],
+                                color: Highcharts.getOptions().colors[1], // cor 2 no ROL
                                 fontSize: '10px'
                             }
                         }
                     },
                     {
+                        visible: me.showLegend[3],
                         top: '60%',
                         height: '40%',
                         title: {
@@ -453,6 +454,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
+                        visible: me.showLegend[4],
                         height: '100%',
                         title: {
                             text: 'Nota',
@@ -528,7 +530,8 @@ Ext.define('App.view.price.ChartsBalanced', {
                         type: 'line',
                         name: 'Preço',
                         data: data[0],
-                        yAxis: 0
+                        yAxis: 0,
+                        visible: me.showLegend[0]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -539,6 +542,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         name: 'ROL',
                         data: data[1],
                         yAxis: 1,
+                        visible: me.showLegend[1]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -549,6 +553,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         name: 'MB',
                         data: data[2],
                         yAxis: 2,
+                        visible: me.showLegend[2]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -561,6 +566,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         data: data[3],
                         color: '#2EBD85',
                         yAxis: 3,
+                        visible: me.showLegend[3]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -570,6 +576,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         name: 'Nota',
                         data: data[4],
                         yAxis: 4,
+                        visible: me.showLegend[4]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -577,6 +584,35 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                 ]
             });
+
+            iColor= 0;
+            iCont =0 ;
+            me.chart.series.forEach(function(record){
+
+                if(record.visible){
+
+                    var color = Highcharts.getOptions().colors[iColor];
+
+                    if(record.name == 'Quantidade' || record.name == 'Navigator 1'){
+                        color = '#2EBD85';
+                    }else{
+                        
+                        iColor++;
+                    }
+                    record.update({color:color},false);
+                    
+                }
+                
+                iCont++;
+            });
+
+            setTimeout(function(){
+                me.chart.redraw();
+            },250);
+
+            setTimeout(function(){
+                me.chart.redraw();
+            },600);
 
     }
 });
