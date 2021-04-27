@@ -11,14 +11,12 @@ Ext.define('App.view.price.TreeGridExplore',{
         var myModel = Ext.create('Ext.data.TreeModel', {
                             fields: [ { name: 'grupo', type: 'string'},
                                       { name: 'rol', type: 'number'},
-                                      { name: 'rol_1m', type: 'number'},
-                                      { name: 'rol_1a', type: 'number'},
-                                      { name: 'rolM12', type: 'number'},
-                                      { name: 'rolM6', type: 'number'},
-                                      { name: 'rol_x_1m', type: 'number'},
-                                      { name: 'rol_x_1a', type: 'number'},
-                                      { name: 'rol_x_m6', type: 'number'},
-                                      { name: 'rol_x_m12', type: 'number'}
+                                      { name: 'precoMedio', type: 'number'},
+                                      { name: 'mb', type: 'number'},
+                                      { name: 'rob', type: 'number'},
+                                      { name: 'qtde', type: 'number'},
+                                      { name: 'cmv', type: 'number'},
+                                      { name: 'lb', type: 'number'}
                                     ]
                         });
 
@@ -27,7 +25,7 @@ Ext.define('App.view.price.TreeGridExplore',{
             autoLoad: false,
             proxy: {
                 type: 'ajax',
-                url: BASEURL + '/api/price/listartreepvd',
+                url: BASEURL + '/api/balanced/listartreepvd',
                 encode: true,
                 timeout: 240000,
                 reader: {
@@ -59,117 +57,67 @@ Ext.define('App.view.price.TreeGridExplore',{
                 },
                 {
                     text: 'ROL',
-                    columns: [
-                        {
-                            text: 'Atual',
-                            dataIndex: 'rol',
-                            width: 98,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: '1M',
-                            dataIndex: 'rol_1m',
-                            hidden: true,
-                            width: 98,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: '1A',
-                            dataIndex: 'rol_1a',
-                            hidden: true,
-                            width: 98,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M12',
-                            dataIndex: 'rolM12',
-                            hidden: true,
-                            width: 98,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: 'M6',
-                            dataIndex: 'rolM6',
-                            hidden: true,
-                            width: 98,
-                            align: 'right',
-                            renderer: function (v) {
-                                return utilFormat.Value(v);
-                            }
-                        },
-                        {
-                            text: '% 1M',
-                            dataIndex: 'rol_x_1m',
-                            width: 72,
-                            align: 'center',
-                            renderer: function (value, metaData, record) {
+                    dataIndex: 'rol',
+                    width: 98,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'Preço Medio',
+                    dataIndex: 'precoMedio',
+                    // hidden: true,
+                    width: 120,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'MB',
+                    dataIndex: 'mb',
+                    // hidden: true,
+                    width: 98,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'Quantidade',
+                    dataIndex: 'qtde',
+                    // hidden: true,
+                    width: 110,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'CMV',
+                    dataIndex: 'cmv',
+                    // hidden: true,
+                    width: 98,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value(v);
+                    }
+                },
+                {
+                    text: 'LB',
+                    dataIndex: 'lb',
+                    width: 72,
+                    align: 'center',
+                    renderer: function (value, metaData, record) {
 
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% 1A',
-                            dataIndex: 'rol_x_1a',
-                            width: 72,
-                            align: 'center',
-                            renderer: function (value, metaData, record) {
+                        // if (value > 0)
+                        //     metaData.tdCls = 'x-grid-cell-green-border';
+                        // if (value < 0)
+                        //     metaData.tdCls = 'x-grid-cell-red-border';
 
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M12',
-                            dataIndex: 'rol_x_m12',
-                            width: 72,
-                            align: 'center',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        },
-                        {
-                            text: '% M6',
-                            dataIndex: 'rol_x_m6',
-                            width: 72,
-                            align: 'center',
-                            renderer: function (value, metaData, record) {
-
-                                if (value > 0)
-                                    metaData.tdCls = 'x-grid-cell-green-border';
-                                if (value < 0)
-                                    metaData.tdCls = 'x-grid-cell-red-border';
-    
-                                return utilFormat.Value(value);
-                            }
-                        }
-                    ]
+                        return utilFormat.Value(value);
+                    }
                 }
             ],
             listeners: {
