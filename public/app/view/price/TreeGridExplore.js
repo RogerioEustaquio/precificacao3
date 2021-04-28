@@ -25,7 +25,7 @@ Ext.define('App.view.price.TreeGridExplore',{
             autoLoad: false,
             proxy: {
                 type: 'ajax',
-                url: BASEURL + '/api/balanced/listartreepvd',
+                url: BASEURL + '/api/price/listartreepvd',
                 encode: true,
                 timeout: 240000,
                 reader: {
@@ -56,15 +56,6 @@ Ext.define('App.view.price.TreeGridExplore',{
                     sortable: true
                 },
                 {
-                    text: 'ROL',
-                    dataIndex: 'rol',
-                    width: 98,
-                    align: 'right',
-                    renderer: function (v) {
-                        return utilFormat.Value(v);
-                    }
-                },
-                {
                     text: 'Preço Medio',
                     dataIndex: 'precoMedio',
                     // hidden: true,
@@ -78,7 +69,7 @@ Ext.define('App.view.price.TreeGridExplore',{
                     text: 'MB',
                     dataIndex: 'mb',
                     // hidden: true,
-                    width: 98,
+                    width: 70,
                     align: 'right',
                     renderer: function (v) {
                         return utilFormat.Value(v);
@@ -91,7 +82,16 @@ Ext.define('App.view.price.TreeGridExplore',{
                     width: 110,
                     align: 'right',
                     renderer: function (v) {
-                        return utilFormat.Value(v);
+                        return utilFormat.Value2(v,0);
+                    }
+                },
+                {
+                    text: 'ROL',
+                    dataIndex: 'rol',
+                    width: 98,
+                    align: 'right',
+                    renderer: function (v) {
+                        return utilFormat.Value2(v,0);
                     }
                 },
                 {
@@ -101,14 +101,14 @@ Ext.define('App.view.price.TreeGridExplore',{
                     width: 98,
                     align: 'right',
                     renderer: function (v) {
-                        return utilFormat.Value(v);
+                        return utilFormat.Value2(v,0);
                     }
                 },
                 {
                     text: 'LB',
                     dataIndex: 'lb',
-                    width: 72,
-                    align: 'center',
+                    width: 98,
+                    align: 'right',
                     renderer: function (value, metaData, record) {
 
                         // if (value > 0)
@@ -116,7 +116,7 @@ Ext.define('App.view.price.TreeGridExplore',{
                         // if (value < 0)
                         //     metaData.tdCls = 'x-grid-cell-red-border';
 
-                        return utilFormat.Value(value);
+                        return utilFormat.Value2(value,0);
                     }
                 }
             ],

@@ -112,44 +112,44 @@ Ext.define('App.view.price.FiltrosWindowExplore', {
             }
         );
 
-        var elTagCurva = Ext.create('Ext.form.field.Tag',{
-            name: 'elCurva',
-            itemId: 'elCurva',
-            multiSelect: true,
-            store: Ext.data.Store({
-                fields: [
-                    { name: 'idCurvaAbc', type: 'string' }
-                ],
-                proxy: {
-                    type: 'ajax',
-                    url: BASEURL + '/api/price/listarcurva',
-                    timeout: 120000,
-                    reader: {
-                        type: 'json',
-                        root: 'data'
-                    }
-                }
-            }),
-            width: '96%',
-            queryParam: 'idCurvaAbc',
-            queryMode: 'local',
-            displayField: 'idCurvaAbc',
-            valueField: 'idCurvaAbc',
-            emptyText: 'Curva',
-            fieldLabel: 'Curvas',
-            labelWidth: 60,
-            // margin: '0 1 0 0',
-            padding: 1,
-            plugins:'dragdroptag',
-            filterPickList: true,
-            publishes: 'value',
-            disabled: true
-        });
-        elTagCurva.store.load(
-            function(){
-                elTagCurva.setDisabled(false);
-            }
-        );
+        // var elTagCurva = Ext.create('Ext.form.field.Tag',{
+        //     name: 'elCurva',
+        //     itemId: 'elCurva',
+        //     multiSelect: true,
+        //     store: Ext.data.Store({
+        //         fields: [
+        //             { name: 'idCurvaAbc', type: 'string' }
+        //         ],
+        //         proxy: {
+        //             type: 'ajax',
+        //             url: BASEURL + '/api/price/listarcurva',
+        //             timeout: 120000,
+        //             reader: {
+        //                 type: 'json',
+        //                 root: 'data'
+        //             }
+        //         }
+        //     }),
+        //     width: '96%',
+        //     queryParam: 'idCurvaAbc',
+        //     queryMode: 'local',
+        //     displayField: 'idCurvaAbc',
+        //     valueField: 'idCurvaAbc',
+        //     emptyText: 'Curva',
+        //     fieldLabel: 'Curvas',
+        //     labelWidth: 60,
+        //     // margin: '0 1 0 0',
+        //     padding: 1,
+        //     plugins:'dragdroptag',
+        //     filterPickList: true,
+        //     publishes: 'value',
+        //     disabled: true
+        // });
+        // elTagCurva.store.load(
+        //     function(){
+        //         elTagCurva.setDisabled(false);
+        //     }
+        // );
 
         var elTagProduto = Ext.create('Ext.form.field.Tag',{
             name: 'elProduto',
@@ -281,22 +281,22 @@ Ext.define('App.view.price.FiltrosWindowExplore', {
                                         }
                                     ]
                                 },
-                                {
-                                    xtype: 'panel',
-                                    layout: 'hbox',
-                                    items:[
-                                        elTagCurva,
-                                        {
-                                            xtype: 'button',
-                                            iconCls: 'fa fa-file',
-                                            tooltip: 'Limpar',
-                                            margin: '1 1 1 4',
-                                            handler: function(form) {
-                                                form.up('panel').down('tagfield').setValue(null);
-                                            }
-                                        }
-                                    ]
-                                },
+                                // {
+                                //     xtype: 'panel',
+                                //     layout: 'hbox',
+                                //     items:[
+                                //         elTagCurva,
+                                //         {
+                                //             xtype: 'button',
+                                //             iconCls: 'fa fa-file',
+                                //             tooltip: 'Limpar',
+                                //             margin: '1 1 1 4',
+                                //             handler: function(form) {
+                                //                 form.up('panel').down('tagfield').setValue(null);
+                                //             }
+                                //         }
+                                //     ]
+                                // },
                                 {
                                     xtype: 'panel',
                                     layout: 'hbox',

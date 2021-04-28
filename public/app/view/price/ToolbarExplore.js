@@ -125,8 +125,8 @@ Ext.define('App.view.price.ToolbarExplore',{
         if(me.vMarcas)
             objWindow.down('#elMarca').setValue(me.vMarcas);
         
-        if(me.vCurvas)
-            objWindow.down('#elCurva').setValue(me.vCurvas);
+        // if(me.vCurvas)
+        //     objWindow.down('#elCurva').setValue(me.vCurvas);
         
         if(me.vProdutos.length){
 
@@ -150,8 +150,8 @@ Ext.define('App.view.price.ToolbarExplore',{
             var marcaSelect = objWindow.down('#elMarca').getValue();
             me.vMarcas = marcaSelect;
 
-            var curvaSelect = objWindow.down('#elCurva').getValue();
-            me.vCurvas = curvaSelect;
+            // var curvaSelect = objWindow.down('#elCurva').getValue();
+            // me.vCurvas = curvaSelect;
 
             var produtoSelect = objWindow.down('#elProduto').getValue();
             me.vProdutos = produtoSelect;
@@ -170,7 +170,7 @@ Ext.define('App.view.price.ToolbarExplore',{
             data : me.vData,
             emps : Ext.encode(me.vEmps),
             marcas: Ext.encode(me.vMarcas),
-            curvas: Ext.encode(me.vCurvas),
+            // curvas: Ext.encode(me.vCurvas),
             niveis: Ext.encode(me.vNiveis),
             produtos: Ext.encode(me.vProdutos),
             ordem : Ext.encode(me.vOrdem)
