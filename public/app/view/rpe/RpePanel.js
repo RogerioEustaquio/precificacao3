@@ -8,7 +8,8 @@ Ext.define('App.view.rpe.RpePanel', {
         'App.view.rpe.TabMarca',
         'App.view.rpe.TabFilial',
         'App.view.rpe.TabCliente',
-        'App.view.rpe.TabProduto'
+        'App.view.rpe.TabProduto',
+        'App.view.rpe.TabCexplore'
     ],
     
     title: 'Rastreador de Performance',
@@ -62,6 +63,9 @@ Ext.define('App.view.rpe.RpePanel', {
                         },
                         {
                             xtype: 'tabproduto'
+                        },
+                        {
+                            xtype: 'tabcexplore'
                         }
                     ]
                    

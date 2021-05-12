@@ -45,67 +45,77 @@ Ext.define('App.view.price.ChartsBalanced', {
                             // var serie = Array();
                             // me.buildChartContainer(el,serie);
                             // me.chart.reflow();
-                            Ext.Ajax.request({
-                                url: BASEURL +'/api/balanced/listaritensbalanced',
-                                method: 'POST',
-                                params: me.params,
-                                async: true,
-                                timeout: 240000,
-                                success: function (response) {
+
+                            rsarray = [];
+                            me.showLegend.push(true);
+                            me.showLegend.push(false);
+                            me.showLegend.push(true);
+                            me.showLegend.push(true);
+                            me.showLegend.push(false);
+                            me.buildChartContainer(el,rsarray,categories);
+                            me.setLoading(false);
+
+                            // Ext.Ajax.request({
+                            //     url: BASEURL +'/api/balanced/listaritensbalanced',
+                            //     method: 'POST',
+                            //     params: me.params,
+                            //     async: true,
+                            //     timeout: 240000,
+                            //     success: function (response) {
                                     
-                                    me.setLoading(false);
-                                    var result = Ext.decode(response.responseText);
-                                    if(result.success){
+                            //         me.setLoading(false);
+                            //         var result = Ext.decode(response.responseText);
+                            //         if(result.success){
 
-                                        rsarray = result.data;
-                                        // categories = result.categories;
+                            //             rsarray = result.data;
+                            //             // categories = result.categories;
 
-                                        rsarray.forEach(function(record){
+                            //             rsarray.forEach(function(record){
 
-                                            // console.log(record);
-                                            if(me.showLegend){
-                                                me.showLegend.push(record[0].show);
-                                            }
-                                        })
+                            //                 // console.log(record);
+                            //                 if(me.showLegend){
+                            //                     me.showLegend.push(record[0].show);
+                            //                 }
+                            //             })
 
-                                        me.buildChartContainer(el,rsarray,categories);
-                                        me.chart.reflow();
+                            //             me.buildChartContainer(el,rsarray,categories);
+                            //             me.chart.reflow();
 
-                                    }else{
+                            //         }else{
                                         
-                                        rsarray = [];
+                            //             rsarray = [];
 
-                                        new Noty({
-                                            theme: 'relax',
-                                            layout: 'bottomRight',
-                                            type: 'error',
-                                            closeWith: [],
-                                            text: 'Erro sistema: '+ result.message.substr(0,20)
-                                        }).show();
-                                    }
+                            //             new Noty({
+                            //                 theme: 'relax',
+                            //                 layout: 'bottomRight',
+                            //                 type: 'error',
+                            //                 closeWith: [],
+                            //                 text: 'Erro sistema: '+ result.message.substr(0,20)
+                            //             }).show();
+                            //         }
 
-                                    me.buildChartContainer(el,rsarray,categories);
+                            //         me.buildChartContainer(el,rsarray,categories);
 
-                                    me.setLoading(false);
-                                },
-                                error: function() {
+                            //         me.setLoading(false);
+                            //     },
+                            //     error: function() {
                                     
-                                    me.setLoading(false);
-                                    rsarray = [];
+                            //         me.setLoading(false);
+                            //         rsarray = [];
 
-                                    me.buildChartContainer(el,rsarray,categories)
+                            //         me.buildChartContainer(el,rsarray,categories)
 
-                                    new Noty({
-                                        theme: 'relax',
-                                        layout: 'bottomRight',
-                                        type: 'error',
-                                        closeWith: [],
-                                        text: 'Erro sistema: '+ result.message.substr(0,20)
-                                    }).show();
+                            //         new Noty({
+                            //             theme: 'relax',
+                            //             layout: 'bottomRight',
+                            //             type: 'error',
+                            //             closeWith: [],
+                            //             text: 'Erro sistema: '+ result.message.substr(0,20)
+                            //         }).show();
 
-                                    me.setLoading(false);
-                                }
-                            });
+                            //         me.setLoading(false);
+                            //     }
+                            // });
 
                         }
                     }

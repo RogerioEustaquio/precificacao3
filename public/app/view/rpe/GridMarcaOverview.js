@@ -81,7 +81,7 @@ Ext.define('App.view.rpe.GridMarcaOverview', {
                                     rootProperty: 'data'
                                 }
                             },
-                            autoLoad: true,
+                            autoLoad: false,
                             grouper: {
                                 property: 'grupo'
                             }
