@@ -734,6 +734,9 @@ class BalancedController extends AbstractRestfulController
                 $andSql .= " and e.id_curva_abc in ('$curvas')";
             }
 
+            if($produtos == 'null'){
+                $produtos = '';
+            }
             if($produtos){
                 $produtos = implode("','",json_decode($produtos));
             }

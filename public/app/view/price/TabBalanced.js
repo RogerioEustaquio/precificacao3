@@ -442,13 +442,16 @@ Ext.define('App.view.price.TabBalanced', {
                                             }
                                         }
 
-                                        if(produtos.length){
+                                        if(produtos){
 
-                                            stringProduto = '';
-                                            for (let index = 0; index < produtos.length; index++) {
-                                                var element = produtos[index];
+                                            if(produtos.length){
 
-                                                stringProduto = !stringProduto ? element :  "','"+element ;
+                                                stringProduto = '';
+                                                for (let index = 0; index < produtos.length; index++) {
+                                                    var element = produtos[index];
+
+                                                    stringProduto = !stringProduto ? element :  "','"+element ;
+                                                }
                                             }
                                         }
                                        
