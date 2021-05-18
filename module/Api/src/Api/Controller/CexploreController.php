@@ -89,9 +89,9 @@ class CexploreController extends AbstractRestfulController
                 $andSql .= " and ic.id_marca in ($marcas)";
             }
 
-            if($curvas){
-                $andSql .= " and es.id_curva_abc in ('$curvas')";
-            }
+            // if($curvas){
+            //     $andSql .= " and es.id_curva_abc in ('$curvas')";
+            // }
 
             if($produtos){
                 $andSql .= " and i.cod_item||c.descricao in ('$produtos')";
@@ -467,46 +467,46 @@ class CexploreController extends AbstractRestfulController
         return $this->getCallbackModel();
     }
 
-    // public function listarcurvaAction()
-    // {
-    //     $data = array();
+    public function listarcurvaAction()
+    {
+        $data = array();
         
-    //     try {
-    //         $session = $this->getSession();
-    //         $usuario = $session['info']['usuarioSistema'];
+        try {
+            $session = $this->getSession();
+            $usuario = $session['info']['usuarioSistema'];
 
-    //         // $idEmpresa      = $this->params()->fromQuery('idEmpresa',null);
+            // $idEmpresa      = $this->params()->fromQuery('idEmpresa',null);
 
-    //         $em = $this->getEntityManager();
-    //         $conn = $em->getConnection();
+            $em = $this->getEntityManager();
+            $conn = $em->getConnection();
 
-    //         $sql = "select id_curva_abc from MS.TB_CURVA_ABC";
+            $sql = "select id_curva_abc from MS.TB_CURVA_ABC";
 
-    //         $stmt = $conn->prepare($sql);
-    //         // $stmt->bindParam(':idEmpresa', $idEmpresa);
-    //         $stmt->execute();
-    //         $results = $stmt->fetchAll();
+            $stmt = $conn->prepare($sql);
+            // $stmt->bindParam(':idEmpresa', $idEmpresa);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
 
-    //         $hydrator = new ObjectProperty;
-    //         $hydrator->addStrategy('id_curva_abc', new ValueStrategy);
-    //         $stdClass = new StdClass;
-    //         $resultSet = new HydratingResultSet($hydrator, $stdClass);
-    //         $resultSet->initialize($results);
+            $hydrator = new ObjectProperty;
+            $hydrator->addStrategy('id_curva_abc', new ValueStrategy);
+            $stdClass = new StdClass;
+            $resultSet = new HydratingResultSet($hydrator, $stdClass);
+            $resultSet->initialize($results);
 
-    //         $data = array();
-    //         foreach ($resultSet as $row) {
-    //             $data[] = $hydrator->extract($row);
-    //         }
+            $data = array();
+            foreach ($resultSet as $row) {
+                $data[] = $hydrator->extract($row);
+            }
 
-    //         $this->setCallbackData($data);
-    //         $this->setMessage("Solicitação enviada com sucesso.");
+            $this->setCallbackData($data);
+            $this->setMessage("Solicitação enviada com sucesso.");
             
-    //     } catch (\Exception $e) {
-    //         $this->setCallbackError($e->getMessage());
-    //     }
+        } catch (\Exception $e) {
+            $this->setCallbackError($e->getMessage());
+        }
         
-    //     return $this->getCallbackModel();
-    // }
+        return $this->getCallbackModel();
+    }
 
     public function listarElementosAction()
     {

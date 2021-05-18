@@ -151,6 +151,197 @@ Ext.define('App.view.price.TabBalanced', {
             width: 90
         });
 
+        var elTagProduto = Ext.create('Ext.form.field.Tag',{
+            name: 'elProduto',
+            itemId: 'elProduto',
+            region: 'north',
+            multiSelect: true,
+            width: '96%',
+            labelWidth: 60,
+            store: Ext.data.Store({
+                fields: [{ name: 'coditem' }, { name: 'descricao' }],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/price/listarprodutos',
+                    reader: { type: 'json', root: 'data' },
+                    extraParams: { tipoSql: 0}
+                }
+            }),
+            queryParam: 'codItem',
+            queryMode: 'remote',
+            displayField: 'codItem',
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',		                            
+                '{codItem} {descricao} {marca}',
+                '</tpl>'), 
+            valueField: 'codItem',
+            emptyText: 'Produto',
+            fieldLabel: 'Produtos',
+            emptyText: 'Informe o código do produto',
+            // matchFieldWidth: false,
+            padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+
+            listeners: {
+                
+            },
+            
+            // allowBlank: false,
+            listConfig: {
+                loadingText: 'Carregando...',
+                emptyText: '<div class="notificacao-red">Nenhuma produto encontrado!</div>',
+                getInnerTpl: function() {
+                    return '{[ values.codItem]} {[ values.descricao]} {[ values.marca]}';
+                }
+            }
+        });
+
+        var btnProduto = Ext.create('Ext.button.Button',{
+            
+            iconCls: 'fa fa-filter',
+            tooltip: 'Produto',
+            name: 'vproduto',
+            // margin: '1 1 1 4',
+            handler: function(){
+
+                var w = Ext.getCmp('wincurvab');
+
+                if(!w){
+
+                    var vproduto = this;
+
+                    var w = Ext.create('Ext.window.Window',{
+                        title: 'Produto',
+                        itemId: 'wincurvab',
+                        height: 140,
+                        width: 400,
+                        bodyStyle: { background: '#ffffff' },
+                        closeAction : 'method-hide',
+                        layout:'border',
+                        items: [
+                            elTagProduto,
+                            {
+                                xtype: 'toolbar',
+                                region:'south',
+                                items :[
+                                    '->',
+                                    {
+                                        xtype: 'button',
+                                        text: 'Confirmar',
+                                        listeners: {
+                                            click: function(){
+                                                // Adicionar valor na toolbar (this)
+                                                vproduto.value = this.up('toolbar').up('window').down('tagfield[name=elProduto]').getValue();
+                                                w.close();
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                }
+
+                w.show();
+
+            }
+        });
+
+        var elTagCurva = Ext.create('Ext.form.field.Tag',{
+            name: 'elCurvab',
+            itemId: 'elCurvab',
+            region: 'north',
+            multiSelect: true,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'idCurvaAbc', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/price/listarcurva',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            width: '96%',
+            queryParam: 'idCurvaAbc',
+            queryMode: 'local',
+            displayField: 'idCurvaAbc',
+            valueField: 'idCurvaAbc',
+            emptyText: 'Curva',
+            fieldLabel: 'Curvas',
+            labelWidth: 60,
+            // margin: '0 1 0 0',
+            padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled: true
+        });
+        elTagCurva.store.load(
+            function(){
+                elTagCurva.setDisabled(false);
+            }
+        );
+
+        var btnCurva = Ext.create('Ext.button.Button',{
+            
+            iconCls: 'fa fa-cubes',
+            tooltip: 'Curva',
+            name: 'vcurva',
+            // margin: '1 1 1 4',
+            handler: function(){
+
+                var w = Ext.getCmp('wincurvab');
+
+                if(!w){
+
+                    var vcurva = this;
+
+                    var w = Ext.create('Ext.window.Window',{
+                        title: 'Curva',
+                        name: 'wincurvab',
+                        itemId: 'wincurvab',
+                        height: 140,
+                        width: 400,
+                        bodyStyle: { background: '#ffffff' },
+                        closeAction : 'method-hide',
+                        layout:'border',
+                        items: [
+                            elTagCurva,
+                            {
+                                xtype: 'toolbar',
+                                region: 'south',
+                                items :[
+                                    '->',
+                                    {
+                                        xtype: 'button',
+                                        text: 'Confirmar',
+                                        listeners: {
+                                            click: function(){
+                                                // Adicionar valor na toolbar (this)
+                                                vcurva.value = this.up('toolbar').up('window').down('tagfield[name=elCurvab]').getValue();
+
+                                                w.close();
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                }
+
+                w.show();
+
+            }
+        });
+
         Ext.applyIf(me, {
 
             items:[
@@ -168,19 +359,25 @@ Ext.define('App.view.price.TabBalanced', {
                                 elTagMarca,
                                 ' ',
                                 elTagEmpresa,
+                                btnCurva,
+                                btnProduto,
                                 ' ',
                                 fielDataInicio,
                                 fielDataFim,
                                 {
                                     xtype: 'button',
-                                    text: 'Consultar Produtos',
+                                    iconCls: 'fa fa-search',
+                                    tooltip: 'Consultar Produtos',
+                                    // text: 'Consultar Produtos',
                                     handler: function (form){
                     
-                                        var marcas = form.up('toolbar').down('tagfield[name=prodmarca]').getValue();
-                                        var filiais  = form.up('toolbar').down('tagfield[name=prodfilial]').getValue();
+                                        var marcas  = form.up('toolbar').down('tagfield[name=prodmarca]').getValue();
+                                        var filiais = form.up('toolbar').down('tagfield[name=prodfilial]').getValue();
+                                        var curvas  = form.up('toolbar').down('button[name=vcurva]').value;
+                                        var produtos= form.up('toolbar').down('button[name=vproduto]').value;
                                         var datainicio  = form.up('toolbar').down('datefield[name=datainicio]').getRawValue();
-                                        var datafim  = form.up('toolbar').down('datefield[name=datafim]').getRawValue();
-                                        var periodo  = form.up('toolbar').down('combobox[name=periodo]').getValue();
+                                        var datafim = form.up('toolbar').down('datefield[name=datafim]').getRawValue();
+                                        var periodo = form.up('toolbar').down('combobox[name=periodo]').getValue();
                                         
                                         var container = form.up('toolbar').up('container');
                                         var storeproduto = container.down('#panelgridproduto').down('#gridprodutobalanced').getStore();
@@ -188,6 +385,8 @@ Ext.define('App.view.price.TabBalanced', {
                                         var params = {
                                             marca: Ext.encode(marcas),
                                             filial: Ext.encode(filiais),
+                                            curvas: Ext.encode(curvas),
+                                            produtos: Ext.encode(produtos),
                                             datainicio: datainicio,
                                             datafim: datafim,
                                             periodo: periodo
@@ -204,11 +403,15 @@ Ext.define('App.view.price.TabBalanced', {
                                 ' ',
                                 {
                                     xtype: 'button',
-                                    text: 'Calcular Preço Médio',
+                                    iconCls: 'fa fa-calculator',
+                                    // text: 'Calcular Preço Médio',
+                                    tooltip: 'Calcular Preço Médio',
                                     handler: function (form){
                     
                                         var marcas = form.up('toolbar').down('tagfield[name=prodmarca]').getValue();
                                         var filiais  = form.up('toolbar').down('tagfield[name=prodfilial]').getValue();
+                                        var curvas  = form.up('toolbar').down('button[name=vcurva]').value;
+                                        var produtos= form.up('toolbar').down('button[name=vproduto]').value;
                                         var datainicio  = form.up('toolbar').down('datefield[name=datainicio]').getRawValue();
                                         var datafim  = form.up('toolbar').down('datefield[name=datafim]').getRawValue();
                                         var periodo  = form.up('toolbar').down('combobox[name=periodo]').getValue();
@@ -238,12 +441,24 @@ Ext.define('App.view.price.TabBalanced', {
                                                 descProduto = element.data.codItem;
                                             }
                                         }
+
+                                        if(produtos.length){
+
+                                            stringProduto = '';
+                                            for (let index = 0; index < produtos.length; index++) {
+                                                var element = produtos[index];
+
+                                                stringProduto = !stringProduto ? element :  "','"+element ;
+                                            }
+                                        }
                                        
                                         var storeitem = container.down('#panelcentral').down('#griditembalanced').down('grid').getStore();
                     
                                         var params = {
                                             marca: Ext.encode(marcas),
                                             filial: Ext.encode(filiais),
+                                            curvas: Ext.encode(curvas),
+                                            // produtos: Ext.encode(produtos),
                                             datainicio: datainicio,
                                             datafim: datafim,
                                             periodo: periodo,

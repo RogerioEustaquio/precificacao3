@@ -43,7 +43,35 @@ Ext.define('App.view.rpe.FiltrosWindowCexplore', {
             format: 'd/m/Y',
             altFormats: 'dmY',
             emptyText: '__/__/____',
-            value: sysdate
+            value: sysdate,
+            listeners: {
+                blur : function(){
+                    
+                    var datainicioa = this.up('window').down('#datainicioa').getRawValue();
+                    var datafinala = this.getRawValue();
+
+                    var arrayDtInicio = datainicioa.split('/');
+                    var arrayDtFim = datafinala.split('/');
+
+                    if(datafinala){
+
+                        if(arrayDtInicio[2] == arrayDtFim[2]){
+
+                            if(arrayDtInicio[1] > arrayDtFim[1]){
+
+                                alert('Período final deve ser maior que o inicial!');
+                                this.setValue(null);
+
+                            }else if(arrayDtInicio[1] == arrayDtFim[1] && arrayDtInicio[0] > arrayDtFim[0]){
+                                alert('Período final deve ser maior que o inicial!');
+                                this.setValue(null);
+                            }
+                        }
+                    }
+                }
+            
+            }
+
         });
 
         var fielDataInicioB = Ext.create('Ext.form.field.Date',{
@@ -71,7 +99,34 @@ Ext.define('App.view.rpe.FiltrosWindowCexplore', {
             format: 'd/m/Y',
             altFormats: 'dmY',
             emptyText: '__/__/____',
-            value: sysdate
+            value: sysdate,
+            listeners: {
+                blur : function(){
+                    
+                    var datainiciob = this.up('window').down('#datainiciob').getRawValue();
+                    var datafinalb = this.getRawValue();
+
+                    var arrayDtInicio = datainiciob.split('/');
+                    var arrayDtFim = datafinalb.split('/');
+
+                    if(datafinalb){
+
+                        if(arrayDtInicio[2] == arrayDtFim[2]){
+
+                            if(arrayDtInicio[1] > arrayDtFim[1]){
+
+                                alert('Período final deve ser maior que o inícial!');
+                                this.setValue(null);
+
+                            }else if(arrayDtInicio[1] == arrayDtFim[1] && arrayDtInicio[0] > arrayDtFim[0]){
+                                alert('Período final deve ser maior que o inícial!');
+                                this.setValue(null);
+                            }
+                        }
+                    }
+                }
+            
+            }
         });
 
         var elTagEmpresa = Ext.create('Ext.form.field.Tag',{
@@ -187,6 +242,45 @@ Ext.define('App.view.rpe.FiltrosWindowCexplore', {
             publishes: 'value',
             disabled:false
         });
+
+        var elTagCurva = Ext.create('Ext.form.field.Tag',{
+            name: 'elCurva',
+            itemId: 'elCurva',
+            multiSelect: true,
+            store: Ext.data.Store({
+                fields: [
+                    { name: 'idCurvaAbc', type: 'string' }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: BASEURL + '/api/price/listarcurva',
+                    timeout: 120000,
+                    reader: {
+                        type: 'json',
+                        root: 'data'
+                    }
+                }
+            }),
+            width: '96%',
+            queryParam: 'idCurvaAbc',
+            queryMode: 'local',
+            displayField: 'idCurvaAbc',
+            valueField: 'idCurvaAbc',
+            emptyText: 'Curva',
+            fieldLabel: 'Curvas',
+            labelWidth: 60,
+            // margin: '0 1 0 0',
+            padding: 1,
+            plugins:'dragdroptag',
+            filterPickList: true,
+            publishes: 'value',
+            disabled: true
+        });
+        elTagCurva.store.load(
+            function(){
+                elTagCurva.setDisabled(false);
+            }
+        );
 
         var elTagProduto = Ext.create('Ext.form.field.Tag',{
             name: 'elProduto',
@@ -337,12 +431,28 @@ Ext.define('App.view.rpe.FiltrosWindowCexplore', {
                                             }
                                         }
                                     ]
-                                },,
+                                },
                                 {
                                     xtype: 'panel',
                                     layout: 'hbox',
                                     items:[
                                         elTagGrupoMarca,
+                                        {
+                                            xtype: 'button',
+                                            iconCls: 'fa fa-file',
+                                            tooltip: 'Limpar',
+                                            margin: '1 1 1 4',
+                                            handler: function(form) {
+                                                form.up('panel').down('tagfield').setValue(null);
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: 'panel',
+                                    layout: 'hbox',
+                                    items:[
+                                        elTagCurva,
                                         {
                                             xtype: 'button',
                                             iconCls: 'fa fa-file',

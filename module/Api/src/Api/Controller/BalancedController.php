@@ -160,8 +160,6 @@ class BalancedController extends AbstractRestfulController
                     $andSql
                     group by $sqlData
                     order by 1 asc";
-            // print "$sql";
-            // exit;
 
             $conn = $em->getConnection();
             $stmt = $conn->prepare($sql);
@@ -398,81 +396,79 @@ class BalancedController extends AbstractRestfulController
             $resultCount = $stmt->fetchAll();
 
             $sql = "select $paramRede
-            codProduto,
-            descricao,
-            rol,
-            0 decrol,
-            lb,
-            0 declb,
-            mb,
-            2 decmb,
-            qtde,
-            0 decqtde,
-            nf,
-            0 decnf,
-            med_accumulated
-        from (select $paramRede
-                 codProduto,
-                 descricao,
-                 rol,
-                 lb,
-                 mb,
-                 qtde,
-                 nf,
-                 fr_rol,
-                 sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
-            from (select rede, $paramRede codProduto, descricao,
+                        codProduto,
+                        descricao,
+                        rol,
+                        0 decrol,
+                        lb,
+                        0 declb,
+                        mb,
+                        2 decmb,
+                        qtde,
+                        0 decqtde,
+                        nf,
+                        0 decnf,
+                        med_accumulated
+                    from (select $paramRede
+                            codProduto,
+                            descricao,
                             rol,
                             lb,
                             mb,
                             qtde,
                             nf,
-                            100*ratio_to_report((case when rol > 0 then rol end)) over (partition by rede) fr_rol
-                    from (select 'JS' as rede,
-                                    $paramRede2
-                                    i.cod_item||c.descricao codProduto,
-                                    i.descricao,
-                                    sum(vi.rob) as rob,
-                                    sum(vi.rol) as rol,
-                                    sum(vi.custo) as cmv,
-                                    sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
-                                    round((case when sum(rol) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
-                                    sum(vi.qtde) as qtde,
-                                    count(distinct vi.numero_nf) as nf,
-                                    count(distinct vi.id_pessoa) as cc
-                            from pricing.vm_ie_ve_venda_item vi, 
-                                    ms.tb_item_categoria ic,
-                                    ms.tb_item i,
-                                    ms.tb_categoria c, 
-                                    ms.empresa em,
-                                    ms.tb_marca m,
-                                    ms.pessoa p
-                            where vi.id_item = ic.id_item
-                            and vi.id_categoria = ic.id_categoria
-                            and vi.id_item = i.id_item
-                            and vi.id_categoria = c.id_categoria
-                            and vi.id_empresa = em.id_empresa
-                            and ic.id_marca = m.id_marca
-                            and vi.id_pessoa = p.id_pessoa
-                            --and vi.id_empresa = 23
-                            $andFilial
-                            $andData
-                            $andMarca
-                            $andProduto
-                            $andCliente
-                            -- and trunc(vi.data_emissao) >= '01/01/2021'
-                            -- and trunc(vi.data_emissao) < sysdate                                    
-                            --and ic.id_marca not in ()
-                            group by $paramRede2 i.descricao, i.cod_item||c.descricao))
-        group by rede, $paramRede codProduto, descricao, rol, lb, mb, qtde, nf, fr_rol)
-        where 1=1
-        $and_mb
-        and rol > 0
-        -- Remover esse filtro se utilizar o filtro de marca
-        $and_accumulated
-        order by med_accumulated asc";
-            print "$sql";
-            exit;
+                            fr_rol,
+                            sum(sum(fr_rol)) over (partition by rede order by rol desc rows unbounded preceding) as med_accumulated  
+                        from (select rede, $paramRede codProduto, descricao,
+                                        rol,
+                                        lb,
+                                        mb,
+                                        qtde,
+                                        nf,
+                                        100*ratio_to_report((case when rol > 0 then rol end)) over (partition by rede) fr_rol
+                                from (select 'JS' as rede,
+                                                $paramRede2
+                                                i.cod_item||c.descricao codProduto,
+                                                i.descricao,
+                                                sum(vi.rob) as rob,
+                                                sum(vi.rol) as rol,
+                                                sum(vi.custo) as cmv,
+                                                sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                                                round((case when sum(rol) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
+                                                sum(vi.qtde) as qtde,
+                                                count(distinct vi.numero_nf) as nf,
+                                                count(distinct vi.id_pessoa) as cc
+                                        from pricing.vm_ie_ve_venda_item vi, 
+                                                ms.tb_item_categoria ic,
+                                                ms.tb_item i,
+                                                ms.tb_categoria c, 
+                                                ms.empresa em,
+                                                ms.tb_marca m,
+                                                ms.pessoa p
+                                        where vi.id_item = ic.id_item
+                                        and vi.id_categoria = ic.id_categoria
+                                        and vi.id_item = i.id_item
+                                        and vi.id_categoria = c.id_categoria
+                                        and vi.id_empresa = em.id_empresa
+                                        and ic.id_marca = m.id_marca
+                                        and vi.id_pessoa = p.id_pessoa
+                                        --and vi.id_empresa = 23
+                                        $andFilial
+                                        $andData
+                                        $andMarca
+                                        $andProduto
+                                        $andCliente
+                                        -- and trunc(vi.data_emissao) >= '01/01/2021'
+                                        -- and trunc(vi.data_emissao) < sysdate                                    
+                                        --and ic.id_marca not in ()
+                                        group by $paramRede2 i.descricao, i.cod_item||c.descricao))
+                    group by rede, $paramRede codProduto, descricao, rol, lb, mb, qtde, nf, fr_rol)
+                    where 1=1
+                    $and_mb
+                    and rol > 0
+                    -- Remover esse filtro se utilizar o filtro de marca
+                    $and_accumulated
+                    order by med_accumulated asc";
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $pEmp);
             
@@ -691,8 +687,10 @@ class BalancedController extends AbstractRestfulController
     {
         $data = array();
 
-        $filial        = $this->params()->fromQuery('filial',null);
+        $filial     = $this->params()->fromQuery('filial',null);
         $marca      = $this->params()->fromQuery('marca',null); //Ex: 130,128,131,129,146,136
+        $curvas     = $this->params()->fromQuery('curvas',null);
+        $produtos   = $this->params()->fromQuery('produtos',null);
         $dtinicio   = $this->params()->fromQuery('dtinicio',null);
         $dtfinal    = $this->params()->fromQuery('dtfinal',null);
 
@@ -729,6 +727,20 @@ class BalancedController extends AbstractRestfulController
                 $andSql .= " and trunc(vi.data_emissao) <= '$dtfinal'";
             }
 
+            if($curvas){
+                $curvas = implode("','",json_decode($curvas));
+            }
+            if($curvas){
+                $andSql .= " and e.id_curva_abc in ('$curvas')";
+            }
+
+            if($produtos){
+                $produtos = implode("','",json_decode($produtos));
+            }
+            if($produtos){
+                $andSql .= " and i.cod_item||c.descricao in ('$produtos')";
+            }
+
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             
@@ -742,14 +754,17 @@ class BalancedController extends AbstractRestfulController
                          ms.tb_item_categoria ic,
                          ms.tb_item i,
                          ms.tb_categoria c,
-                         ms.tb_marca m
+                         ms.tb_marca m,
+                         ms.tb_estoque e
                     where vi.id_item = ic.id_item
                         and vi.id_categoria = ic.id_categoria
                         and vi.id_item = i.id_item
                         and vi.id_categoria = c.id_categoria
                         and ic.id_marca = m.id_marca
                         and vi.id_operacao in (4,7)
-                        and vi.status_venda = 'A'                                    
+                        and vi.status_venda = 'A'     
+                        and e.id_item = i.id_item
+                        and e.id_categoria = c.id_categoria                               
                         --and m.descricao = 'YPF'                   
                         --and trunc(vi.data_emissao) >= '01/03/2021'
                         --and trunc(vi.data_emissao) <= '12/03/2021'
@@ -758,8 +773,6 @@ class BalancedController extends AbstractRestfulController
                     group by i.cod_item||c.descricao, i.descricao
                     order by nvl(cc,0) desc
             ";
-            // print "$sql";
-            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();
@@ -953,8 +966,6 @@ class BalancedController extends AbstractRestfulController
                     where rank <= 18
                     order by preco_medio desc
             ";
-            // print "$sql";
-            // exit;
 
             $stmt = $conn->prepare($sql);
             $stmt->execute();

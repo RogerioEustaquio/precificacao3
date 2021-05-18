@@ -31,15 +31,6 @@ Ext.define('App.view.price.GridItemBalanced', {
                               '#F97E81',
                               '#F8696B'
                             ];
-
-        // var mymodel = Ext.create('Ext.data.Model', {
-        //                         fields:[{name:'precoMedio', mapping:'precoMedio', type:'number'},
-        //                                 {name:'numeroNf', type: 'float'},
-        //                                 {name:'rol', type: 'float'},
-        //                                 {name:'mb', type: 'float'},
-        //                                 {name:'order', type: 'float'}
-        //                                 ]
-        //             });
         
         var mystore = Ext.create('Ext.data.Store', {
                                 model: Ext.create('Ext.data.Model', {

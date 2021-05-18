@@ -149,6 +149,9 @@ Ext.define('App.view.rpe.ToolbarCexplore',{
         if(me.vMarcas)
             objWindow.down('#elgrupomarca').setValue(me.vMarcas);
         
+        if(me.vCurvas)
+            objWindow.down('#elCurva').setValue(me.vCurvas);
+        
         if(me.vProdutos.length){
 
             var objProduto = objWindow.down('#elProduto');
@@ -188,8 +191,8 @@ Ext.define('App.view.rpe.ToolbarCexplore',{
             var marcaSelect = objWindow.down('#elgrupomarca').getValue();
             me.vMarcas = marcaSelect;
 
-            // var curvaSelect = objWindow.down('#elCurva').getValue();
-            // me.vCurvas = curvaSelect;
+            var curvaSelect = objWindow.down('#elCurva').getValue();
+            me.vCurvas = curvaSelect;
 
             var produtoSelect = objWindow.down('#elProduto').getValue();
             me.vProdutos = produtoSelect;
@@ -211,7 +214,7 @@ Ext.define('App.view.rpe.ToolbarCexplore',{
             datafinalb  : me.vdatafinalb,
             emps : Ext.encode(me.vEmps),
             marcas: Ext.encode(me.vMarcas),
-            // curvas: Ext.encode(me.vCurvas),
+            curvas: Ext.encode(me.vCurvas),
             niveis: Ext.encode(me.vNiveis),
             produtos: Ext.encode(me.vProdutos),
             ordem : Ext.encode(me.vOrdem)
