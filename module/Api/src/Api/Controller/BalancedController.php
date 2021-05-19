@@ -727,6 +727,9 @@ class BalancedController extends AbstractRestfulController
                 $andSql .= " and trunc(vi.data_emissao) <= '$dtfinal'";
             }
 
+            if($curvas == 'null'){
+                $curvas = '';
+            }
             if($curvas){
                 $curvas = implode("','",json_decode($curvas));
             }
