@@ -422,7 +422,7 @@ class ProdutoposicionamentoController extends AbstractRestfulController
                     --and e.id_curva_abc = 'E'
                     and ( e.ultima_compra > add_months(sysdate, -6) or e.estoque > 0 )
                     group by g.id_grupo_marca, m.id_marca, m.descricao
-                    order by skus desc
+                    order by m.descricao asc
             ";
             
             $conn = $em->getConnection();
