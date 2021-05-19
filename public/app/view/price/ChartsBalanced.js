@@ -385,7 +385,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         margin: 2,
                         height: '100%',
                         title: {
-                            text: 'Preço',
+                            text: 'Preço Médio',
                             style: {
                                 color: Highcharts.getOptions().colors[0],
                                 fontSize: '10px'
@@ -496,7 +496,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                             this.points ?
                                 this.points.map(function (point) {
 
-                                    var dicima = point.series.name == 'Preço' || point.series.name == 'MB' ? 2 : 0;
+                                    var dicima = point.series.name == 'Preço Médio' || point.series.name == 'MB' ? 2 : 0;
                                     var valor = utilFormat.Value2(point.y,dicima);
 
                                     return '<span style="color: '+point.color+'">'+point.series.name+'</span>: <b>'+valor+'</b><br/>';
@@ -538,7 +538,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                 series: [
                     {
                         type: 'line',
-                        name: 'Preço',
+                        name: 'Preço Médio',
                         data: data[0],
                         yAxis: 0,
                         visible: me.showLegend[0]

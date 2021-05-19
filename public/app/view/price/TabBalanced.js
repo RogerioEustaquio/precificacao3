@@ -206,7 +206,7 @@ Ext.define('App.view.price.TabBalanced', {
             // margin: '1 1 1 4',
             handler: function(){
 
-                var w = Ext.getCmp('wincurvab');
+                var w = Ext.getCmp('winprodutob');
 
                 if(!w){
 
@@ -214,7 +214,7 @@ Ext.define('App.view.price.TabBalanced', {
 
                     var w = Ext.create('Ext.window.Window',{
                         title: 'Produto',
-                        itemId: 'wincurvab',
+                        itemId: 'winprodutob',
                         height: 140,
                         width: 400,
                         bodyStyle: { background: '#ffffff' },
@@ -235,6 +235,31 @@ Ext.define('App.view.price.TabBalanced', {
                                                 // Adicionar valor na toolbar (this)
                                                 vproduto.value = this.up('toolbar').up('window').down('tagfield[name=elProduto]').getValue();
                                                 w.close();
+
+                                                var marcas  = vproduto.up('toolbar').down('tagfield[name=prodmarca]').getValue();
+                                                var filiais = vproduto.up('toolbar').down('tagfield[name=prodfilial]').getValue();
+                                                var curvas  = vproduto.up('toolbar').down('button[name=vcurva]').value;
+                                                var produtos= vproduto.up('toolbar').down('button[name=vproduto]').value;
+                                                var datainicio  = vproduto.up('toolbar').down('datefield[name=datainicio]').getRawValue();
+                                                var datafim = vproduto.up('toolbar').down('datefield[name=datafim]').getRawValue();
+                                                var periodo = vproduto.up('toolbar').down('combobox[name=periodo]').getValue();
+                                                
+                                                var container = vproduto.up('toolbar').up('container');
+                                                var storeproduto = container.down('#panelgridproduto').down('#gridprodutobalanced').getStore();
+                            
+                                                var params = {
+                                                    marca: Ext.encode(marcas),
+                                                    filial: Ext.encode(filiais),
+                                                    curvas: Ext.encode(curvas),
+                                                    produtos: Ext.encode(produtos),
+                                                    datainicio: datainicio,
+                                                    datafim: datafim,
+                                                    periodo: periodo
+                                                };
+                            
+                                                storeproduto.getProxy().setExtraParams(params);
+                            
+                                                storeproduto.load();
                                             }
                                         }
                                     }
@@ -501,7 +526,7 @@ Ext.define('App.view.price.TabBalanced', {
 
                                                     var series1 = {
                                                         type: 'line',
-                                                        name: 'Preço',
+                                                        name: 'Preço Médio',
                                                         data: rsarray[0],
                                                         yAxis: 0,
                                                         index: 0,

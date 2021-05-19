@@ -204,7 +204,7 @@ class BalancedController extends AbstractRestfulController
                 $elementos['data'] = $timeEmissao .'000';
 
                 $data1[] = array(
-                    'name'=> 'Preço',
+                    'name'=> 'Preço Médio',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
                     // 'description'=> $dataEmissao,
