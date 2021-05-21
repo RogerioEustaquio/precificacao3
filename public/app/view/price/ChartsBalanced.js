@@ -49,6 +49,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                             rsarray = [];
                             me.showLegend.push(true);
                             me.showLegend.push(false);
+                            me.showLegend.push(false);
                             me.showLegend.push(true);
                             me.showLegend.push(true);
                             me.showLegend.push(false);
@@ -379,7 +380,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     type: 'datetime'
                 },
                 yAxis: [
-                    {  
+                    {
                         visible: me.showLegend[0],
                         offset: 30,
                         margin: 2,
@@ -425,6 +426,26 @@ Ext.define('App.view.price.ChartsBalanced', {
                         visible: me.showLegend[2],
                         height: '100%',
                         title: {
+                            text: 'LB',
+                            style: {
+                                color: Highcharts.getOptions().colors[3],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,0);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[3],
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
+                        visible: me.showLegend[3],
+                        height: '100%',
+                        title: {
                             text: 'MB',
                             style: {
                                 color: Highcharts.getOptions().colors[1],  // cor 2 no ROL
@@ -442,7 +463,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
-                        visible: me.showLegend[3],
+                        visible: me.showLegend[4],
                         top: '60%',
                         height: '40%',
                         title: {
@@ -464,12 +485,12 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
-                        visible: me.showLegend[4],
+                        visible: me.showLegend[5],
                         height: '100%',
                         title: {
                             text: 'Nota',
                             style: {
-                                color: Highcharts.getOptions().colors[3],
+                                color: Highcharts.getOptions().colors[4],
                                 fontSize: '10px'
                             }
                         },
@@ -478,7 +499,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,0);
                             },
                             style: {
-                                color: Highcharts.getOptions().colors[3],
+                                color: Highcharts.getOptions().colors[4],
                                 fontSize: '10px'
                             }
                         }
@@ -560,7 +581,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'line',
-                        name: 'MB',
+                        name: 'LB',
                         data: data[2],
                         yAxis: 2,
                         visible: me.showLegend[2]
@@ -570,13 +591,24 @@ Ext.define('App.view.price.ChartsBalanced', {
                         
                     },
                     {
+                        type: 'line',
+                        name: 'MB',
+                        data: data[3],
+                        yAxis: 3,
+                        visible: me.showLegend[3]
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                        
+                    },
+                    {
                         type: 'column',
                         id: 'Quantidade',
                         name: 'Quantidade',
-                        data: data[3],
+                        data: data[4],
                         color: '#2EBD85',
-                        yAxis: 3,
-                        visible: me.showLegend[3]
+                        yAxis: 4,
+                        visible: me.showLegend[4]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -584,9 +616,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                     {
                         type: 'line',
                         name: 'Nota',
-                        data: data[4],
-                        yAxis: 4,
-                        visible: me.showLegend[4]
+                        data: data[5],
+                        yAxis: 5,
+                        visible: me.showLegend[5]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }

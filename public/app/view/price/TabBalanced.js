@@ -351,8 +351,32 @@ Ext.define('App.view.price.TabBalanced', {
                                             click: function(){
                                                 // Adicionar valor na toolbar (this)
                                                 vcurva.value = this.up('toolbar').up('window').down('tagfield[name=elCurvab]').getValue();
-
                                                 w.close();
+
+                                                var marcas  = vcurva.up('toolbar').down('tagfield[name=prodmarca]').getValue();
+                                                var filiais = vcurva.up('toolbar').down('tagfield[name=prodfilial]').getValue();
+                                                var curvas  = vcurva.up('toolbar').down('button[name=vcurva]').value;
+                                                var produtos= vcurva.up('toolbar').down('button[name=vproduto]').value;
+                                                var datainicio  = vcurva.up('toolbar').down('datefield[name=datainicio]').getRawValue();
+                                                var datafim = vcurva.up('toolbar').down('datefield[name=datafim]').getRawValue();
+                                                var periodo = vcurva.up('toolbar').down('combobox[name=periodo]').getValue();
+                                                
+                                                var container = vcurva.up('toolbar').up('container');
+                                                var storeproduto = container.down('#panelgridproduto').down('#gridprodutobalanced').getStore();
+                            
+                                                var params = {
+                                                    marca: Ext.encode(marcas),
+                                                    filial: Ext.encode(filiais),
+                                                    curvas: Ext.encode(curvas),
+                                                    produtos: Ext.encode(produtos),
+                                                    datainicio: datainicio,
+                                                    datafim: datafim,
+                                                    periodo: periodo
+                                                };
+                            
+                                                storeproduto.getProxy().setExtraParams(params);
+                            
+                                                storeproduto.load();
                                             }
                                         }
                                     }
@@ -550,7 +574,7 @@ Ext.define('App.view.price.TabBalanced', {
 
                                                     var series3 = {
                                                         type: 'line',
-                                                        name: 'MB',
+                                                        name: 'LB',
                                                         data: rsarray[2],
                                                         // color: seriesCores[2],
                                                         yAxis: 2,
@@ -561,11 +585,10 @@ Ext.define('App.view.price.TabBalanced', {
                                                     charts.chart.addSeries(series3);
 
                                                     var series4 = {
-                                                        type: 'column',
-                                                        id: 'Quantidade',
-                                                        name: 'Quantidade',
+                                                        type: 'line',
+                                                        name: 'MB',
                                                         data: rsarray[3],
-                                                        color: '#2EBD85',
+                                                        // color: seriesCores[2],
                                                         yAxis: 3,
                                                         index: 3,
                                                         visible: charts.showLegend[3]
@@ -574,15 +597,28 @@ Ext.define('App.view.price.TabBalanced', {
                                                     charts.chart.addSeries(series4);
 
                                                     var series5 = {
-                                                        type: 'line',
-                                                        name: 'Nota',
+                                                        type: 'column',
+                                                        id: 'Quantidade',
+                                                        name: 'Quantidade',
                                                         data: rsarray[4],
-                                                        // color: seriesCores[4],
+                                                        color: '#2EBD85',
                                                         yAxis: 4,
                                                         index: 4,
                                                         visible: charts.showLegend[4]
                                                     };
+                                                    
                                                     charts.chart.addSeries(series5);
+
+                                                    var series6 = {
+                                                        type: 'line',
+                                                        name: 'Nota',
+                                                        data: rsarray[5],
+                                                        // color: seriesCores[4],
+                                                        yAxis: 5,
+                                                        index: 5,
+                                                        visible: charts.showLegend[5]
+                                                    };
+                                                    charts.chart.addSeries(series6);
 
                                                     var subtitle = '';
                                                     if(descProduto){

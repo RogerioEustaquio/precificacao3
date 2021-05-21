@@ -137,7 +137,7 @@ class BalancedController extends AbstractRestfulController
             $sql = "select $sqlData as data,
                             round(sum(vi.rob)/sum(vi.qtde),2) as preco_medio,
                             sum(vi.rol) as rol,
-                            --sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
+                            sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
                             round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
                             sum(vi.qtde) as qtde,
                             count(distinct vi.numero_nf) as nf
@@ -172,6 +172,7 @@ class BalancedController extends AbstractRestfulController
             $hydrator->addStrategy('data', new ValueStrategy);
             $hydrator->addStrategy('preco_medio', new ValueStrategy);
             $hydrator->addStrategy('rol', new ValueStrategy);
+            $hydrator->addStrategy('lb', new ValueStrategy);
             $hydrator->addStrategy('mb', new ValueStrategy);
             $hydrator->addStrategy('qtde', new ValueStrategy);
             $stdClass = new StdClass;
@@ -183,6 +184,7 @@ class BalancedController extends AbstractRestfulController
             $data3 = array();
             $data4 = array();
             $data5 = array();
+            $data6 = array();
             $data = array();
             $categories= array();
             // $date = date_create();
@@ -224,6 +226,16 @@ class BalancedController extends AbstractRestfulController
                 );
 
                 $data3[] = array(
+                    'name'=> 'LB',
+                    'type'=> 'line',
+                    'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['lb'],
+                    'show' => false
+                );
+
+                $data4[] = array(
                     'name'=> 'MB',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
@@ -233,7 +245,7 @@ class BalancedController extends AbstractRestfulController
                     'show' => true
                 );
 
-                $data4[] = array(
+                $data5[] = array(
                     'name'=> 'Quantidade',
                     'type'=> 'column',
                     // 'data'=> $dataEmissao,
@@ -243,7 +255,7 @@ class BalancedController extends AbstractRestfulController
                     'show' => true
                 );
 
-                $data5[] = array(
+                $data6[] = array(
                     'name'=> 'Nota',
                     'type'=> 'column',
                     'data'=> $dataEmissao,
@@ -261,6 +273,7 @@ class BalancedController extends AbstractRestfulController
             $data[] = $data3;
             $data[] = $data4;
             $data[] = $data5;
+            $data[] = $data6;
 
             $this->setCallbackData($data);
             
@@ -870,6 +883,7 @@ class BalancedController extends AbstractRestfulController
         try {
 
             $data[] = ['id'=> 'ROL','name'=> 'ROL','vExemplo'=> 1000000];
+            $data[] = ['id'=> 'LB','name'=> 'LB','vExemplo'=> 100000];
             $data[] = ['id'=> 'MB','name'=> 'MB','vExemplo'=> 30];
             $data[] = ['id'=> 'NF','name'=> 'NF','vExemplo'=> 1000];
             $data[] = ['id'=> 'QTDE','name'=> 'QTDE','vExemplo'=> 200];
@@ -935,12 +949,12 @@ class BalancedController extends AbstractRestfulController
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             
-            $sql = "select preco_medio, rol, notas, qtde, mb 
+            $sql = "select preco_medio, rol,lb, notas, qtde, mb 
                         from (select rank() over (order by rol desc) rank, preco_medio,
-                                    rol, notas, qtde, mb
+                                    rol, lb, notas, qtde, mb
                                 from (select preco_medio,
                                             count(*) as notas,
-                                            round(sum(rol),0) as rol, sum(qtde) as qtde, round(sum(lb)/sum(rol)*100,2) as mb
+                                            round(sum(rol),0) as rol, round(sum(lb),0) as lb, sum(qtde) as qtde, round(sum(lb)/sum(rol)*100,2) as mb
                                         from (select vi.id_empresa, 
                                                     vi.numero_nf,
                                                     sum(vi.rob) as rob,
@@ -993,6 +1007,7 @@ class BalancedController extends AbstractRestfulController
                 $data[$cont]['precoMedio'] = $data[$cont]['precoMedio'];
                 $data[$cont]['notas'] = (float) $data[$cont]['notas'];
                 $data[$cont]['rol'] = (float) $data[$cont]['rol'];
+                $data[$cont]['lb'] = (float) $data[$cont]['lb'];
                 $data[$cont]['qtde'] = (float) $data[$cont]['qtde'];
                 $data[$cont]['mb'] = $data[$cont]['mb'];
                 // $data[$cont]['order'] = $cont;

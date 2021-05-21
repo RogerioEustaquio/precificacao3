@@ -38,6 +38,7 @@ Ext.define('App.view.price.GridItemBalanced', {
                                                         {name:'numeroNf', type: 'float'},
                                                         {name:'rol', type: 'float'},
                                                         {name:'mb', type: 'number'},
+                                                        {name:'mb', type: 'number'},
                                                         {name:'order', type: 'float'}
                                                         ]
                                 }),
@@ -105,6 +106,15 @@ Ext.define('App.view.price.GridItemBalanced', {
 
                             return valor;
                         }
+                    },
+                    {
+                        text: 'LB',
+                        dataIndex: 'lb',
+                        width: 80,
+                        renderer: function (v) {
+                            return utilFormat.Value2(v,0);
+                        },
+                        hidden: true
                     },
                     {
                         text: 'MB',
