@@ -224,7 +224,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['precoMedio'],
-                    'show' => true
+                    'show' => true,
+                    'dicima' => 2
                 );
 
                 $data2[] = array(
@@ -234,7 +235,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['rolUni'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 2
                 );
                 $data3[] = array(
                     'name'=> 'Custo Unitário',
@@ -243,7 +245,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['custoUni'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 2
                 );
                 $data4[] = array(
                     'name'=> 'Lucro Unitário',
@@ -252,7 +255,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['lucroUni'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 2
                 );
 
                 $data5[] = array(
@@ -262,7 +266,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['rol'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 0
                 );
 
                 $data6[] = array(
@@ -272,7 +277,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['cmv'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 0
                 );
 
                 $data7[] = array(
@@ -282,7 +288,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['lb'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 0
                 );
 
                 $data8[] = array(
@@ -292,7 +299,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['mb'],
-                    'show' => true
+                    'show' => true,
+                    'dicima' => 2
                 );
 
                 $data9[] = array(
@@ -302,7 +310,8 @@ class BalancedController extends AbstractRestfulController
                     'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['qtde'],
-                    'show' => true
+                    'show' => true,
+                    'dicima' => 0
                 );
 
                 $data10[] = array(
@@ -312,7 +321,8 @@ class BalancedController extends AbstractRestfulController
                     // 'description'=> $dataEmissao,
                     'x'=> (float) $elementos['data'],
                     'y'=> (float) $elementos['nf'],
-                    'show' => false
+                    'show' => false,
+                    'dicima' => 0
                 );
 
                 // $categories[] = (float) $elementos['data'];
@@ -1011,9 +1021,9 @@ class BalancedController extends AbstractRestfulController
                                     rol, cmv, lb, notas, qtde, mb
                                 from (select preco_medio,
                                             count(*) as notas,
-                                            round(sum(rol_uni),2) rol_uni,
-                                            round(sum(custo_uni),2) custo_uni,
-                                            round(sum(lucro_uni),2) lucro_uni,
+                                            round(rol_uni,2) rol_uni,
+                                            round(custo_uni,2) custo_uni,
+                                            round(lucro_uni,2) lucro_uni,
                                             round(sum(rol),0) as rol,
                                             round(sum(cmv),0) as cmv,
                                             round(sum(lb),0) as lb, sum(qtde) as qtde, round(sum(lb)/sum(rol)*100,2) as mb
@@ -1047,7 +1057,7 @@ class BalancedController extends AbstractRestfulController
                                             --and vi.id_empresa = 8
                                             $andSql
                                             group by vi.id_empresa, vi.numero_nf)
-                                    group by preco_medio))
+                                    group by preco_medio,rol_uni,custo_uni,lucro_uni))
                     where rank <= 18
                     order by preco_medio desc
             ";

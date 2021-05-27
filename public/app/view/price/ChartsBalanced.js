@@ -419,7 +419,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,0);
+                                return utilFormat.Value2(this.value,2);
                             },
                             style: {
                                 color: Highcharts.getOptions().colors[6],   // cor 1 na MB
@@ -439,7 +439,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,0);
+                                return utilFormat.Value2(this.value,2);
                             },
                             style: {
                                 color: Highcharts.getOptions().colors[2],
@@ -459,7 +459,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         },
                         labels: {
                             formatter: function () {
-                                return utilFormat.Value2(this.value,0);
+                                return utilFormat.Value2(this.value,2);
                             },
                             style: {
                                 color: Highcharts.getOptions().colors[3],
@@ -602,7 +602,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                             this.points ?
                                 this.points.map(function (point) {
 
-                                    var dicima = point.series.name == 'Preço Médio' || point.series.name == 'MB' ? 2 : 0;
+                                    var dicima = point.point.dicima >1 ? 2 : 0;
                                     var valor = utilFormat.Value2(point.y,dicima);
 
                                     return '<span style="color: '+point.color+'">'+point.series.name+'</span>: <b>'+valor+'</b><br/>';
