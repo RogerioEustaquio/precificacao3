@@ -136,7 +136,11 @@ class BalancedController extends AbstractRestfulController
             
             $sql = "select $sqlData as data,
                             round(sum(vi.rob)/sum(vi.qtde),2) as preco_medio,
+                            round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
+                            round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                            round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
                             sum(vi.rol) as rol,
+                            sum(vi.custo) as cmv,
                             sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
                             round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
                             sum(vi.qtde) as qtde,
@@ -171,7 +175,11 @@ class BalancedController extends AbstractRestfulController
             $hydrator = new ObjectProperty;
             $hydrator->addStrategy('data', new ValueStrategy);
             $hydrator->addStrategy('preco_medio', new ValueStrategy);
+            $hydrator->addStrategy('rol_uni', new ValueStrategy);
+            $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('lucro_uni', new ValueStrategy);
             $hydrator->addStrategy('rol', new ValueStrategy);
+            $hydrator->addStrategy('cmv', new ValueStrategy);
             $hydrator->addStrategy('lb', new ValueStrategy);
             $hydrator->addStrategy('mb', new ValueStrategy);
             $hydrator->addStrategy('qtde', new ValueStrategy);
@@ -185,6 +193,10 @@ class BalancedController extends AbstractRestfulController
             $data4 = array();
             $data5 = array();
             $data6 = array();
+            $data7 = array();
+            $data8 = array();
+            $data9 = array();
+            $data10 = array();
             $data = array();
             $categories= array();
             // $date = date_create();
@@ -216,6 +228,34 @@ class BalancedController extends AbstractRestfulController
                 );
 
                 $data2[] = array(
+                    'name'=> 'ROL Unitário',
+                    'type'=> 'line',
+                    'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['rolUni'],
+                    'show' => false
+                );
+                $data3[] = array(
+                    'name'=> 'Custo Unitário',
+                    'type'=> 'line',
+                    'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['custoUni'],
+                    'show' => false
+                );
+                $data4[] = array(
+                    'name'=> 'Lucro Unitário',
+                    'type'=> 'line',
+                    'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['lucroUni'],
+                    'show' => false
+                );
+
+                $data5[] = array(
                     'name'=> 'ROL',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
@@ -225,7 +265,17 @@ class BalancedController extends AbstractRestfulController
                     'show' => false
                 );
 
-                $data3[] = array(
+                $data6[] = array(
+                    'name'=> 'CMV',
+                    'type'=> 'line',
+                    'data'=> $dataEmissao,
+                    // 'description'=> $dataEmissao,
+                    'x'=> (float) $elementos['data'],
+                    'y'=> (float) $elementos['cmv'],
+                    'show' => false
+                );
+
+                $data7[] = array(
                     'name'=> 'LB',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
@@ -235,7 +285,7 @@ class BalancedController extends AbstractRestfulController
                     'show' => false
                 );
 
-                $data4[] = array(
+                $data8[] = array(
                     'name'=> 'MB',
                     'type'=> 'line',
                     'data'=> $dataEmissao,
@@ -245,7 +295,7 @@ class BalancedController extends AbstractRestfulController
                     'show' => true
                 );
 
-                $data5[] = array(
+                $data9[] = array(
                     'name'=> 'Quantidade',
                     'type'=> 'column',
                     // 'data'=> $dataEmissao,
@@ -255,7 +305,7 @@ class BalancedController extends AbstractRestfulController
                     'show' => true
                 );
 
-                $data6[] = array(
+                $data10[] = array(
                     'name'=> 'Nota',
                     'type'=> 'column',
                     'data'=> $dataEmissao,
@@ -274,6 +324,10 @@ class BalancedController extends AbstractRestfulController
             $data[] = $data4;
             $data[] = $data5;
             $data[] = $data6;
+            $data[] = $data7;
+            $data[] = $data8;
+            $data[] = $data9;
+            $data[] = $data10;
 
             $this->setCallbackData($data);
             
@@ -482,6 +536,7 @@ class BalancedController extends AbstractRestfulController
                     -- Remover esse filtro se utilizar o filtro de marca
                     $and_accumulated
                     order by med_accumulated asc";
+
             $stmt = $conn->prepare($sql);
             // $stmt->bindValue(1, $pEmp);
             
@@ -949,18 +1004,28 @@ class BalancedController extends AbstractRestfulController
             $em = $this->getEntityManager();
             $conn = $em->getConnection();
             
-            $sql = "select preco_medio, rol,lb, notas, qtde, mb 
+            $sql = "select preco_medio, rol_uni, custo_uni, lucro_uni,
+                           rol, cmv, lb, notas, qtde, mb 
                         from (select rank() over (order by rol desc) rank, preco_medio,
-                                    rol, lb, notas, qtde, mb
+                                    rol_uni, custo_uni, lucro_uni,
+                                    rol, cmv, lb, notas, qtde, mb
                                 from (select preco_medio,
                                             count(*) as notas,
-                                            round(sum(rol),0) as rol, round(sum(lb),0) as lb, sum(qtde) as qtde, round(sum(lb)/sum(rol)*100,2) as mb
+                                            round(sum(rol_uni),2) rol_uni,
+                                            round(sum(custo_uni),2) custo_uni,
+                                            round(sum(lucro_uni),2) lucro_uni,
+                                            round(sum(rol),0) as rol,
+                                            round(sum(cmv),0) as cmv,
+                                            round(sum(lb),0) as lb, sum(qtde) as qtde, round(sum(lb)/sum(rol)*100,2) as mb
                                         from (select vi.id_empresa, 
                                                     vi.numero_nf,
+                                                    round((case when sum(qtde) > 0 then sum(vi.rol)/sum(qtde) end),2) as rol_uni,
+                                                    round((case when sum(qtde) > 0 then sum(vi.custo)/sum(qtde) end),2) as custo_uni,
+                                                    round((case when sum(qtde) > 0 then sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(qtde) end),2) as lucro_uni,
                                                     sum(vi.rob) as rob,
                                                     round(sum(vi.rob)/sum(vi.qtde),2) as preco_medio,
                                                     sum(vi.rol) as rol,
-                                                    --sum(vi.custo) as cmv,
+                                                    sum(vi.custo) as cmv,
                                                     sum(nvl(vi.rol,0)-nvl(vi.custo,0)) as lb,
                                                     --round((case when sum(qtde) > 0 then (sum(nvl(vi.rol,0)-nvl(vi.custo,0))/sum(rol))*100 end),2) as mb,
                                                     sum(vi.qtde) as qtde
@@ -987,12 +1052,19 @@ class BalancedController extends AbstractRestfulController
                     order by preco_medio desc
             ";
 
+            // print "$sql";
+            // exit;
+
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $results = $stmt->fetchAll();
 
             $hydrator = new ObjectProperty;
             $hydrator->addStrategy('preco_medio', new ValueStrategy);
+            $hydrator->addStrategy('rol_uni', new ValueStrategy);
+            $hydrator->addStrategy('custo_uni', new ValueStrategy);
+            $hydrator->addStrategy('lucro_uni', new ValueStrategy);
+            $hydrator->addStrategy('cmv', new ValueStrategy);
             $hydrator->addStrategy('mb', new ValueStrategy);
             $stdClass = new StdClass;
             $resultSet = new HydratingResultSet($hydrator, $stdClass);

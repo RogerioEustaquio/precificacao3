@@ -47,7 +47,12 @@ Ext.define('App.view.price.ChartsBalanced', {
                             // me.chart.reflow();
 
                             rsarray = [];
+                            // me.showLegend = [true, false, false, false, false, false, false, true, true, false];
                             me.showLegend.push(true);
+                            me.showLegend.push(false);
+                            me.showLegend.push(false);
+                            me.showLegend.push(false);
+                            me.showLegend.push(false);
                             me.showLegend.push(false);
                             me.showLegend.push(false);
                             me.showLegend.push(true);
@@ -190,7 +195,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                         },
                         indicadores: {
                             onclick: function () {
-                                var meChart = this;                            
+                                var meChart = this;
                                 var lista = [];
                                 var element = '';
 
@@ -220,9 +225,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                                                 }
                                             }
 
-                                            if(cont > 8){
+                                            if(cont > 6){
 
-                                                Ext.Msg.alert('Alerta','Permitido selecionar 8 indicadores.');
+                                                Ext.Msg.alert('Alerta','Permitido selecionar 6 indicadores.');
                                                 record.setValue(false);
                                                 me.showLegend[recordSeries.index] = false ;
                                                 recordSeries.update({ visible: false},false);
@@ -406,9 +411,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                         visible: me.showLegend[1],
                         height: '100%',
                         title: {
-                            text: 'ROL',
+                            text: 'ROL Unitário',
                             style: {
-                                color: Highcharts.getOptions().colors[2],  // cor 1 na MB
+                                color: Highcharts.getOptions().colors[6],   // cor 1 na MB
                                 fontSize: '10px'
                             }
                         },
@@ -417,7 +422,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,0);
                             },
                             style: {
-                                color: Highcharts.getOptions().colors[2],  // cor 1 na MB
+                                color: Highcharts.getOptions().colors[6],   // cor 1 na MB
                                 fontSize: '10px'
                             }
                         }
@@ -426,7 +431,27 @@ Ext.define('App.view.price.ChartsBalanced', {
                         visible: me.showLegend[2],
                         height: '100%',
                         title: {
-                            text: 'LB',
+                            text: 'Custo Unitário',
+                            style: {
+                                color: Highcharts.getOptions().colors[2],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,0);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[2],
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
+                        visible: me.showLegend[3],
+                        height: '100%',
+                        title: {
+                            text: 'Lucro Unitário',
                             style: {
                                 color: Highcharts.getOptions().colors[3],
                                 fontSize: '10px'
@@ -443,12 +468,72 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
-                        visible: me.showLegend[3],
+                        visible: me.showLegend[4],
+                        height: '100%',
+                        title: {
+                            text: 'ROL',
+                            style: {
+                                color: Highcharts.getOptions().colors[4],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,0);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[4],
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
+                        visible: me.showLegend[5],
+                        height: '100%',
+                        title: {
+                            text: 'CMV',
+                            style: {
+                                color: Highcharts.getOptions().colors[5],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,0);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[5],
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
+                        visible: me.showLegend[6],
+                        height: '100%',
+                        title: {
+                            text: 'LB',
+                            style: {
+                                color: Highcharts.getOptions().colors[6],
+                                fontSize: '10px'
+                            }
+                        },
+                        labels: {
+                            formatter: function () {
+                                return utilFormat.Value2(this.value,0);
+                            },
+                            style: {
+                                color: Highcharts.getOptions().colors[6],
+                                fontSize: '10px'
+                            }
+                        }
+                    },
+                    {
+                        visible: me.showLegend[7],
                         height: '100%',
                         title: {
                             text: 'MB',
                             style: {
-                                color: Highcharts.getOptions().colors[1],  // cor 2 no ROL
+                                color: Highcharts.getOptions().colors[1],  // cor 7 no ROL Unitário
                                 fontSize: '10px'
                             }
                         },
@@ -457,13 +542,13 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,2);
                             },
                             style: {
-                                color: Highcharts.getOptions().colors[1], // cor 2 no ROL
+                                color: Highcharts.getOptions().colors[1], // cor 7 no ROL Unitário
                                 fontSize: '10px'
                             }
                         }
                     },
                     {
-                        visible: me.showLegend[4],
+                        visible: me.showLegend[8],
                         top: '60%',
                         height: '40%',
                         title: {
@@ -485,12 +570,12 @@ Ext.define('App.view.price.ChartsBalanced', {
                         }
                     },
                     {
-                        visible: me.showLegend[5],
+                        visible: me.showLegend[9],
                         height: '100%',
                         title: {
                             text: 'Nota',
                             style: {
-                                color: Highcharts.getOptions().colors[4],
+                                color: Highcharts.getOptions().colors[8],
                                 fontSize: '10px'
                             }
                         },
@@ -499,7 +584,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                                 return utilFormat.Value2(this.value,0);
                             },
                             style: {
-                                color: Highcharts.getOptions().colors[4],
+                                color: Highcharts.getOptions().colors[8],
                                 fontSize: '10px'
                             }
                         }
@@ -570,7 +655,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'line',
-                        name: 'ROL',
+                        name: 'ROL Unitário',
                         data: data[1],
                         yAxis: 1,
                         visible: me.showLegend[1]
@@ -581,7 +666,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'line',
-                        name: 'LB',
+                        name: 'Custo Unitário',
                         data: data[2],
                         yAxis: 2,
                         visible: me.showLegend[2]
@@ -592,7 +677,7 @@ Ext.define('App.view.price.ChartsBalanced', {
                     },
                     {
                         type: 'line',
-                        name: 'MB',
+                        name: 'Lucro Unitário',
                         data: data[3],
                         yAxis: 3,
                         visible: me.showLegend[3]
@@ -602,13 +687,57 @@ Ext.define('App.view.price.ChartsBalanced', {
                         
                     },
                     {
+                        type: 'line',
+                        name: 'ROL',
+                        data: data[4],
+                        yAxis: 4,
+                        visible: me.showLegend[4]
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                        
+                    },
+                    {
+                        type: 'line',
+                        name: 'CMV',
+                        data: data[5],
+                        yAxis: 5,
+                        visible: me.showLegend[5]
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                        
+                    },
+                    {
+                        type: 'line',
+                        name: 'LB',
+                        data: data[6],
+                        yAxis: 6,
+                        visible: me.showLegend[6]
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                        
+                    },
+                    {
+                        type: 'line',
+                        name: 'MB',
+                        data: data[7],
+                        yAxis: 7,
+                        visible: me.showLegend[7]
+                        // tooltip: {
+                        //     valueDecimals: 2
+                        // }
+                        
+                    },
+                    {
                         type: 'column',
                         id: 'Quantidade',
                         name: 'Quantidade',
-                        data: data[4],
+                        data: data[8],
                         color: '#2EBD85',
-                        yAxis: 4,
-                        visible: me.showLegend[4]
+                        yAxis: 8,
+                        visible: me.showLegend[8]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }
@@ -616,9 +745,9 @@ Ext.define('App.view.price.ChartsBalanced', {
                     {
                         type: 'line',
                         name: 'Nota',
-                        data: data[5],
-                        yAxis: 5,
-                        visible: me.showLegend[5]
+                        data: data[9],
+                        yAxis: 9,
+                        visible: me.showLegend[9]
                         // tooltip: {
                         //     valueDecimals: 2
                         // }

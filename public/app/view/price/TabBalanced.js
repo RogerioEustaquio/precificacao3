@@ -557,68 +557,107 @@ Ext.define('App.view.price.TabBalanced', {
                                                         // color: seriesCores[0],
                                                         visible: charts.showLegend[0]
                                                     };
-
                                                     charts.chart.addSeries(series1);
 
                                                     var series2 = {
                                                         type: 'line',
-                                                        name: 'ROL',
+                                                        name: 'ROL Unitário',
                                                         data: rsarray[1],
-                                                        // color: seriesCores[1],
                                                         yAxis: 1,
                                                         index: 1,
+                                                        // color: seriesCores[0],
                                                         visible: charts.showLegend[1]
                                                     };
-
                                                     charts.chart.addSeries(series2);
 
                                                     var series3 = {
                                                         type: 'line',
-                                                        name: 'LB',
+                                                        name: 'Custo Unitário',
                                                         data: rsarray[2],
-                                                        // color: seriesCores[2],
                                                         yAxis: 2,
                                                         index: 2,
+                                                        // color: seriesCores[0],
                                                         visible: charts.showLegend[2]
                                                     };
-                                                    
                                                     charts.chart.addSeries(series3);
 
                                                     var series4 = {
                                                         type: 'line',
-                                                        name: 'MB',
+                                                        name: 'Lucro Unitário',
                                                         data: rsarray[3],
-                                                        // color: seriesCores[2],
                                                         yAxis: 3,
                                                         index: 3,
+                                                        // color: seriesCores[0],
                                                         visible: charts.showLegend[3]
                                                     };
-                                                    
                                                     charts.chart.addSeries(series4);
 
                                                     var series5 = {
-                                                        type: 'column',
-                                                        id: 'Quantidade',
-                                                        name: 'Quantidade',
+                                                        type: 'line',
+                                                        name: 'ROL',
                                                         data: rsarray[4],
-                                                        color: '#2EBD85',
+                                                        // color: seriesCores[1],
                                                         yAxis: 4,
                                                         index: 4,
                                                         visible: charts.showLegend[4]
                                                     };
-                                                    
                                                     charts.chart.addSeries(series5);
 
                                                     var series6 = {
                                                         type: 'line',
-                                                        name: 'Nota',
+                                                        name: 'CMV',
                                                         data: rsarray[5],
-                                                        // color: seriesCores[4],
+                                                        // color: seriesCores[1],
                                                         yAxis: 5,
                                                         index: 5,
                                                         visible: charts.showLegend[5]
                                                     };
                                                     charts.chart.addSeries(series6);
+
+                                                    var series7 = {
+                                                        type: 'line',
+                                                        name: 'LB',
+                                                        data: rsarray[6],
+                                                        // color: seriesCores[2],
+                                                        yAxis: 6,
+                                                        index: 6,
+                                                        visible: charts.showLegend[6]
+                                                    };
+                                                    charts.chart.addSeries(series7);
+
+                                                    var series8 = {
+                                                        type: 'line',
+                                                        name: 'MB',
+                                                        data: rsarray[7],
+                                                        // color: seriesCores[2],
+                                                        yAxis: 7,
+                                                        index: 7,
+                                                        visible: charts.showLegend[7]
+                                                    };
+                                                    charts.chart.addSeries(series8);
+
+                                                    var series9 = {
+                                                        type: 'column',
+                                                        id: 'Quantidade',
+                                                        name: 'Quantidade',
+                                                        data: rsarray[8],
+                                                        color: '#2EBD85',
+                                                        yAxis: 8,
+                                                        index: 8,
+                                                        visible: charts.showLegend[8]
+                                                    };
+                                                    charts.chart.addSeries(series9);
+
+                                                    var series10 = {
+                                                        type: 'line',
+                                                        name: 'Nota',
+                                                        data: rsarray[9],
+                                                        // color: seriesCores[4],
+                                                        yAxis: 9,
+                                                        index: 9,
+                                                        visible: charts.showLegend[9]
+                                                    };
+                                                    charts.chart.addSeries(series10);
 
                                                     var subtitle = '';
                                                     if(descProduto){

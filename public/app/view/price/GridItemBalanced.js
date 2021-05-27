@@ -35,8 +35,12 @@ Ext.define('App.view.price.GridItemBalanced', {
         var mystore = Ext.create('Ext.data.Store', {
                                 model: Ext.create('Ext.data.Model', {
                                                 fields:[{name:'precoMedio', type:'number'},
+                                                        {name:'rolUni', type: 'float'},
+                                                        {name:'lucroUni', type: 'float'},
+                                                        {name:'custoUni', type: 'float'},
                                                         {name:'numeroNf', type: 'float'},
                                                         {name:'rol', type: 'float'},
+                                                        {name:'cmv', type: 'float'},
                                                         {name:'mb', type: 'number'},
                                                         {name:'mb', type: 'number'},
                                                         {name:'order', type: 'float'}
@@ -74,6 +78,36 @@ Ext.define('App.view.price.GridItemBalanced', {
                         }
                     },
                     {
+                        text: 'Rol Uni',
+                        dataIndex: 'rolUni',
+                        minWidth: 90,
+                        flex: 1,
+                        hidden: true,
+                        renderer: function (v) {
+                            return utilFormat.Value2(v,2);
+                        }
+                    },
+                    {
+                        text: 'Custo Uni',
+                        dataIndex: 'custoUni',
+                        minWidth: 90,
+                        flex: 1,
+                        hidden: true,
+                        renderer: function (v) {
+                            return utilFormat.Value2(v,2);
+                        }
+                    },
+                    {
+                        text: 'Lucro Uni',
+                        dataIndex: 'lucroUni',
+                        minWidth: 90,
+                        flex: 1,
+                        hidden: true,
+                        renderer: function (v) {
+                            return utilFormat.Value2(v,2);
+                        }
+                    },
+                    {
                         text: 'Notas',
                         dataIndex: 'notas',
                         width: 75
@@ -106,6 +140,15 @@ Ext.define('App.view.price.GridItemBalanced', {
 
                             return valor;
                         }
+                    },
+                    {
+                        text: 'CMV',
+                        dataIndex: 'cmv',
+                        width: 80,
+                        renderer: function (v) {
+                            return utilFormat.Value2(v,0);
+                        },
+                        hidden: true
                     },
                     {
                         text: 'LB',
